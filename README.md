@@ -151,7 +151,7 @@ W projekcie zaimplementowano m.in.:
 - Dodanie automatycznej walidacji `sitemap.xml` i `robots.txt` w pipeline `npm run check`.
 
 ### Licencja
-MIT (zgodnie z polem `license` w `package.json`).
+Atelier No.02 jest projektem własnościowym, objętym [licencją KP_CODE](LICENSE). Materiały podmiotów trzecich podlegają własnym licencjom.
 
 ## EN
 
@@ -304,4 +304,4 @@ Detected performance-oriented implementation includes:
 - Add automated `sitemap.xml` and `robots.txt` validation in the `npm run check` workflow.
 
 ### License
-MIT (as declared in `package.json`).
+Atelier No.02 is a proprietary project governed by the [KP_CODE license](LICENSE). Third-party materials remain subject to their own licenses.
