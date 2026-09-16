@@ -1,0 +1,30 @@
+{
+  "defaults": {
+    "chromeLaunchConfig": {
+      "args": [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage"
+      ]
+    },
+    "standard": "WCAG2AA",
+    "timeout": 45000,
+    "wait": 1000,
+    "runners": [
+      "htmlcs"
+    ]
+  },
+  "concurrency": 2,
+  "urls": [
+    "http://127.0.0.1:5173/",
+    "http://127.0.0.1:5173/about.html",
+    "http://127.0.0.1:5173/menu.html",
+    "http://127.0.0.1:5173/gallery.html",
+    "http://127.0.0.1:5173/cookies.html",
+    "http://127.0.0.1:5173/polityka-prywatnosci.html",
+    "http://127.0.0.1:5173/regulamin.html",
+    "http://127.0.0.1:5173/offline.html",
+    "http://127.0.0.1:5173/thank-you.html",
+    "http://127.0.0.1:5173/404.html"
+  ]
+}

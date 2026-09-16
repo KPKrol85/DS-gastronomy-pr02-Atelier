@@ -1,0 +1,51 @@
+.net-status {
+  position: fixed;
+  left: 50%;
+  bottom: 1rem;
+  z-index: 1100;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface-overlay);
+  border: 1px solid var(--surface-overlay-border);
+  color: var(--c-ink);
+  font-size: 0.9rem;
+  box-shadow: var(--shadow);
+  transform: translate(-50%, 8px);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+.net-status.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.net-status.is-offline {
+  background: color-mix(in oklab, var(--gold) 12%, var(--surface-overlay));
+  border-color: color-mix(in oklab, var(--gold) 35%, var(--surface-overlay-border));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.nojs {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  color: #2a1f14;
+  background: var(--gold);
+  box-shadow: var(--shadow);
+  transform: translateX(-50%);
+}

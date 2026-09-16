@@ -1,0 +1,41 @@
+/* gallery.html */
+.page--gallery .gallery__grid {
+  display: flex;
+  gap: var(--gallery-gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  padding-inline: var(--space-4);
+  scroll-padding-inline: var(--space-4);
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--burgundy) 30%, transparent) transparent;
+}
+.page--gallery .section__title {
+  margin-bottom: var(--space-2);
+}
+.page--gallery .gallery__item {
+  flex: 0 0 var(--gallery-slide-basis);
+  scroll-snap-align: start;
+}
+.page--gallery .gallery__grid::-webkit-scrollbar {
+  height: 8px;
+}
+.page--gallery .gallery__grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+.page--gallery .gallery__grid::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--burgundy) 30%, transparent);
+  border-radius: var(--radius-md);
+}
+
+@media (min-width: 760px) {
+  .page--gallery .gallery__grid {
+    --gallery-slide-basis: calc((100% - var(--gallery-gap)) / 2);
+  }
+}
+@media (min-width: 1024px) {
+  .page--gallery .gallery__grid {
+    --gallery-slide-basis: calc((100% - (2 * var(--gallery-gap))) / 3);
+  }
+}

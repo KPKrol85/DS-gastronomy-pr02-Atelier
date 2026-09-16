@@ -1,0 +1,117 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.06s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+a.btn {
+  text-decoration: none;
+}
+a.btn:hover,
+a.btn:focus {
+  text-decoration: none;
+}
+.btn--primary {
+  background-color: var(--burgundy);
+  color: #fff;
+  border-color: var(--burgundy);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 44%, rgba(0, 0, 0, 0.08) 100%);
+  background-blend-mode: normal;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.06s ease,
+    opacity 0.18s ease;
+}
+.btn--primary:hover,
+.btn--primary:focus-visible:hover {
+  background-color: color-mix(in oklab, var(--burgundy) 86%, white);
+  border-color: color-mix(in oklab, var(--burgundy) 86%, white);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 46%, rgba(0, 0, 0, 0.1) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+.btn--primary:active {
+  background-color: color-mix(in oklab, var(--burgundy) 92%, black);
+  border-color: color-mix(in oklab, var(--burgundy) 92%, black);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 44%, rgba(0, 0, 0, 0.1) 100%);
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.btn--primary:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px color-mix(in oklab, var(--burgundy) 22%, white),
+    0 6px 18px rgba(0, 0, 0, 0.12);
+}
+.btn--ghost {
+  background: transparent;
+  color: color-mix(in oklab, var(--burgundy) 92%, black);
+  border: 1px solid color-mix(in oklab, var(--burgundy) 96%, white);
+}
+.btn--ghost:hover,
+.btn--ghost:focus-visible:hover {
+  background: color-mix(in oklab, var(--burgundy) 10%, white);
+  border-color: color-mix(in oklab, var(--burgundy) 86%, white);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+.btn--ghost:active {
+  background: color-mix(in oklab, var(--burgundy) 6%, black);
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.btn--ghost:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px color-mix(in oklab, var(--burgundy) 22%, white),
+    0 6px 18px rgba(0, 0, 0, 0.12);
+}
+.btn[aria-disabled="true"],
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+[data-theme="dark"] .btn--primary {
+  color: var(--bone);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 48%, rgba(0, 0, 0, 0.12) 100%);
+}
+[data-theme="dark"] .btn--primary:hover,
+[data-theme="dark"] .btn--primary:focus-visible:hover {
+  background-color: color-mix(in oklab, var(--burgundy) 80%, white);
+  border-color: color-mix(in oklab, var(--burgundy) 80%, white);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+  color: var(--bone);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.14) 100%);
+}
+[data-theme="dark"] .btn--ghost:hover,
+[data-theme="dark"] .btn--ghost:focus-visible:hover {
+  background: color-mix(in oklab, var(--burgundy) 25%, black);
+  border-color: color-mix(in oklab, var(--burgundy) 80%, white);
+}
+:where(a:not(.btn)):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}

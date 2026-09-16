@@ -1,0 +1,83 @@
+.visually-hidden {
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  width: auto;
+  height: auto;
+  background: var(--burgundy);
+  color: var(--bone);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  z-index: 1000;
+}
+
+.nav__list a,
+.footer__list a,
+.btn,
+.footer__social a {
+  position: relative;
+}
+.nav__list a::before,
+.footer__list a::before,
+.btn::before,
+.footer__social a::before {
+  content: "";
+  position: absolute;
+}
+.nav__list a::before,
+.footer__list a::before {
+  inset: -8px -6px;
+  border-radius: var(--radius-md);
+}
+.nav__list a::after,
+.footer__list a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -3px;
+  width: 0;
+  height: 1px;
+  transform: translateX(-50%);
+  transition: width 0.35s ease;
+}
+.nav__list a:hover::after,
+.nav__list a:focus-visible::after,
+.footer__list a:hover::after,
+.footer__list a:focus-visible::after {
+  width: 100%;
+}
+.btn::before {
+  inset: -6px -10px;
+  border-radius: var(--radius-md);
+}
+.footer__social a::before {
+  inset: -8px;
+}
+
+@media (min-width: 1024px) {
+  .nav__list a::before,
+  .footer__list a::before,
+  .btn::before,
+  .footer__social a::before {
+    content: none;
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "id": "/",
+  "name": "Atelier No.02",
+  "short_name": "Atelier No.02",
+  "description": "Restauracja fine dining Atelier No.02. Autorska kuchnia, sezonowe menu i wyjątkowe doświadczenie kulinarne.",
+  "categories": ["food", "restaurant", "fine-dining"],
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#f8f1e7",
+  "background_color": "#f8f1e7",
+
+  "icons": [
+    {
+      "src": "/assets/icons/fav-icon/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/fav-icon/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/icons/fav-icon/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/fav-icon/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+
+  "screenshots": [
+    {
+      "src": "/assets/icons/screenshots/desktop.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Atelier No.02 – widok strony na desktopie"
+    },
+    {
+      "src": "/assets/icons/screenshots/mobile.jpg",
+      "sizes": "720x1280",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Atelier No.02 – widok strony na urządzeniu mobilnym"
+    }
+  ],
+
+  "shortcuts": [
+    {
+      "name": "Menu",
+      "short_name": "Menu",
+      "description": "Sprawdź aktualne menu restauracji",
+      "url": "/menu.html",
+      "icons": [
+        {
+          "src": "/assets/icons/shortcuts/menu-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Galeria",
+      "short_name": "Galeria",
+      "description": "Zobacz wnętrza i dania Atelier No.02",
+      "url": "/gallery.html",
+      "icons": [
+        {
+          "src": "/assets/icons/shortcuts/gallery-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Kontakt",
+      "short_name": "Kontakt",
+      "description": "Rezerwacje i kontakt z restauracją",
+      "url": "/contact.html",
+      "icons": [
+        {
+          "src": "/assets/icons/shortcuts/contact-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}
