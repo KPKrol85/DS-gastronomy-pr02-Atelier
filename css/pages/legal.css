@@ -2,7 +2,7 @@
 .page--legal .section:not(.page-hero) .container {
   max-width: 920px;
 }
-/*spis treści */
+/* Spis treści */
 .toc {
   max-width: 720px;
   margin-inline: auto;
@@ -63,19 +63,32 @@
 .page--legal .card__body {
   line-height: var(--lh-relaxed);
 }
-.page--legal .card__body > p {
+.page--legal .card__body > :is(p, ul, ol) {
   margin: 0 0 var(--space-3);
 }
-.page--legal .card__body ul {
-  margin: 0;
+.page--legal .card__body :is(ul, ol) {
   padding-left: var(--space-5);
   display: grid;
   gap: var(--space-3);
 }
+.page--legal .card__body > h3 {
+  margin: var(--space-5) 0 var(--space-3);
+}
+.page--legal .card__body > :last-child {
+  margin-bottom: 0;
+}
+.page--legal .card__body a {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  overflow-wrap: anywhere;
+}
+.page--legal .card__body a:hover {
+  text-decoration-thickness: 2px;
+}
 .legal__table-wrap {
   max-width: 100%;
   overflow-x: auto;
-  margin-top: var(--space-3);
+  margin-block: var(--space-3);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-md);
 }
