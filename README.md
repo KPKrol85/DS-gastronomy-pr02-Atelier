@@ -1,307 +1,353 @@
-# Atelier
+# Atelier No.02
 
 ## PL
 
 ### Przegląd projektu
-Atelier to wielostronicowy, statyczny serwis restauracyjny zbudowany w oparciu o HTML, CSS i JavaScript (ES Modules). Projekt obejmuje stronę główną oraz dedykowane podstrony: o restauracji, menu, galerię, kontakt, strony prawne, stronę offline, stronę potwierdzenia formularza i stronę 404.
+
+Atelier No.02 to demonstracyjna, wielostronicowa witryna fikcyjnej restauracji fine dining, opracowana przez KP_Code Digital Studio. Statyczne strony HTML są uzupełniane modułami JavaScript i wspólnym arkuszem CSS.
+
+Projekt obejmuje stronę główną, informacje o restauracji, menu, galerię, kontakt, strony prawne oraz widoki offline, potwierdzenia formularza i 404. Nie zawiera systemu rezerwacji ani własnego backendu; formularz kontaktowy jest skonfigurowany do obsługi przez Netlify Forms.
+
+### Wersja online
+
+[Adres demo wskazany w repozytorium](https://gastronomy-project-02.netlify.app/) pochodzi z regulaminu i metadanych stron. Dostępność witryny oraz zgodność wdrożonej wersji z bieżącym kodem nie zostały potwierdzone.
 
 ### Kluczowe funkcje
-- Wielostronicowa nawigacja z rozwijanymi sekcjami i wariantem mobilnym (drawer), wraz z obsługą klawiatury i zarządzaniem fokusem.
-- Przełącznik motywu jasny/ciemny z zapisem preferencji w `localStorage` i synchronizacją `meta[name="theme-color"]`.
-- Dynamiczne renderowanie pozycji menu z `data/menu.json` (sekcja wyróżniona na stronie głównej oraz kategorie na podstronie menu).
-- Filtrowanie i wyszukiwanie dań po tagach i treści na stronie menu.
-- Galeria z lightboxem (nawigacja klawiaturą, licznik slajdów, fullscreen, obsługa gestów dotykowych).
-- Walidacja formularza kontaktowego po stronie klienta (walidacja pól, komunikaty błędów, status wysyłki).
-- Banner statusu sieci online/offline oraz kontekstowe komunikaty offline na wybranych podstronach.
-- Service Worker z cache zasobów i fallbackiem do `offline.html` dla żądań nawigacyjnych.
+
+- Menu renderowane z `data/menu.json`, wyszukiwanie tekstowe i filtrowanie po tagach; statyczne karty pozostają dostępne bez JavaScript lub po nieudanym pobraniu danych.
+- Galeria z grupowanym lightboxem, podpisami, licznikiem, nawigacją klawiaturą i gestami oraz trybem pełnoekranowym.
+- Nawigacja z rozwijanymi sekcjami i mobilnym panelem z obsługą fokusa.
+- Motywy jasny i ciemny, preferencja systemowa oraz lokalny zapis wyboru użytkownika.
+- Formularz kontaktowy z natywnym POST, honeypotem, walidacją pól i komunikatem trwającej wysyłki. JavaScript nie symuluje udanej dostawy; rzeczywisty odbiór przez Netlify nie został sprawdzony.
+- Komunikaty online/offline i zamykana informacja o demonstracyjnym charakterze serwisu.
 
 ### Stack technologiczny
-**Runtime (frontend):**
-- HTML5 (wielostronicowa struktura statyczna)
-- CSS (architektura modułowa: `base`, `layout`, `components`, `pages`)
-- JavaScript (ES Modules)
-- PWA surface: `manifest.webmanifest` + `sw.js`
 
-**Narzędzia i build:**
-- npm scripts
-- PostCSS (`postcss-import`, `cssnano`) do bundlingu/minifikacji CSS
-- esbuild do bundlingu/minifikacji JavaScript
-- Sharp + fast-glob (pipeline optymalizacji obrazów)
-- ESLint
-- html-validate
-- linkinator
-- pa11y-ci
-- http-server + start-server-and-test + cross-env
+- **Interfejs:** HTML5, modułowy CSS, Vanilla JavaScript z ES Modules; lokalne fonty WOFF2.
+- **Build:** Node.js i npm, PostCSS z `postcss-import` i `cssnano`, esbuild.
+- **Obrazy:** Sharp i `fast-glob` do generowania wariantów AVIF, WebP i JPEG/PNG oraz kopiowania SVG.
+- **Walidacja i development:** ESLint, html-validate, linkinator, pa11y-ci, http-server, start-server-and-test i cross-env.
+
+### Architektura
+
+Każda podstrona jest osobnym dokumentem HTML. Wspólny nagłówek i stopka są zapisane w poszczególnych stronach; build nie generuje ich z szablonów. `js/script.js` uruchamia `js/app/init.js`, który rozdziela inicjalizatory wspólne i funkcje stron według `data-page`. `js/core.js` jest mniejszym wejściem używanym przez stronę 404.
+
+`css/style.css` importuje warstwy `base`, `layout`, `components` i `pages`. PostCSS oraz esbuild tworzą bundlowane pliki `.min.css` i `.min.js`, do których odwołuje się HTML. Osobny `js/bootstrap.js` synchronizuje kolor motywu i rejestruje Service Workera.
 
 ### Struktura projektu
+
 ```text
-pr-02-atelier/
-├── *.html                     # Strony serwisu (home, podstrony, legal, offline, 404)
-├── css/
-│   ├── base/                  # reset, typografia, tokeny
-│   ├── layout/                # grid, header, footer, układ
-│   ├── components/            # nawigacja, karty, formularze, lightbox, stany
-│   ├── pages/                 # style specyficzne dla podstron
-│   ├── style.css              # wejście źródłowe CSS
-│   └── style.min.css          # zminifikowany bundle CSS
-├── js/
-│   ├── app/init.js            # orkiestracja inicjalizacji common/page
-│   ├── core/                  # utilsy DOM i scrollspy
-│   ├── features/              # moduły funkcjonalne (menu, gallery, form, nav, theme...)
-│   ├── script.js              # główny punkt wejścia aplikacji
-│   ├── core.js                # punkt wejścia skryptów współdzielonych
-│   ├── script.min.js          # zminifikowany bundle app
-│   └── core.min.js            # zminifikowany bundle core
-├── data/menu.json             # dane menu renderowane dynamicznie
+./
+├── index.html
+├── about.html
+├── menu.html
+├── gallery.html
+├── contact.html
+├── cookies.html
+├── polityka-prywatnosci.html
+├── regulamin.html
+├── offline.html
+├── thank-you.html
+├── 404.html
+├── css/                    # źródła warstw i wygenerowany style.min.css
+├── js/                     # wejścia, app/, core/, features/ i bundle
+├── data/menu.json
 ├── assets/
-│   ├── img-src/               # źródłowe obrazy
-│   ├── img-optimized/         # wygenerowane warianty (avif/webp/jpg/png/svg)
-│   ├── icons/                 # favicons, skróty, ikony SVG, screenshoty manifestu
-│   ├── fonts/                 # fonty lokalne
-│   └── docs/menu.svg          # plik menu do pobrania
+│   ├── img-src/            # źródła obrazów
+│   ├── img-optimized/      # wygenerowane warianty
+│   ├── fonts/
+│   ├── icons/
+│   └── docs/menu.svg
 ├── scripts/
-│   ├── build-dist.js          # budowa katalogu dist
-│   └── images/build-images.js # generowanie obrazów zoptymalizowanych
-├── sw.js
+│   ├── build-dist.js
+│   └── images/build-images.js
 ├── manifest.webmanifest
+├── sw.js
 ├── robots.txt
 ├── sitemap.xml
 ├── _headers
-└── _redirects
+├── _redirects
+├── package.json
+├── package-lock.json
+├── CHANGELOG.md
+└── LICENSE
 ```
 
-### Instalacja i konfiguracja
+### Instalacja
+
+Wymagane są Node.js i npm. Repozytorium zawiera `package-lock.json`; nie ustala jednej wersji Node.js w konfiguracji projektu.
+
 ```bash
-npm install
+npm ci
 ```
 
 ### Development lokalny
-```bash
-npm run dev:server
-```
-Serwer uruchamia projekt pod adresem `http://127.0.0.1:5173`.
 
-Dostępne kontrole jakości:
-```bash
-npm run lint
-npm run validate:html
-npm run check
-```
+Strony korzystają z bundli produkcyjnych, dlatego po zmianie źródeł CSS lub JS należy je przebudować. Serwer nie wykonuje automatycznego builda ani nie obserwuje zmian.
 
-### Build produkcyjny
 ```bash
 npm run build
+npm run dev:server
+```
+
+Serwis można otworzyć pod `http://127.0.0.1:5173`. Serwer wyłącza cache HTTP. Rejestracja Service Workera jest celowo pomijana na `localhost`, `127.0.0.1` i `::1`.
+
+### Build produkcyjny
+
+```bash
 npm run build:dist
 ```
-- `npm run build` generuje zminifikowane pliki CSS i JS.
-- `npm run build:dist` tworzy katalog `dist/` z plikami stron, assetami i konfiguracją runtime.
 
-Dodatkowo:
+Polecenie najpierw buduje `css/style.min.css`, `js/script.min.js` i `js/core.min.js`, a następnie zastępuje katalog `dist/` paczką wybranych stron, zasobów i konfiguracji hostingu. Nie uruchamia generatora obrazów i nie kopiuje źródeł `assets/img-src/`. Bundle i obrazy wynikowe są śledzone w Git; `dist/` jest ignorowany.
+
+Obecna lista kopiowania w `scripts/build-dist.js` pomija `js/bootstrap.js`, do którego odwołują się strony HTML. Paczka `dist/` nie zawiera więc tego skryptu inicjalizacyjnego, w tym rejestracji Service Workera.
+
+Po zmianie źródeł obrazów dostępny jest osobny workflow:
+
 ```bash
 npm run images:build
 ```
-Skrypt przebudowuje zasoby w `assets/img-optimized` na podstawie `assets/img-src`.
 
-### Deployment
-Repozytorium zawiera konfigurację typową dla hostingu statycznego z regułami:
-- `_redirects` (m.in. obsługa `404.html`),
-- `_headers` (nagłówki bezpieczeństwa i cache),
-- `build-dist.js` przygotowujący artefakt publikacyjny `dist/`.
+Generator zastępuje zawartość `assets/img-optimized/`, zapisując warianty odpowiadające źródłom w `assets/img-src/`.
+
+### Testy i walidacja
+
+Skonfigurowane kontrole obejmują:
+
+| Polecenie | Zakres |
+| --- | --- |
+| `npm run lint` | Reguły ESLint dla JavaScript w `js/`. |
+| `npm run validate:html` | Walidacja dokumentów HTML w katalogu głównym. |
+| `npm run check:links:dev` | Lokalne linki i fragmenty; pomija HTTPS oraz odwołania do `.min.css` i `.min.js`. |
+| `npm run check:a11y` | pa11y-ci z HTML CodeSniffer i standardem WCAG2AA dla 10 adresów z `.pa11yci`; bez `contact.html`. |
+| `npm run check` | Lint, walidacja HTML, uruchomienie serwera, kontrola linków dev i pa11y-ci. |
+| `npm run check:server:prod` | Build i kontrola linków z uwzględnieniem bundli; pomija HTTPS. |
+| `npm run check:server:external` | Build i kontrola linków, także zewnętrznych. |
+
+Samodzielne kontrole linków i pa11y-ci wymagają działającego serwera. Warianty `check:server:prod` i `check:server:external` budują assety i testują katalog projektu, a nie paczkę `dist/`. Są to skonfigurowane workflow; ich wyników nie zweryfikowano podczas przygotowania tej dokumentacji.
+
+### Wdrożenie
+
+Repozytorium przygotowuje statyczną paczkę `dist/` oraz pliki `_headers` i `_redirects` w formacie Netlify. Reguły określają nagłówki, cache i odpowiedź 404. Ścieżki manifestu, Service Workera i metadanych zakładają publikację w katalogu głównym domeny.
+
+Formularz w `contact.html` ma oznaczenia Netlify Forms, ukryte pole `form-name`, honeypot i przekierowanie do `thank-you.html`. Obsługa zgłoszeń zależy od konfiguracji hostingu; lokalny serwer nie potwierdza ich dostawy. Strona kontaktowa zawiera również bezpośrednio osadzoną mapę Google Maps.
 
 ### Dostępność
-Wdrożone elementy dostępności obejmują m.in.:
-- skip linki do głównej treści i (na stronie menu) do nawigacji kategorii,
-- semantyczne landmarki (`header`, `main`, `nav`, `footer`) i rozbudowane etykiety ARIA,
-- mobilne menu z kontrolą fokusa (focus trap) i obsługą zamykania przez interakcję poza menu,
-- lightbox jako dialog modalny (`role="dialog"`, `aria-modal`, klawisze nawigacyjne, przywracanie fokusa),
-- komunikaty statusowe online/offline (`aria-live`) i walidację formularza z `aria-invalid`.
 
-W repozytorium znajduje się też skrypt audytu dostępności:
-```bash
-npm run check:a11y
-```
+Implementacja obejmuje semantyczne landmarki, skip linki, etykiety pól i widoczny fokus. Mobilna nawigacja, lightbox i okno informacji demo zarządzają fokusem oraz obsługują klawiaturę. Walidacja aktualizuje `aria-invalid`, a komunikaty stanu korzystają z regionów `aria-live`.
+
+Animacje uwzględniają `prefers-reduced-motion`; moduł reveal pokazuje treść od razu także przy braku `IntersectionObserver`. Te mechanizmy i konfiguracja pa11y-ci nie stanowią potwierdzenia zgodności całego serwisu z WCAG.
 
 ### SEO
-Projekt zawiera wdrożone elementy SEO:
-- meta `description`, `canonical`, `robots`,
-- metadane Open Graph i Twitter Cards,
-- dane strukturalne JSON-LD (`Organization`, `Restaurant`),
-- `robots.txt` i `sitemap.xml`.
+
+Strony zawierają tytuły, opisy, linki canonical, metadane Open Graph i Twitter Cards oraz JSON-LD, m.in. `Organization` i `Restaurant`. Repozytorium zawiera również `robots.txt` i `sitemap.xml`. Dane restauracji opisują fikcyjną markę demonstracyjną; obecność metadanych nie potwierdza indeksacji ani pozycji w wyszukiwarkach.
+
+### PWA i obsługa offline
+
+`manifest.webmanifest` definiuje widok `standalone`, `start_url` i `scope` ustawione na `/`, ikony 192/512 px, zrzuty ekranu oraz skróty do menu, galerii i kontaktu. Źródłem Service Workera jest ręcznie utrzymywany `sw.js`; build kopiuje go bez generowania.
+
+Worker używa cache `atelierno02-v1.3`. Wybrane strony i zasoby są precache'owane; nawigacja korzysta z sieci, następnie zapisanej strony lub `offline.html`. Pozostałe żądania GET korzystają najpierw z cache. Podczas aktywacji worker usuwa cache o innych nazwach.
+
+Obsługa offline zależy od udanej rejestracji, instalacji i dostępnych zasobów cache; żądania POST formularza nie są obsługiwane przez worker. Instalowalność i działanie offline nie zostały sprawdzone w przeglądarce. Ograniczenie paczki `dist/` opisano w sekcji builda.
 
 ### Wydajność
-W projekcie zaimplementowano m.in.:
-- minifikację CSS i bundling/minifikację JS,
-- responsywne obrazy (`picture`, `srcset`, AVIF/WebP/JPG),
-- preloading kluczowych fontów i obrazu hero,
-- pipeline optymalizacji obrazów oparty o Sharp,
-- cache statycznych zasobów przez Service Worker.
+
+Skonfigurowano minifikację CSS i bundling/minifikację JS. Obrazy korzystają z `picture`, `srcset`, AVIF/WebP, wymiarów i selektywnego `loading="lazy"`. Strona główna preloaduje fonty i obraz hero, a deklaracje fontów używają `font-display: swap`. Nie podano wyników Lighthouse ani Core Web Vitals.
+
+### Dane i trwałość stanu
+
+`data/menu.json` zawiera statyczne pozycje menu, kategorie, opisy, ceny, tagi i warianty obrazów. Stan wyszukiwania i filtrów jest utrzymywany w pamięci strony.
+
+`localStorage` przechowuje motyw pod `kp-theme` i potwierdzenie informacji demo pod `kp-demo-accepted`; odczytywany jest także starszy klucz `kp_demo_legal_ack`. Dostęp do storage jest zabezpieczony `try/catch`. Potwierdzenie demo nie jest zgodą na cookies. Cache Storage przechowuje zasoby witryny; projekt nie implementuje kont ani synchronizacji między urządzeniami.
 
 ### Utrzymanie projektu
-- Główna orkiestracja inicjalizacji znajduje się w `js/app/init.js` (inicjalizatory wspólne + per strona).
-- Funkcje domenowe są rozdzielone w `js/features/*` (menu, galeria, nawigacja, formularz, status sieci, motyw).
-- Dane menu są utrzymywane w `data/menu.json` i renderowane po stronie klienta.
-- Struktura CSS jest podzielona według odpowiedzialności (`base`/`layout`/`components`/`pages`) i scalana przez PostCSS.
-- Skrypty w `scripts/` kontrolują przygotowanie obrazów i artefaktu `dist/`.
 
-### Roadmap
-- Rozszerzenie konfiguracji ESLint tak, aby wykluczyć z lintowania wszystkie bundlowane pliki `.min.js`.
-- Dodanie automatycznego cache bustingu nazw plików assetów w procesie build.
-- Rozszerzenie testów dostępności (`pa11y-ci`) o pełny zestaw podstron i progi jakości.
-- Ujednolicenie deklaracji metadanych SEO pomiędzy wszystkimi podstronami.
-- Dodanie automatycznej walidacji `sitemap.xml` i `robots.txt` w pipeline `npm run check`.
+- Edytuj źródła CSS i moduły JS, następnie regeneruj bundle; nie poprawiaj ręcznie plików `.min.css` i `.min.js`.
+- Utrzymuj dane w `data/menu.json` oraz statyczne karty HTML pełniące rolę fallbacku.
+- Zmiany stron i publicznych zasobów zestawiaj z listami w `scripts/build-dist.js`, `sw.js`, `manifest.webmanifest` i `sitemap.xml`.
+- Po zmianach zasobów cache aktualizuj `CACHE_VERSION` w `sw.js`.
+- [CHANGELOG.md](CHANGELOG.md) jest zapisem znaczących ukończonych zmian; aktualizuj go, gdy zakres zadania na to pozwala, lub zgłoś potrzebę wpisu.
 
 ### Licencja
-Atelier No.02 jest projektem własnościowym, objętym [licencją KP_CODE](LICENSE). Materiały podmiotów trzecich podlegają własnym licencjom.
+
+Atelier No.02 jest projektem własnościowym objętym [Własnościową Licencją Projektu KP_CODE, wersja 1.0](LICENSE), z prawami zastrzeżonymi przez Kamila Króla — KP_Code. Publiczne udostępnienie nie oznacza licencji open source. Materiały podmiotów trzecich podlegają własnym warunkom.
+
+### Atrybucje
+
+Siedem ikon SVG w `assets/icons/svg-icon/` zawiera informacje o Font Awesome Free 7.1.0, m.in. [ikona GitHub](assets/icons/svg-icon/github-icon.svg). Zachowaj zawarte w plikach informacje o autorstwie i licencji.
 
 ## EN
 
 ### Project Overview
-Atelier is a multi-page static restaurant website built with HTML, CSS, and JavaScript (ES Modules). The project includes a homepage and dedicated pages for about, menu, gallery, contact, legal content, offline view, form confirmation, and a 404 page.
+
+Atelier No.02 is a multi-page demonstration website for a fictional fine dining restaurant, developed by KP_Code Digital Studio. Static HTML pages are enhanced with JavaScript modules and a shared CSS stylesheet.
+
+The project includes a homepage, restaurant information, menu, gallery, contact, legal pages, and offline, form confirmation and 404 views. It has no booking system or custom backend; the contact form is configured for Netlify Forms handling.
+
+### Live Version
+
+[Demo address stated in the repository](https://gastronomy-project-02.netlify.app/) comes from the terms and page metadata. Website availability and whether the deployed version matches the current code have not been confirmed.
 
 ### Key Features
-- Multi-page navigation with dropdown sections and a mobile drawer variant, including keyboard handling and focus management.
-- Light/dark theme toggle with preference persistence in `localStorage` and `meta[name="theme-color"]` synchronization.
-- Dynamic menu rendering from `data/menu.json` (featured section on the homepage and category sections on the menu page).
-- Menu filtering and searching by tags and text content.
-- Gallery lightbox (keyboard navigation, slide counter, fullscreen mode, touch gesture support).
-- Client-side contact form validation (field validation, error messages, submission status).
-- Online/offline network status banner with contextual offline notes on selected pages.
-- Service Worker with asset caching and `offline.html` fallback for navigation requests.
+
+- Menu rendered from `data/menu.json`, text search and tag filters; static cards remain available without JavaScript or when data fetching fails.
+- Gallery with grouped lightboxes, captions, counters, keyboard and gesture navigation, and fullscreen mode.
+- Navigation with dropdown sections and a mobile panel with focus handling.
+- Light and dark themes, system preference support and browser-local persistence of the user's choice.
+- Contact form with native POST, a honeypot, field validation and submission progress feedback. JavaScript does not simulate successful delivery; actual Netlify receipt has not been checked.
+- Online/offline notices and a dismissible notice explaining the demonstration scope.
 
 ### Tech Stack
-**Runtime (frontend):**
-- HTML5 (multi-page static structure)
-- CSS (modular architecture: `base`, `layout`, `components`, `pages`)
-- JavaScript (ES Modules)
-- PWA surface: `manifest.webmanifest` + `sw.js`
 
-**Tooling and build:**
-- npm scripts
-- PostCSS (`postcss-import`, `cssnano`) for CSS bundling/minification
-- esbuild for JavaScript bundling/minification
-- Sharp + fast-glob (image optimization pipeline)
-- ESLint
-- html-validate
-- linkinator
-- pa11y-ci
-- http-server + start-server-and-test + cross-env
+- **Interface:** HTML5, modular CSS, Vanilla JavaScript with ES Modules; local WOFF2 fonts.
+- **Build:** Node.js and npm, PostCSS with `postcss-import` and `cssnano`, esbuild.
+- **Images:** Sharp and `fast-glob` for AVIF, WebP and JPEG/PNG generation and SVG copying.
+- **Validation and development:** ESLint, html-validate, linkinator, pa11y-ci, http-server, start-server-and-test and cross-env.
+
+### Architecture
+
+Each page is a separate HTML document. Shared header and footer markup is stored in individual pages; the build does not generate it from templates. `js/script.js` runs `js/app/init.js`, which separates common initializers and page features using `data-page`. `js/core.js` is a smaller entry point used by the 404 page.
+
+`css/style.css` imports the `base`, `layout`, `components` and `pages` layers. PostCSS and esbuild produce bundled `.min.css` and `.min.js` files referenced by HTML. The separate `js/bootstrap.js` synchronizes the theme color and registers the Service Worker.
 
 ### Project Structure
+
 ```text
-pr-02-atelier/
-├── *.html                     # Site pages (home, subpages, legal, offline, 404)
-├── css/
-│   ├── base/                  # reset, typography, tokens
-│   ├── layout/                # grid, header, footer, layout
-│   ├── components/            # navigation, cards, forms, lightbox, states
-│   ├── pages/                 # page-specific styles
-│   ├── style.css              # source CSS entry
-│   └── style.min.css          # minified CSS bundle
-├── js/
-│   ├── app/init.js            # common/page initialization orchestration
-│   ├── core/                  # DOM utilities and scrollspy
-│   ├── features/              # feature modules (menu, gallery, form, nav, theme...)
-│   ├── script.js              # main app entry point
-│   ├── core.js                # shared script entry point
-│   ├── script.min.js          # minified app bundle
-│   └── core.min.js            # minified core bundle
-├── data/menu.json             # dynamically rendered menu data
+./
+├── index.html
+├── about.html
+├── menu.html
+├── gallery.html
+├── contact.html
+├── cookies.html
+├── polityka-prywatnosci.html
+├── regulamin.html
+├── offline.html
+├── thank-you.html
+├── 404.html
+├── css/                    # layer sources and generated style.min.css
+├── js/                     # entry points, app/, core/, features/ and bundles
+├── data/menu.json
 ├── assets/
-│   ├── img-src/               # source images
-│   ├── img-optimized/         # generated variants (avif/webp/jpg/png/svg)
-│   ├── icons/                 # favicons, shortcuts, SVG icons, manifest screenshots
-│   ├── fonts/                 # local fonts
-│   └── docs/menu.svg          # downloadable menu asset
+│   ├── img-src/            # image sources
+│   ├── img-optimized/      # generated variants
+│   ├── fonts/
+│   ├── icons/
+│   └── docs/menu.svg
 ├── scripts/
-│   ├── build-dist.js          # dist directory build script
-│   └── images/build-images.js # optimized image generation
-├── sw.js
+│   ├── build-dist.js
+│   └── images/build-images.js
 ├── manifest.webmanifest
+├── sw.js
 ├── robots.txt
 ├── sitemap.xml
 ├── _headers
-└── _redirects
+├── _redirects
+├── package.json
+├── package-lock.json
+├── CHANGELOG.md
+└── LICENSE
 ```
 
-### Setup and Installation
+### Installation
+
+Node.js and npm are required. The repository includes `package-lock.json`; project configuration does not pin a single Node.js version.
+
 ```bash
-npm install
+npm ci
 ```
 
 ### Local Development
-```bash
-npm run dev:server
-```
-The server runs at `http://127.0.0.1:5173`.
 
-Available quality checks:
-```bash
-npm run lint
-npm run validate:html
-npm run check
-```
+Pages use production bundles, so rebuild them after changing CSS or JS sources. The server does not build automatically or watch for changes.
 
-### Production Build
 ```bash
 npm run build
+npm run dev:server
+```
+
+Open the website at `http://127.0.0.1:5173`. The server disables HTTP caching. Service Worker registration is deliberately skipped on `localhost`, `127.0.0.1` and `::1`.
+
+### Production Build
+
+```bash
 npm run build:dist
 ```
-- `npm run build` generates minified CSS and JS outputs.
-- `npm run build:dist` creates the `dist/` publication artifact with pages, assets, and runtime config.
 
-Additional image pipeline command:
+This command first builds `css/style.min.css`, `js/script.min.js` and `js/core.min.js`, then replaces `dist/` with a package of selected pages, assets and hosting configuration. It does not run image generation or copy `assets/img-src/` sources. Bundles and generated images are tracked in Git; `dist/` is ignored.
+
+The current copy list in `scripts/build-dist.js` omits `js/bootstrap.js`, which is referenced by HTML pages. The `dist/` package therefore lacks this initialization script, including Service Worker registration.
+
+A separate workflow is available after changing image sources:
+
 ```bash
 npm run images:build
 ```
-This rebuilds `assets/img-optimized` from `assets/img-src`.
+
+The generator replaces the contents of `assets/img-optimized/`, writing variants corresponding to sources in `assets/img-src/`.
+
+### Testing and Validation
+
+Configured checks include:
+
+| Command | Scope |
+| --- | --- |
+| `npm run lint` | ESLint rules for JavaScript in `js/`. |
+| `npm run validate:html` | Validation of root HTML documents. |
+| `npm run check:links:dev` | Local links and fragments; skips HTTPS and `.min.css` and `.min.js` references. |
+| `npm run check:a11y` | pa11y-ci with HTML CodeSniffer and the WCAG2AA standard for 10 addresses in `.pa11yci`; excludes `contact.html`. |
+| `npm run check` | Lint, HTML validation, server startup, dev link checks and pa11y-ci. |
+| `npm run check:server:prod` | Build and link checks including bundles; skips HTTPS. |
+| `npm run check:server:external` | Build and link checks, including external links. |
+
+Standalone link checks and pa11y-ci require a running server. `check:server:prod` and `check:server:external` build assets and test the project directory rather than the `dist/` package. These are configured workflows; their results were not verified while preparing this documentation.
 
 ### Deployment
-The repository includes static-hosting-oriented deployment configuration with:
-- `_redirects` (including `404.html` handling),
-- `_headers` (security and caching headers),
-- `build-dist.js` for preparing the `dist/` deployment artifact.
+
+The repository prepares a static `dist/` package and `_headers` and `_redirects` files in Netlify format. Rules define headers, caching and the 404 response. Manifest, Service Worker and metadata paths assume deployment at the domain root.
+
+The form in `contact.html` has Netlify Forms attributes, a hidden `form-name` field, a honeypot and a redirect to `thank-you.html`. Submission handling depends on hosting configuration; the local server does not confirm delivery. The contact page also contains a directly embedded Google Maps iframe.
 
 ### Accessibility
-Implemented accessibility elements include:
-- skip links to main content and (on the menu page) category navigation,
-- semantic landmarks (`header`, `main`, `nav`, `footer`) with extensive ARIA labeling,
-- mobile navigation with focus trapping and outside-interaction close handling,
-- lightbox modal dialog (`role="dialog"`, `aria-modal`, keyboard shortcuts, focus restoration),
-- online/offline live status messaging (`aria-live`) and form validation with `aria-invalid`.
 
-The repository also includes an accessibility audit script:
-```bash
-npm run check:a11y
-```
+The implementation includes semantic landmarks, skip links, field labels and visible focus states. Mobile navigation, lightboxes and the demo notice dialog manage focus and keyboard interaction. Validation updates `aria-invalid`, and status messages use `aria-live` regions.
+
+Animations account for `prefers-reduced-motion`; the reveal module also exposes content immediately when `IntersectionObserver` is unavailable. These mechanisms and the pa11y-ci configuration do not confirm WCAG compliance across the website.
 
 ### SEO
-The project includes implemented SEO elements:
-- `description`, `canonical`, and `robots` meta tags,
-- Open Graph and Twitter Card metadata,
-- JSON-LD structured data (`Organization`, `Restaurant`),
-- `robots.txt` and `sitemap.xml`.
+
+Pages include titles, descriptions, canonical links, Open Graph and Twitter Cards metadata, and JSON-LD such as `Organization` and `Restaurant`. The repository also contains `robots.txt` and `sitemap.xml`. Restaurant data describes a fictional demonstration brand; metadata does not confirm indexing or search rankings.
+
+### PWA and Offline Support
+
+`manifest.webmanifest` defines `standalone` display, `start_url` and `scope` set to `/`, 192/512 px icons, screenshots and menu, gallery and contact shortcuts. The Service Worker source is the manually maintained `sw.js`; the build copies it without generation.
+
+The worker uses the `atelierno02-v1.3` cache. Selected pages and assets are precached; navigation tries the network, then a saved page or `offline.html`. Other GET requests try the cache first. During activation, the worker removes caches with other names.
+
+Offline support depends on successful registration, installation and available cached resources; form POST requests are not handled by the worker. Installability and offline behavior have not been checked in a browser. The `dist/` package limitation is described in the build section.
 
 ### Performance
-Detected performance-oriented implementation includes:
-- CSS minification and JS bundling/minification,
-- responsive images (`picture`, `srcset`, AVIF/WebP/JPG),
-- preload hints for key fonts and hero image,
-- Sharp-based image optimization pipeline,
-- Service Worker caching for static assets.
+
+CSS minification and JS bundling/minification are configured. Images use `picture`, `srcset`, AVIF/WebP, dimensions and selective `loading="lazy"`. The homepage preloads fonts and the hero image, and font declarations use `font-display: swap`. No Lighthouse or Core Web Vitals results are reported.
+
+### Data and State Persistence
+
+`data/menu.json` contains static menu items, categories, descriptions, prices, tags and image variants. Search and filter state is kept in page memory.
+
+`localStorage` stores the theme under `kp-theme` and demo acknowledgement under `kp-demo-accepted`; the legacy `kp_demo_legal_ack` key is also read. Storage access is guarded with `try/catch`. Demo acknowledgement is not cookie consent. Cache Storage holds website resources; the project does not implement accounts or synchronization across devices.
 
 ### Project Maintenance
-- Main initialization orchestration is in `js/app/init.js` (common + per-page initializers).
-- Domain functionality is separated in `js/features/*` (menu, gallery, navigation, form, network state, theme).
-- Menu content is maintained in `data/menu.json` and rendered client-side.
-- CSS is organized by responsibility (`base`/`layout`/`components`/`pages`) and composed via PostCSS.
-- `scripts/` controls image generation and `dist/` artifact assembly.
 
-### Roadmap
-- Extend ESLint configuration to exclude all bundled `.min.js` files from linting.
-- Add automated asset filename cache busting in the build process.
-- Expand accessibility checks (`pa11y-ci`) to cover the full page set with quality thresholds.
-- Standardize SEO metadata declarations across all pages.
-- Add automated `sitemap.xml` and `robots.txt` validation in the `npm run check` workflow.
+- Edit CSS sources and JS modules, then regenerate bundles; do not manually patch `.min.css` and `.min.js` files.
+- Maintain `data/menu.json` and the static HTML cards used as fallback content.
+- Check page and public asset changes against the lists in `scripts/build-dist.js`, `sw.js`, `manifest.webmanifest` and `sitemap.xml`.
+- Update `CACHE_VERSION` in `sw.js` when cached resources change.
+- [CHANGELOG.md](CHANGELOG.md) records significant completed changes; update it when task scope permits, or report that an entry is needed.
 
 ### License
-Atelier No.02 is a proprietary project governed by the [KP_CODE license](LICENSE). Third-party materials remain subject to their own licenses.
+
+Atelier No.02 is a proprietary project governed by the [KP_CODE Proprietary Project License, version 1.0](LICENSE), with rights reserved by Kamil Król — KP_Code. Public availability does not grant an open source license. Third-party materials remain subject to their own terms.
+
+### Attributions
+
+Seven SVG icons in `assets/icons/svg-icon/` contain Font Awesome Free 7.1.0 notices, including the [GitHub icon](assets/icons/svg-icon/github-icon.svg). Preserve the attribution and license information included in these files.
