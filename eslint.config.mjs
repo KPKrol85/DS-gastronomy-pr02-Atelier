@@ -1,7 +1,6 @@
 export default [
   {
     files: ['js/**/*.js'],
-    ignores: ['js/script.min.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',

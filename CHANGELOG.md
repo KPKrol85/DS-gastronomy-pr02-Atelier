@@ -31,6 +31,11 @@ All significant changes to this project are documented in this file.
 
 ### Build and Tooling
 
+- Replaced QA server process-tree cleanup with the existing http-server API in a small Node runner, avoiding missing WMIC on Windows and rejecting occupied QA ports.
+
+- Separated source development from production output: source HTML uses ordinary assets; a clean build writes minified CSS/JS only into `dist/` and transforms copied HTML/Service Worker references.
+- Added explicit dev/build/preview/qa/qa:dist workflows, production integrity checks and dist-based link/accessibility QA; restored the required bootstrap script in the deployment package and removed tracked source-tree bundles and obsolete command aliases.
+
 - Added PostCSS and esbuild asset builds, a local static development server and explicit `dist/` packaging of pages, selected public assets and static-hosting configuration.
 - Added a Sharp image-generation workflow from `assets/img-src/` to `assets/img-optimized/`, producing AVIF, WebP and JPEG or PNG variants.
 

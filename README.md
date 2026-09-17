@@ -26,13 +26,13 @@ Projekt obejmuje stronę główną, informacje o restauracji, menu, galerię, ko
 - **Interfejs:** HTML5, modułowy CSS, Vanilla JavaScript z ES Modules; lokalne fonty WOFF2.
 - **Build:** Node.js i npm, PostCSS z `postcss-import` i `cssnano`, esbuild.
 - **Obrazy:** Sharp i `fast-glob` do generowania wariantów AVIF, WebP i JPEG/PNG oraz kopiowania SVG.
-- **Walidacja i development:** ESLint, html-validate, linkinator, pa11y-ci, http-server, start-server-and-test i cross-env.
+- **Walidacja i development:** ESLint, html-validate, linkinator, pa11y-ci, http-server i lokalny runner Node.js.
 
 ### Architektura
 
-Każda podstrona jest osobnym dokumentem HTML. Wspólny nagłówek i stopka są zapisane w poszczególnych stronach; build nie generuje ich z szablonów. `js/script.js` uruchamia `js/app/init.js`, który rozdziela inicjalizatory wspólne i funkcje stron według `data-page`. `js/core.js` jest mniejszym wejściem używanym przez stronę 404.
+Każda podstrona jest osobnym dokumentem HTML. Wspólny nagłówek i stopka są zapisane w poszczególnych stronach; build nie generuje ich z szablonów. `js/script.js` uruchamia `js/app/init.js`, który rozdziela inicjalizatory wspólne i funkcje stron według `data-page`. `js/core.js` jest mniejszym wejściem używanym przez strony prawne i stronę 404.
 
-`css/style.css` importuje warstwy `base`, `layout`, `components` i `pages`. PostCSS oraz esbuild tworzą bundlowane pliki `.min.css` i `.min.js`, do których odwołuje się HTML. Osobny `js/bootstrap.js` synchronizuje kolor motywu i rejestruje Service Workera.
+`css/style.css` importuje warstwy `base`, `layout`, `components` i `pages`. Źródłowy HTML ładuje zwykły CSS i wejścia ES Modules. PostCSS oraz esbuild zapisują bundle `.min.css` i `.min.js` wyłącznie w `dist/`; build przekształca odwołania w kopiach HTML. Osobny `js/bootstrap.js` synchronizuje kolor motywu i rejestruje Service Workera.
 
 ### Struktura projektu
 
@@ -49,8 +49,8 @@ Każda podstrona jest osobnym dokumentem HTML. Wspólny nagłówek i stopka są 
 ├── offline.html
 ├── thank-you.html
 ├── 404.html
-├── css/                    # źródła warstw i wygenerowany style.min.css
-├── js/                     # wejścia, app/, core/, features/ i bundle
+├── css/                    # wyłącznie źródła CSS
+├── js/                     # źródła: wejścia, bootstrap, app/, core/, features/
 ├── data/menu.json
 ├── assets/
 │   ├── img-src/            # źródła obrazów
@@ -59,8 +59,13 @@ Każda podstrona jest osobnym dokumentem HTML. Wspólny nagłówek i stopka są 
 │   ├── icons/
 │   └── docs/menu.svg
 ├── scripts/
+│   ├── build-config.js
 │   ├── build-dist.js
+│   ├── validate-dist.js
+│   ├── qa-links.js
+│   ├── qa-server.js
 │   └── images/build-images.js
+├── dist/                   # generated production package (ignored)
 ├── manifest.webmanifest
 ├── sw.js
 ├── robots.txt
@@ -83,11 +88,10 @@ npm ci
 
 ### Development lokalny
 
-Strony korzystają z bundli produkcyjnych, dlatego po zmianie źródeł CSS lub JS należy je przebudować. Serwer nie wykonuje automatycznego builda ani nie obserwuje zmian.
+Serwer udostępnia katalog repozytorium i zwykłe zasoby źródłowe; build produkcyjny nie jest potrzebny. Po zmianach odśwież stronę. Serwer nie obserwuje plików ani nie generuje minifikowanych zasobów.
 
 ```bash
-npm run build
-npm run dev:server
+npm run dev
 ```
 
 Serwis można otworzyć pod `http://127.0.0.1:5173`. Serwer wyłącza cache HTTP. Rejestracja Service Workera jest celowo pomijana na `localhost`, `127.0.0.1` i `::1`.
@@ -95,12 +99,13 @@ Serwis można otworzyć pod `http://127.0.0.1:5173`. Serwer wyłącza cache HTTP
 ### Build produkcyjny
 
 ```bash
-npm run build:dist
+npm run build
+npm run preview
 ```
 
-Polecenie najpierw buduje `css/style.min.css`, `js/script.min.js` i `js/core.min.js`, a następnie zastępuje katalog `dist/` paczką wybranych stron, zasobów i konfiguracji hostingu. Nie uruchamia generatora obrazów i nie kopiuje źródeł `assets/img-src/`. Bundle i obrazy wynikowe są śledzone w Git; `dist/` jest ignorowany.
+Build usuwa poprzedni `dist/`, przygotowuje 11 stron, zasoby runtime i konfigurację hostingu, przekształca odwołania HTML/Service Workera, buduje CSS oraz oba wejścia JS bezpośrednio w `dist/` i sprawdza kompletność wyniku. Preview udostępnia wyłącznie `dist/` na porcie 5173; zatrzymaj dev przed preview. Build nie generuje obrazów ani nie kopiuje `assets/img-src/`. Zoptymalizowane obrazy pozostają śledzone w Git; minifikowane CSS/JS i cały `dist/` są ignorowanym wynikiem builda.
 
-Obecna lista kopiowania w `scripts/build-dist.js` pomija `js/bootstrap.js`, do którego odwołują się strony HTML. Paczka `dist/` nie zawiera więc tego skryptu inicjalizacyjnego, w tym rejestracji Service Workera.
+Paczka zawiera `css/style.min.css`, `js/script.min.js`, `js/core.min.js` i niezmieniony skrypt runtime `js/bootstrap.js`. Nie zawiera modułów źródłowych CSS/JS ani narzędzi developerskich. Root HTML pozostaje kanoniczny; osobne ręcznie edytowane wersje produkcyjne nie istnieją.
 
 Po zmianie źródeł obrazów dostępny jest osobny workflow:
 
@@ -116,15 +121,13 @@ Skonfigurowane kontrole obejmują:
 
 | Polecenie | Zakres |
 | --- | --- |
-| `npm run lint` | Reguły ESLint dla JavaScript w `js/`. |
-| `npm run validate:html` | Walidacja dokumentów HTML w katalogu głównym. |
-| `npm run check:links:dev` | Lokalne linki i fragmenty; pomija HTTPS oraz odwołania do `.min.css` i `.min.js`. |
-| `npm run check:a11y` | pa11y-ci z HTML CodeSniffer i standardem WCAG2AA dla 10 adresów z `.pa11yci`; bez `contact.html`. |
-| `npm run check` | Lint, walidacja HTML, uruchomienie serwera, kontrola linków dev i pa11y-ci. |
-| `npm run check:server:prod` | Build i kontrola linków z uwzględnieniem bundli; pomija HTTPS. |
-| `npm run check:server:external` | Build i kontrola linków, także zewnętrznych. |
+| `npm run qa` | ESLint, kontrakt źródeł, HTML, uruchomienie dev, lokalne linki/zasoby/fragmenty i pa11y-ci. |
+| `npm run qa:dist` | Integralność istniejącego `dist/`, produkcyjny HTML, uruchomienie preview, lokalne linki/zasoby/fragmenty i pa11y-ci. Najpierw uruchom build. |
+| `npm run qa:links` | Wszystkie 11 stron i ich lokalne zasoby, w tym importy CSS i fonty; wymaga działającego dev albo preview. |
+| `npm run qa:a11y` | Dotychczasowe 10 adresów z `.pa11yci`, HTML CodeSniffer, WCAG2AA; bez `contact.html`. |
+| `npm run qa:links:external` | Opcjonalna kontrola także zewnętrznych linków na działającym serwerze. |
 
-Samodzielne kontrole linków i pa11y-ci wymagają działającego serwera. Warianty `check:server:prod` i `check:server:external` budują assety i testują katalog projektu, a nie paczkę `dist/`. Są to skonfigurowane workflow; ich wyników nie zweryfikowano podczas przygotowania tej dokumentacji.
+QA źródeł nie buduje produkcji; QA dist sprawdza przygotowaną paczkę i nie przebudowuje jej. Kontrole lokalne pomijają zewnętrzne adresy, a nie bundle produkcyjne. Runner `scripts/qa-server.js` używa tego samego http-server i właściwego katalogu; zamyka serwer także po błędzie. Nie wymaga Windows WMIC. Port 5173 musi być wolny. Automatyczny audyt dostępności nie potwierdza pełnej zgodności WCAG.
 
 ### Wdrożenie
 
@@ -144,11 +147,11 @@ Strony zawierają tytuły, opisy, linki canonical, metadane Open Graph i Twitter
 
 ### PWA i obsługa offline
 
-`manifest.webmanifest` definiuje widok `standalone`, `start_url` i `scope` ustawione na `/`, ikony 192/512 px, zrzuty ekranu oraz skróty do menu, galerii i kontaktu. Źródłem Service Workera jest ręcznie utrzymywany `sw.js`; build kopiuje go bez generowania.
+`manifest.webmanifest` definiuje widok `standalone`, `start_url` i `scope` ustawione na `/`, ikony 192/512 px, zrzuty ekranu oraz skróty do menu, galerii i kontaktu. Źródłem Service Workera jest ręcznie utrzymywany `sw.js` z odwołaniami źródłowymi; build przekształca wyłącznie ścieżki CSS/JS w jego kopii w `dist/`. Precache obejmuje oba bundle oraz bootstrap.
 
 Worker używa cache `atelierno02-v1.3`. Wybrane strony i zasoby są precache'owane; nawigacja korzysta z sieci, następnie zapisanej strony lub `offline.html`. Pozostałe żądania GET korzystają najpierw z cache. Podczas aktywacji worker usuwa cache o innych nazwach.
 
-Obsługa offline zależy od udanej rejestracji, instalacji i dostępnych zasobów cache; żądania POST formularza nie są obsługiwane przez worker. Instalowalność i działanie offline nie zostały sprawdzone w przeglądarce. Ograniczenie paczki `dist/` opisano w sekcji builda.
+Obsługa offline zależy od udanej rejestracji, instalacji i dostępnych zasobów cache; żądania POST formularza nie są obsługiwane przez worker. W izolowanym lokalnym Chrome sprawdzono ręczną rejestrację produkcyjnego workera, wszystkie 19 wpisów precache, działanie strony prawnej i motywu offline oraz fallback nawigacji. Instalowalności PWA ani wdrożonej witryny nie zweryfikowano.
 
 ### Wydajność
 
@@ -162,9 +165,9 @@ Skonfigurowano minifikację CSS i bundling/minifikację JS. Obrazy korzystają z
 
 ### Utrzymanie projektu
 
-- Edytuj źródła CSS i moduły JS, następnie regeneruj bundle; nie poprawiaj ręcznie plików `.min.css` i `.min.js`.
+- Edytuj źródła CSS i moduły JS; przed preview lub wydaniem uruchom `npm run build`; nie poprawiaj ręcznie plików `.min.css` i `.min.js`.
 - Utrzymuj dane w `data/menu.json` oraz statyczne karty HTML pełniące rolę fallbacku.
-- Zmiany stron i publicznych zasobów zestawiaj z listami w `scripts/build-dist.js`, `sw.js`, `manifest.webmanifest` i `sitemap.xml`.
+- Zmiany stron i publicznych zasobów zestawiaj z listami w `scripts/build-config.js`, `sw.js`, `manifest.webmanifest` i `sitemap.xml`.
 - Po zmianach zasobów cache aktualizuj `CACHE_VERSION` w `sw.js`.
 - [CHANGELOG.md](CHANGELOG.md) jest zapisem znaczących ukończonych zmian; aktualizuj go, gdy zakres zadania na to pozwala, lub zgłoś potrzebę wpisu.
 
@@ -202,13 +205,13 @@ The project includes a homepage, restaurant information, menu, gallery, contact,
 - **Interface:** HTML5, modular CSS, Vanilla JavaScript with ES Modules; local WOFF2 fonts.
 - **Build:** Node.js and npm, PostCSS with `postcss-import` and `cssnano`, esbuild.
 - **Images:** Sharp and `fast-glob` for AVIF, WebP and JPEG/PNG generation and SVG copying.
-- **Validation and development:** ESLint, html-validate, linkinator, pa11y-ci, http-server, start-server-and-test and cross-env.
+- **Validation and development:** ESLint, html-validate, linkinator, pa11y-ci, http-server and a local Node.js runner.
 
 ### Architecture
 
-Each page is a separate HTML document. Shared header and footer markup is stored in individual pages; the build does not generate it from templates. `js/script.js` runs `js/app/init.js`, which separates common initializers and page features using `data-page`. `js/core.js` is a smaller entry point used by the 404 page.
+Each page is a separate HTML document. Shared header and footer markup is stored in individual pages; the build does not generate it from templates. `js/script.js` runs `js/app/init.js`, which separates common initializers and page features using `data-page`. `js/core.js` is a smaller entry point used by legal pages and the 404 page.
 
-`css/style.css` imports the `base`, `layout`, `components` and `pages` layers. PostCSS and esbuild produce bundled `.min.css` and `.min.js` files referenced by HTML. The separate `js/bootstrap.js` synchronizes the theme color and registers the Service Worker.
+`css/style.css` imports the `base`, `layout`, `components` and `pages` layers. Source HTML loads ordinary CSS and ES Module entry points. PostCSS and esbuild write `.min.css` and `.min.js` bundles only into `dist/`; the build transforms references in copied HTML. The separate `js/bootstrap.js` synchronizes the theme color and registers the Service Worker.
 
 ### Project Structure
 
@@ -225,8 +228,8 @@ Each page is a separate HTML document. Shared header and footer markup is stored
 ├── offline.html
 ├── thank-you.html
 ├── 404.html
-├── css/                    # layer sources and generated style.min.css
-├── js/                     # entry points, app/, core/, features/ and bundles
+├── css/                    # CSS sources only
+├── js/                     # sources: entries, bootstrap, app/, core/, features/
 ├── data/menu.json
 ├── assets/
 │   ├── img-src/            # image sources
@@ -235,8 +238,13 @@ Each page is a separate HTML document. Shared header and footer markup is stored
 │   ├── icons/
 │   └── docs/menu.svg
 ├── scripts/
+│   ├── build-config.js
 │   ├── build-dist.js
+│   ├── validate-dist.js
+│   ├── qa-links.js
+│   ├── qa-server.js
 │   └── images/build-images.js
+├── dist/                   # generated production package (ignored)
 ├── manifest.webmanifest
 ├── sw.js
 ├── robots.txt
@@ -259,11 +267,10 @@ npm ci
 
 ### Local Development
 
-Pages use production bundles, so rebuild them after changing CSS or JS sources. The server does not build automatically or watch for changes.
+The server serves the repository and ordinary source assets; no production build is needed. Reload the page after changes. The server does not watch files or generate minified assets.
 
 ```bash
-npm run build
-npm run dev:server
+npm run dev
 ```
 
 Open the website at `http://127.0.0.1:5173`. The server disables HTTP caching. Service Worker registration is deliberately skipped on `localhost`, `127.0.0.1` and `::1`.
@@ -271,12 +278,13 @@ Open the website at `http://127.0.0.1:5173`. The server disables HTTP caching. S
 ### Production Build
 
 ```bash
-npm run build:dist
+npm run build
+npm run preview
 ```
 
-This command first builds `css/style.min.css`, `js/script.min.js` and `js/core.min.js`, then replaces `dist/` with a package of selected pages, assets and hosting configuration. It does not run image generation or copy `assets/img-src/` sources. Bundles and generated images are tracked in Git; `dist/` is ignored.
+Build removes the previous `dist/`, prepares 11 pages, runtime assets and hosting configuration, transforms HTML/Service Worker references, builds CSS and both JS entries directly into `dist/`, and checks output integrity. Preview serves only `dist/` on port 5173; stop dev before preview. Build does not generate images or copy `assets/img-src/`. Optimized images remain tracked in Git; minified CSS/JS and the entire `dist/` are ignored build output.
 
-The current copy list in `scripts/build-dist.js` omits `js/bootstrap.js`, which is referenced by HTML pages. The `dist/` package therefore lacks this initialization script, including Service Worker registration.
+The package includes `css/style.min.css`, `js/script.min.js`, `js/core.min.js` and the unchanged runtime script `js/bootstrap.js`. It excludes CSS/JS source modules and development tools. Root HTML remains canonical; no separate manually edited production pages are maintained.
 
 A separate workflow is available after changing image sources:
 
@@ -292,15 +300,13 @@ Configured checks include:
 
 | Command | Scope |
 | --- | --- |
-| `npm run lint` | ESLint rules for JavaScript in `js/`. |
-| `npm run validate:html` | Validation of root HTML documents. |
-| `npm run check:links:dev` | Local links and fragments; skips HTTPS and `.min.css` and `.min.js` references. |
-| `npm run check:a11y` | pa11y-ci with HTML CodeSniffer and the WCAG2AA standard for 10 addresses in `.pa11yci`; excludes `contact.html`. |
-| `npm run check` | Lint, HTML validation, server startup, dev link checks and pa11y-ci. |
-| `npm run check:server:prod` | Build and link checks including bundles; skips HTTPS. |
-| `npm run check:server:external` | Build and link checks, including external links. |
+| `npm run qa` | ESLint, source contract, HTML, dev startup, local links/assets/fragments and pa11y-ci. |
+| `npm run qa:dist` | Integrity of existing `dist/`, production HTML, preview startup, local links/assets/fragments and pa11y-ci. Run build first. |
+| `npm run qa:links` | All 11 pages and local resources, including CSS imports and fonts; requires a running dev or preview server. |
+| `npm run qa:a11y` | Existing 10 addresses in `.pa11yci`, HTML CodeSniffer, WCAG2AA; excludes `contact.html`. |
+| `npm run qa:links:external` | Optional external link checking against a running server. |
 
-Standalone link checks and pa11y-ci require a running server. `check:server:prod` and `check:server:external` build assets and test the project directory rather than the `dist/` package. These are configured workflows; their results were not verified while preparing this documentation.
+Source QA does not build production; dist QA checks the prepared package without rebuilding it. Local checks skip external addresses, not production bundles. The `scripts/qa-server.js` runner uses the same http-server and the appropriate directory; it closes the server even after failures. It does not require Windows WMIC. Port 5173 must be free. Automated accessibility auditing does not establish full WCAG compliance.
 
 ### Deployment
 
@@ -320,11 +326,11 @@ Pages include titles, descriptions, canonical links, Open Graph and Twitter Card
 
 ### PWA and Offline Support
 
-`manifest.webmanifest` defines `standalone` display, `start_url` and `scope` set to `/`, 192/512 px icons, screenshots and menu, gallery and contact shortcuts. The Service Worker source is the manually maintained `sw.js`; the build copies it without generation.
+`manifest.webmanifest` defines `standalone` display, `start_url` and `scope` set to `/`, 192/512 px icons, screenshots and menu, gallery and contact shortcuts. The Service Worker source is the manually maintained `sw.js` with source references; the build transforms only CSS/JS paths in its `dist/` copy. Precache includes both bundles and bootstrap.
 
 The worker uses the `atelierno02-v1.3` cache. Selected pages and assets are precached; navigation tries the network, then a saved page or `offline.html`. Other GET requests try the cache first. During activation, the worker removes caches with other names.
 
-Offline support depends on successful registration, installation and available cached resources; form POST requests are not handled by the worker. Installability and offline behavior have not been checked in a browser. The `dist/` package limitation is described in the build section.
+Offline support depends on successful registration, installation and available cached resources; form POST requests are not handled by the worker. An isolated local Chrome test verified manual production worker registration, all 19 precache entries, offline legal-page and theme behavior, and the navigation fallback. PWA installability and the deployed website were not verified.
 
 ### Performance
 
@@ -338,9 +344,9 @@ CSS minification and JS bundling/minification are configured. Images use `pictur
 
 ### Project Maintenance
 
-- Edit CSS sources and JS modules, then regenerate bundles; do not manually patch `.min.css` and `.min.js` files.
+- Edit CSS sources and JS modules; run `npm run build` before preview or release; do not manually patch `.min.css` and `.min.js` files.
 - Maintain `data/menu.json` and the static HTML cards used as fallback content.
-- Check page and public asset changes against the lists in `scripts/build-dist.js`, `sw.js`, `manifest.webmanifest` and `sitemap.xml`.
+- Check page and public asset changes against the lists in `scripts/build-config.js`, `sw.js`, `manifest.webmanifest` and `sitemap.xml`.
 - Update `CACHE_VERSION` in `sw.js` when cached resources change.
 - [CHANGELOG.md](CHANGELOG.md) records significant completed changes; update it when task scope permits, or report that an entry is needed.
 

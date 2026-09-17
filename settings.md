@@ -1,73 +1,112 @@
 # settings.md
 
+## Publiczny workflow
+
+`npm run dev` → `npm run qa` → `npm run build` → `npm run preview` → `npm run qa:dist`.
+
+Dev i preview używają portu 5173; uruchamiaj je osobno. Przed QA zatrzymaj ręczny serwer, aby runner QA mógł uruchomić właściwy serwer. QA źródeł nie generuje produkcji, QA dist nie przebudowuje paczki.
+
 ## package.json scripts
 
-### `build:css`
-- command: `postcss css/style.css -o css/style.min.css --no-map`
-- what it does: kompiluje i minifikuje główny arkusz CSS do `css/style.min.css`.
-- when to use: przed wydaniem produkcyjnym lub testem wariantu prod.
+### `dev`
 
-### `build:js`
-- command: `esbuild js/script.js --bundle --minify --outfile=js/script.min.js --target=es2018`
-- what it does: bundluje i minifikuje JS do `js/script.min.js`.
-- when to use: przed wydaniem produkcyjnym lub testem wariantu prod.
+- command: `http-server . -a 127.0.0.1 -p 5173 -c-1`
+- what it does: Serwuje źródła repozytorium na 127.0.0.1:5173 bez cache i bez builda.
 
 ### `build`
-- command: `npm run build:css && npm run build:js`
-- what it does: uruchamia pełny build assetów produkcyjnych CSS/JS.
-- when to use: przed deploymentem i przed `check:server:prod`.
+
+- command: `npm run build:static && npm run build:css && npm run build:js && npm run qa:dist:integrity`
+- what it does: Czyści i przygotowuje dist, przekształca referencje HTML/SW, buduje CSS/JS w dist i sprawdza kompletność.
+
+### `preview`
+
+- command: `http-server dist -a 127.0.0.1 -p 5173 -c-1`
+- what it does: Serwuje wyłącznie istniejący dist na 127.0.0.1:5173 bez cache. Najpierw build; zatrzymaj dev.
+
+### `qa`
+
+- command: `npm run lint && npm run qa:source && npm run qa:html && npm run qa:server`
+- what it does: Waliduje źródła: ESLint, kontrakt zasobów, HTML oraz linki/fragmenty/CSS i dostępność na dev.
+
+### `qa:dist`
+
+- command: `npm run qa:dist:integrity && npm run qa:dist:html && npm run qa:dist:server`
+- what it does: Waliduje istniejącą produkcję: kompletność, HTML oraz linki/fragmenty/CSS i dostępność na preview. Nie buduje.
+
+### `build:static`
+
+- command: `node scripts/build-dist.js`
+- what it does: Zastępuje dist statycznymi plikami runtime i kopiami HTML/SW. Nie minifikuje.
+
+### `build:css`
+
+- command: `postcss css/style.css -o dist/css/style.min.css --no-map`
+- what it does: PostCSS/postcss-import/cssnano; wyjście wyłącznie dist/css/style.min.css.
+
+### `build:js`
+
+- command: `esbuild js/script.js js/core.js --bundle --minify --outdir=dist/js --out-extension:.js=.min.js --target=es2018`
+- what it does: esbuild; oba wejścia script i core, es2018, wyjście wyłącznie dist/js/*.min.js.
 
 ### `images:build`
-- command: `node scripts/images/build-images.js`
-- what it does: generuje/aktualizuje zoptymalizowane warianty obrazów.
-- when to use: po dodaniu lub podmianie obrazów źródłowych.
 
-### `dev:server`
-- command: `http-server -p 5173 -c-1`
-- what it does: uruchamia lokalny serwer statyczny na porcie `5173` z wyłączonym cache.
-- when to use: codzienny development lokalny.
+- command: `node scripts/images/build-images.js`
+- what it does: Osobny generator obrazów img-src → img-optimized. Nie jest częścią builda.
 
 ### `lint`
+
 - command: `eslint "js/**/*.js"`
-- what it does: sprawdza jakość i zgodność kodu JS z regułami ESLint.
-- when to use: przed commitem/PR oraz w pipeline QA.
+- what it does: ESLint dla źródeł JavaScript.
 
-### `validate:html`
+### `qa:source`
+
+- command: `node scripts/validate-dist.js --source`
+- what it does: Sprawdza brak wygenerowanych minifikowanych plików w css/js i wejścia źródłowe HTML.
+
+### `qa:html`
+
 - command: `html-validate "*.html"`
-- what it does: waliduje pliki HTML w katalogu głównym.
-- when to use: po zmianach w HTML oraz przed release.
+- what it does: Waliduje HTML źródeł.
 
-### `check:links`
-- command: `npm run check:links:dev`
-- what it does: alias na developerski wariant testu linków.
-- when to use: kompatybilność ze starszym workflow; preferowany bezpośrednio `check:links:dev`.
+### `qa:links`
 
-### `check:links:dev`
-- command: `linkinator http://127.0.0.1:5173/ http://127.0.0.1:5173/about.html http://127.0.0.1:5173/menu.html http://127.0.0.1:5173/gallery.html http://127.0.0.1:5173/cookies.html http://127.0.0.1:5173/polityka-prywatnosci.html http://127.0.0.1:5173/regulamin.html http://127.0.0.1:5173/offline.html http://127.0.0.1:5173/thank-you.html http://127.0.0.1:5173/404.html --recurse --check-fragments --silent --concurrency 4 --timeout 10000 --retry --skip "^https://|\.min\.(css|js)(\?.*)?$"`
-- what it does: sprawdza linki i anchory lokalnie; ignoruje referencje `.min.css/.min.js` zgodnie ze strategią dev.
-- when to use: codzienny QA w środowisku nie-minifikowanym.
+- command: `node scripts/qa-links.js`
+- what it does: Sprawdza wszystkie 11 stron, lokalne linki, zasoby, fragmenty, importy CSS i fonty. Wymaga serwera.
 
-### `check:links:prod`
-- command: `linkinator http://127.0.0.1:5173/ http://127.0.0.1:5173/about.html http://127.0.0.1:5173/menu.html http://127.0.0.1:5173/gallery.html http://127.0.0.1:5173/cookies.html http://127.0.0.1:5173/polityka-prywatnosci.html http://127.0.0.1:5173/regulamin.html http://127.0.0.1:5173/offline.html http://127.0.0.1:5173/thank-you.html http://127.0.0.1:5173/404.html --recurse --check-fragments --silent --concurrency 4 --timeout 10000 --retry --skip "^https://"`
-- what it does: sprawdza linki i anchory bez ignorowania `.min.*`.
-- when to use: QA release po buildzie.
+### `qa:links:external`
 
-### `check:a11y`
+- command: `node scripts/qa-links.js --external`
+- what it does: Opcjonalnie sprawdza również linki zewnętrzne na działającym serwerze.
+
+### `qa:a11y`
+
 - command: `pa11y-ci`
-- what it does: automatyczny audyt dostępności WCAG2AA dla URL z `.pa11yci`.
-- when to use: po zmianach UI/CSS/HTML i przed release.
+- what it does: Dotychczasowa .pa11yci: WCAG2AA/htmlcs, 10 stron, bez contact.html. Wymaga serwera.
 
-### `check:server`
-- command: `cross-env WAIT_ON_TIMEOUT=60000 WAIT_ON_INTERVAL=250 start-server-and-test dev:server http-get://127.0.0.1:5173 "npm run check:links:dev && npm run check:a11y"`
-- what it does: uruchamia serwer i wykonuje dev-safe test linków oraz test dostępności.
-- when to use: lokalny preflight quality gate.
+### `qa:server`
 
-### `check:server:prod`
-- command: `cross-env WAIT_ON_TIMEOUT=60000 WAIT_ON_INTERVAL=250 start-server-and-test "npm run build && npm run dev:server" http-get://127.0.0.1:5173 "npm run check:links:prod"`
-- what it does: buduje assety produkcyjne i uruchamia ścisły test linków pod release.
-- when to use: przed wdrożeniem lub w CI release.
+- command: `node scripts/qa-server.js`
+- what it does: Zarządza serwerem dev na czas linków i pa11y.
 
-### `check`
-- command: `npm run lint && npm run validate:html && npm run check:server`
-- what it does: uruchamia pełny pakiet kontroli jakości dla developmentu.
-- when to use: standardowy gate przed merge/release.
+### `qa:dist:integrity`
+
+- command: `node scripts/validate-dist.js`
+- what it does: Sprawdza 11 stron, zasoby, CSS, manifest, obrazy menu, bootstrap i precache SW; odrzuca źródła w dist.
+
+### `qa:dist:html`
+
+- command: `html-validate "dist/*.html"`
+- what it does: Waliduje wyłącznie HTML w dist.
+
+### `qa:dist:server`
+
+- command: `node scripts/qa-server.js --dist`
+- what it does: Zarządza serwerem preview na czas linków i pa11y.
+
+## Własność plików
+
+Root HTML, css/style.css, moduły CSS, wejścia JS i sw.js są kanonicznymi źródłami. scripts/build-config.js utrzymuje listę stron, plików runtime i mapowanie ścieżek. Build zmienia tylko referencje zasobów w kopiach HTML/SW; bootstrap jest kopiowany bez zmian. dist/ pozostaje ignorowany. Nie generuj ani nie edytuj css/style.min.css, js/script.min.js ani js/core.min.js w źródłach.
+
+Usunięte komendy build:dist, clean:dist, dev:server, validate:html, check* i osobne build:js:script/core są pokryte przez powyższy workflow. Nie zmieniono zależności ani targetu es2018.
+
+Runner QA używa API istniejącego http-server w tym samym procesie, więc zamknięcie serwera nie wymaga ps-tree/wmic.exe. Lista zależności pozostaje bez zmian.
