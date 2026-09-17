@@ -2,6 +2,20 @@
 .page--legal .section:not(.page-hero) .container {
   max-width: 920px;
 }
+
+.page--legal .page-hero__eyebrow {
+  margin: 0;
+  font-family: inherit;
+  line-height: var(--lh-normal);
+}
+
+.page--legal .page-hero__meta {
+  margin: 0;
+  color: var(--text-subtle);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-normal);
+}
+
 /* Spis treści */
 .toc {
   max-width: 720px;
@@ -16,13 +30,13 @@
 }
 .toc__link {
   display: block;
-  width: 100%;
   padding: var(--space-3) var(--space-4);
   border: 1px solid var(--surface-overlay-border);
   border-radius: var(--radius-md);
   background: color-mix(in oklab, var(--surface-overlay) 70%, transparent);
   color: var(--c-ink);
   text-decoration: none;
+  text-align: center;
   font-weight: 600;
   letter-spacing: var(--ls-wide);
   line-height: var(--lh-snug);
@@ -39,16 +53,19 @@
   border-color: var(--tab-active-border);
   color: var(--burgundy);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-box);
+  box-shadow: var(--shodow-box-sm);
 }
 .toc__link:active {
   transform: none;
   box-shadow: none;
 }
-.toc__link:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 3px;
+.toc__link:focus-visible,
+.legal__table-wrap:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
 }
+
+/* Treść dokumentów */
 .page--legal .section__title::after {
   content: "";
   display: block;
@@ -63,13 +80,14 @@
 .page--legal .card__body {
   line-height: var(--lh-relaxed);
 }
-.page--legal .card__body > :is(p, ul, ol) {
-  margin: 0 0 var(--space-3);
-}
 .page--legal .card__body :is(ul, ol) {
-  padding-left: var(--space-5);
+  margin-block: var(--space-3) 0;
+  padding-inline-start: var(--space-5);
   display: grid;
   gap: var(--space-3);
+}
+.page--legal .card__body > :is(p, ul, ol) {
+  margin: 0 0 var(--space-3);
 }
 .page--legal .card__body > h3 {
   margin: var(--space-5) 0 var(--space-3);
@@ -77,14 +95,16 @@
 .page--legal .card__body > :last-child {
   margin-bottom: 0;
 }
-.page--legal .card__body a {
+.page--legal :is(.card__body, .page-hero__lead) a {
   text-decoration: underline;
   text-underline-offset: 0.15em;
   overflow-wrap: anywhere;
 }
-.page--legal .card__body a:hover {
+.page--legal :is(.card__body, .page-hero__lead) a:hover {
   text-decoration-thickness: 2px;
 }
+
+/* Tabele przewijane w obrębie dokumentu */
 .legal__table-wrap {
   max-width: 100%;
   overflow-x: auto;
@@ -92,13 +112,9 @@
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-md);
 }
-.legal__table-wrap:focus-visible {
-  outline: 2px solid var(--burgundy);
-  outline-offset: 3px;
-}
 .legal__table {
   width: 100%;
-  min-width: 760px;
+  min-width: var(--bp-md);
   border-collapse: collapse;
   font-size: var(--fs-xs);
   line-height: var(--lh-normal);
@@ -127,7 +143,7 @@
 
 @media (min-width: 1024px) {
   .toc {
-    max-width: 960px;
+    max-width: none;
   }
   .toc__list {
     grid-template-columns: repeat(3, minmax(0, 1fr));
