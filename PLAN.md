@@ -79,10 +79,10 @@
   - **Completion condition:** `sitemap.xml` declares only namespaces the sitemap protocol defines
   - **Source:** `daily-AUDIT.md` — P1-07
 
-- [ ] **PH2-02 — Restore the shared head contract on the system pages** — **Priority:** Medium
-  - [ ] add the inline `kp-theme` preload script and the `js/bootstrap.js` reference to `offline.html`
-  - [ ] add the `theme-color` and `color-scheme` meta tags missing from `offline.html`, `404.html` and `thank-you.html`
-  - [ ] verify that a dark-theme load of the precached offline page renders dark without a visible flip to light
+- [x] **PH2-02 — Restore the shared head contract on the system pages** — **Priority:** Medium
+  - [x] add the inline `kp-theme` preload script and the `js/bootstrap.js` reference to `offline.html`
+  - [x] add the `theme-color` and `color-scheme` meta tags missing from `offline.html`, `404.html` and `thank-you.html`
+  - [x] verify that a dark-theme load of the precached offline page renders dark without a visible flip to light
   - **Completion condition:** all 11 pages carry the same theme bootstrap and colour metadata
   - **Source:** `daily-AUDIT.md` — P2-03
 
