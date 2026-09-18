@@ -29,6 +29,7 @@ All significant changes to this project are documented in this file.
 - Corrected connectivity-state initialization so network status notifications are shown only for genuine online and offline transitions.
 - Improved menu filtering accessibility with synchronized pressed states and live announcements for result counts and empty searches.
 - Aligned sticky category navigation styling with the active scrollspy state on menu and gallery pages, using valid theme-aware shadow tokens.
+- Corrected lightbox focus restoration so closing returns keyboard focus to the originating gallery link after the background becomes interactive.
 
 ### Documentation
 

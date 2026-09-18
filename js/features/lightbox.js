@@ -186,10 +186,11 @@ export function initLightbox() {
   function closeLightbox() {
     html.classList.remove("lb-open");
     imgEl.removeAttribute("src");
-    if (lastTrigger) lastTrigger.focus();
     if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
 
     setPageInert(false);
+    /* Focus is restored only after the background landmarks are interactive again. */
+    if (lastTrigger) lastTrigger.focus();
   }
   function next() {
     index = (index + 1) % group.length;

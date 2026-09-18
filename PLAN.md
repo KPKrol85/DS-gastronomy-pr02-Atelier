@@ -62,9 +62,9 @@
   - **Completion condition:** the sticky category navigation shows the current section on both pages, and no rule in `css/` references an undefined shadow token
   - **Source:** `daily-AUDIT.md` — P1-01
 
-- [ ] **PH1-06 — Restore lightbox focus after the background becomes interactive** — **Priority:** High
-  - [ ] move the `lastTrigger.focus()` call in `closeLightbox()` (`js/features/lightbox.js`) to after `setPageInert(false)` removes `inert` and `aria-hidden` from the page landmarks
-  - [ ] verify that closing with Escape and with the close button both return focus to the gallery link that opened the dialog
+- [x] **PH1-06 — Restore lightbox focus after the background becomes interactive** — **Priority:** High
+  - [x] move the `lastTrigger.focus()` call in `closeLightbox()` (`js/features/lightbox.js`) to after `setPageInert(false)` removes `inert` and `aria-hidden` from the page landmarks
+  - [x] verify that closing with Escape and with the close button both return focus to the gallery link that opened the dialog
   - **Completion condition:** keyboard focus returns to the originating gallery link instead of the document body
   - **Source:** `daily-AUDIT.md` — P1-04
 
