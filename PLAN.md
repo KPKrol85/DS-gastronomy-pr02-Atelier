@@ -122,10 +122,10 @@
 
 **Goal:** Give each interactive behaviour one owner and remove code that has no effect.
 
-- [ ] **PH4-01 — Give the scrollspy a single active-section owner** — **Priority:** Medium
-  - [ ] make either the `IntersectionObserver` branch or the scroll-offset algorithm in `js/core/scrollspy.js` the owner of the active section, and reduce the other to a fallback
-  - [ ] ensure the `topPercent`, `bottomPercent` and `bottomPercentMobile` configuration passed from `js/features/menu.js` and `js/features/gallery.js` reaches the owning mechanism
-  - [ ] verify the active tab tracks scrolling on `menu.html` and `gallery.html` at mobile and desktop widths
+- [x] **PH4-01 — Give the scrollspy a single active-section owner** — **Priority:** Medium
+  - [x] make either the `IntersectionObserver` branch or the scroll-offset algorithm in `js/core/scrollspy.js` the owner of the active section, and reduce the other to a fallback
+  - [x] ensure the `topPercent`, `bottomPercent` and `bottomPercentMobile` configuration passed from `js/features/menu.js` and `js/features/gallery.js` reaches the owning mechanism
+  - [x] verify the active tab tracks scrolling on `menu.html` and `gallery.html` at mobile and desktop widths
   - **Completion condition:** one mechanism determines the active section, and the configured thresholds have a single meaning
   - **Depends on:** `PH1-05`
   - **Source:** `daily-AUDIT.md` — P2-02
