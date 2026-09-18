@@ -25,6 +25,7 @@ All significant changes to this project are documented in this file.
 - Standardized the cookies policy and documented existing `localStorage`, Service Worker and Cache Storage use.
 - Adopted the bilingual KP_CODE proprietary license and aligned root npm license metadata and README licensing notices, preserving third-party licenses.
 - Synchronized navigation dropdown visibility and `aria-expanded` state across mobile and desktop, with explicit desktop disclosure controls and a preserved no-JavaScript hover/focus fallback.
+- Aligned the reduced JavaScript entry with shipped page markup by initializing the shared demo disclosure and reveal features on legal and system pages.
 
 ### Documentation
 

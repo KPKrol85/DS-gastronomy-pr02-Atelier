@@ -32,11 +32,11 @@
   - **Completion condition:** on all 11 pages the toggle's `aria-expanded` matches whether the submenu links are visible and focusable, and the button performs an action at every width
   - **Source:** `daily-AUDIT.md` — P1-06
 
-- [ ] **PH1-02 — Align the reduced JavaScript entry with the markup its pages ship** — **Priority:** High
-  - [ ] decide whether `js/core.js` owns the demonstration disclosure and the scroll reveals, or whether the four pages it serves (`404.html`, `cookies.html`, `polityka-prywatnosci.html`, `regulamin.html`) should stop shipping that markup
-  - [ ] apply the decision consistently: either import `initDemoLegalModal` and `initReveal` into `js/core.js`, or remove the `#demo-legal-modal` block and the 19–35 `data-reveal` attributes from the three legal pages
-  - [ ] keep the shared `kp-demo-accepted` acknowledgement key and its legacy-key migration unchanged on the pages that retain the dialog
-  - [ ] verify on one legal page that the disclosure and its acceptance control are reachable and dismissible, or that no permanently inert dialog markup remains
+- [x] **PH1-02 — Align the reduced JavaScript entry with the markup its pages ship** — **Priority:** High
+  - [x] decide whether `js/core.js` owns the demonstration disclosure and the scroll reveals, or whether the four pages it serves (`404.html`, `cookies.html`, `polityka-prywatnosci.html`, `regulamin.html`) should stop shipping that markup
+  - [x] apply the decision consistently: either import `initDemoLegalModal` and `initReveal` into `js/core.js`, or remove the `#demo-legal-modal` block and the 19–35 `data-reveal` attributes from the three legal pages
+  - [x] keep the shared `kp-demo-accepted` acknowledgement key and its legacy-key migration unchanged on the pages that retain the dialog
+  - [x] verify on one legal page that the disclosure and its acceptance control are reachable and dismissible, or that no permanently inert dialog markup remains
   - **Completion condition:** no page ships feature markup that its JavaScript entry never initialises
   - **Source:** `daily-AUDIT.md` — P1-02
 
