@@ -86,10 +86,10 @@
   - **Completion condition:** all 11 pages carry the same theme bootstrap and colour metadata
   - **Source:** `daily-AUDIT.md` — P2-03
 
-- [ ] **PH2-03 — Establish one canonical demonstration disclosure** — **Priority:** Medium
-  - [ ] choose the canonical wording and correct the misspelling in the variant currently carried by nine pages
-  - [ ] replace the divergent `contact.html` wording, which names a different owner entity, with the canonical text
-  - [ ] apply the canonical text to every page that still carries `#demo-legal-modal` after `PH1-02`
+- [x] **PH2-03 — Establish one canonical demonstration disclosure** — **Priority:** Medium
+  - [x] choose the canonical wording and correct the misspelling in the variant currently carried by nine pages
+  - [x] replace the divergent `contact.html` wording, which names a different owner entity, with the canonical text
+  - [x] apply the canonical text to every page that still carries `#demo-legal-modal` after `PH1-02`
   - **Completion condition:** every page carrying the disclosure shows identical, correctly spelled wording
   - **Depends on:** `PH1-02`
   - **Source:** `daily-AUDIT.md` — P2-07

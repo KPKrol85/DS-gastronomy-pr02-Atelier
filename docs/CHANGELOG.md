@@ -32,6 +32,7 @@ All significant changes to this project are documented in this file.
 - Corrected lightbox focus restoration so closing returns keyboard focus to the originating gallery link after the background becomes interactive.
 - Corrected the sitemap protocol namespace and removed the unused XHTML namespace declaration while preserving the existing public URL inventory.
 - Restored the shared theme bootstrap and colour metadata contract on system pages, including early dark-theme initialization for the offline fallback.
+- Standardized the demonstration disclosure across all pages, correcting the project wording and removing the divergent contact-page variant.
 
 ### Documentation
 
