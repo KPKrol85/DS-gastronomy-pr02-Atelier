@@ -130,9 +130,9 @@
   - **Depends on:** `PH1-05`
   - **Source:** `daily-AUDIT.md` — P2-02
 
-- [ ] **PH4-02 — Limit form progress live-region writes to real changes** — **Priority:** Medium
-  - [ ] compare the computed message against the current `#form-progress` text before assigning it in `updateProgress()` (`js/features/form.js`)
-  - [ ] verify that typing in the message field no longer rewrites the region while the counted message is unchanged
+- [x] **PH4-02 — Limit form progress live-region writes to real changes** — **Priority:** Medium
+  - [x] compare the computed message against the current `#form-progress` text before assigning it in `updateProgress()` (`js/features/form.js`)
+  - [x] verify that typing in the message field no longer rewrites the region while the counted message is unchanged
   - **Completion condition:** the progress region is written only when its message actually changes
   - **Source:** `daily-AUDIT.md` — P2-04
 

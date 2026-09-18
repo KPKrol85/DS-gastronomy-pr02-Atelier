@@ -37,6 +37,7 @@ All significant changes to this project are documented in this file.
 - Replaced the undefined menu-card focus colour fallback with the shared theme-aware focus token, restoring a visible indicator in both light and dark themes.
 - Activated the reveal direction and stagger authoring contract, with immediate no-motion rendering for reduced-motion users and fallback environments.
 - Simplified scrollspy ownership so IntersectionObserver exclusively tracks active sections when available, with the scroll-offset algorithm retained as a fallback and responsive observer geometry rebuilt on resize.
+- Reduced redundant contact-form live-region updates so progress status is rewritten only when the validation summary actually changes.
 
 ### Documentation
 

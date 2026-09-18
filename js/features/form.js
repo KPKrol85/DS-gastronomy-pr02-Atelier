@@ -85,12 +85,12 @@ export function initForm() {
       if (validateField(field, false)) validCount++;
     });
     var remaining = fields.length - validCount;
-    if (remaining <= 0) {
-      progress.textContent = "Formularz gotowy do wysłania.";
-      return;
+    var nextMessage = "Formularz gotowy do wysłania.";
+    if (remaining > 0) {
+      var label = pluralize(remaining, "pole", "pola", "pól");
+      nextMessage = "Uzupełnij " + remaining + " " + label + ", aby wysłać.";
     }
-    var label = pluralize(remaining, "pole", "pola", "pól");
-    progress.textContent = "Uzupełnij " + remaining + " " + label + ", aby wysłać.";
+    if (progress.textContent !== nextMessage) progress.textContent = nextMessage;
   }
 
   fields.forEach(function (field) {
