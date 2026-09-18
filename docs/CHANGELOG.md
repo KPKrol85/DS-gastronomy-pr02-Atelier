@@ -28,6 +28,7 @@ All significant changes to this project are documented in this file.
 - Aligned the reduced JavaScript entry with shipped page markup by initializing the shared demo disclosure and reveal features on legal and system pages.
 - Corrected connectivity-state initialization so network status notifications are shown only for genuine online and offline transitions.
 - Improved menu filtering accessibility with synchronized pressed states and live announcements for result counts and empty searches.
+- Aligned sticky category navigation styling with the active scrollspy state on menu and gallery pages, using valid theme-aware shadow tokens.
 
 ### Documentation
 

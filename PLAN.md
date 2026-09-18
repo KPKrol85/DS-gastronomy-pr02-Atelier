@@ -55,10 +55,10 @@
   - **Completion condition:** applying a filter or search reports the selected filter and the resulting state without relying on visual feedback
   - **Source:** `daily-AUDIT.md` — P1-05
 
-- [ ] **PH1-05 — Render the active category state in the sticky tabs** — **Priority:** High
-  - [ ] align the active-state rules in `css/components/tabs-nav.css` with the `is-active` class and the `aria-current="location"` value that `setActive` in `js/core/scrollspy.js` writes
-  - [ ] replace the undefined `--shadow-box` custom property used inside that rule with a defined token, or remove the declaration
-  - [ ] verify on `menu.html` and `gallery.html` that the current category is marked while scrolling and after clicking a tab
+- [x] **PH1-05 — Render the active category state in the sticky tabs** — **Priority:** High
+  - [x] align the active-state rules in `css/components/tabs-nav.css` with the `is-active` class and the `aria-current="location"` value that `setActive` in `js/core/scrollspy.js` writes
+  - [x] replace the undefined `--shadow-box` custom property used inside that rule with a defined token, or remove the declaration
+  - [x] verify on `menu.html` and `gallery.html` that the current category is marked while scrolling and after clicking a tab
   - **Completion condition:** the sticky category navigation shows the current section on both pages, and no rule in `css/` references an undefined shadow token
   - **Source:** `daily-AUDIT.md` — P1-01
 
