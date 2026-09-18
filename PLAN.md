@@ -72,10 +72,10 @@
 
 **Goal:** Make the public metadata and the per-page blocks duplicated across the 11 pages consistent with each other.
 
-- [ ] **PH2-01 — Correct the sitemap namespace declarations** — **Priority:** High
-  - [ ] set the `urlset` default namespace in `sitemap.xml` to the `http` form defined by the sitemap protocol
-  - [ ] remove the declared but unused `xhtml` prefix
-  - [ ] verify the document still lists the eight URLs advertised through `robots.txt`
+- [x] **PH2-01 — Correct the sitemap namespace declarations** — **Priority:** High
+  - [x] set the `urlset` default namespace in `sitemap.xml` to the `http` form defined by the sitemap protocol
+  - [x] remove the declared but unused `xhtml` prefix
+  - [x] verify the document still lists the eight URLs advertised through `robots.txt`
   - **Completion condition:** `sitemap.xml` declares only namespaces the sitemap protocol defines
   - **Source:** `daily-AUDIT.md` — P1-07
 

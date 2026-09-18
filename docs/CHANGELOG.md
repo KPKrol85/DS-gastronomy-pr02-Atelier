@@ -30,6 +30,7 @@ All significant changes to this project are documented in this file.
 - Improved menu filtering accessibility with synchronized pressed states and live announcements for result counts and empty searches.
 - Aligned sticky category navigation styling with the active scrollspy state on menu and gallery pages, using valid theme-aware shadow tokens.
 - Corrected lightbox focus restoration so closing returns keyboard focus to the originating gallery link after the background becomes interactive.
+- Corrected the sitemap protocol namespace and removed the unused XHTML namespace declaration while preserving the existing public URL inventory.
 
 ### Documentation
 
