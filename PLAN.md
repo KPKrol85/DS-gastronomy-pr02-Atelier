@@ -94,9 +94,9 @@
   - **Depends on:** `PH1-02`
   - **Source:** `daily-AUDIT.md` — P2-07
 
-- [ ] **PH2-04 — Name the contact form after its visible heading** — **Priority:** Low
-  - [ ] replace the reservation-form `aria-label` on the `contact.html` form with a name matching the visible `#contact-title` heading, or associate the form with that heading
-  - [ ] verify the accessible name no longer describes a booking capability the three-field form does not implement
+- [x] **PH2-04 — Name the contact form after its visible heading** — **Priority:** Low
+  - [x] replace the reservation-form `aria-label` on the `contact.html` form with a name matching the visible `#contact-title` heading, or associate the form with that heading
+  - [x] verify the accessible name no longer describes a booking capability the three-field form does not implement
   - **Completion condition:** the form's accessible name matches the visible heading that introduces it
   - **Source:** `daily-AUDIT.md` — P2-05
 
