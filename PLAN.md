@@ -111,10 +111,10 @@
   - **Completion condition:** no focus rule in `css/` depends on an undefined custom property, and the menu-card indicator changes with the theme
   - **Source:** `daily-AUDIT.md` — P2-06
 
-- [ ] **PH3-02 — Reconcile the reveal authoring API with the stylesheet** — **Priority:** Low
-  - [ ] decide whether `--rx`, `--ry` and `--reveal-delay` become part of the reveal transition or are removed
-  - [ ] apply the decision across `css/components/animations.css`, the per-item delay loop in `js/features/reveal.js` and the `data-reveal-dir` attributes authored in `index.html` and `contact.html`
-  - [ ] keep the reduced-motion and missing-`IntersectionObserver` paths showing content immediately
+- [x] **PH3-02 — Reconcile the reveal authoring API with the stylesheet** — **Priority:** Low
+  - [x] decide whether `--rx`, `--ry` and `--reveal-delay` become part of the reveal transition or are removed
+  - [x] apply the decision across `css/components/animations.css`, the per-item delay loop in `js/features/reveal.js` and the `data-reveal-dir` attributes authored in `index.html` and `contact.html`
+  - [x] keep the reduced-motion and missing-`IntersectionObserver` paths showing content immediately
   - **Completion condition:** every reveal custom property and `data-reveal-dir` attribute in the repository is either consumed by a rule or no longer present
   - **Source:** `daily-AUDIT.md` — P2-01
 
