@@ -104,10 +104,10 @@
 
 **Goal:** Make CSS tokens and authoring attributes resolve to real, theme-aware implementations.
 
-- [ ] **PH3-01 — Replace the undefined accent token in the menu-card focus outline** — **Priority:** Medium
-  - [ ] point the `.menu-card` link `:focus-visible` rule in `css/components/cards.css` at a defined, theme-aware token instead of the undefined `--accent` property with a literal fallback
-  - [ ] confirm the rule still resolves as intended against the `:where()`-based link focus rule in `css/components/buttons.css`, or fold it into that rule
-  - [ ] verify the focus indicator on menu-card links is visible in both light and dark themes
+- [x] **PH3-01 — Replace the undefined accent token in the menu-card focus outline** — **Priority:** Medium
+  - [x] point the `.menu-card` link `:focus-visible` rule in `css/components/cards.css` at a defined, theme-aware token instead of the undefined `--accent` property with a literal fallback
+  - [x] confirm the rule still resolves as intended against the `:where()`-based link focus rule in `css/components/buttons.css`, or fold it into that rule
+  - [x] verify the focus indicator on menu-card links is visible in both light and dark themes
   - **Completion condition:** no focus rule in `css/` depends on an undefined custom property, and the menu-card indicator changes with the theme
   - **Source:** `daily-AUDIT.md` — P2-06
 

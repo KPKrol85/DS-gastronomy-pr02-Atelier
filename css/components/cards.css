@@ -118,7 +118,7 @@
   background: color-mix(in srgb, var(--gold) 45%, var(--bone));
 }
 .page .menu-card a:focus-visible {
-  outline: 2px solid var(--accent, #6b1e2f);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
