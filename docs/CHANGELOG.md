@@ -24,6 +24,7 @@ All significant changes to this project are documented in this file.
 - Standardized the privacy policy and clarified Netlify Forms processing and embedded Google Maps disclosures, correcting the cookies policy's third-party integration description.
 - Standardized the cookies policy and documented existing `localStorage`, Service Worker and Cache Storage use.
 - Adopted the bilingual KP_CODE proprietary license and aligned root npm license metadata and README licensing notices, preserving third-party licenses.
+- Synchronized navigation dropdown visibility and `aria-expanded` state across mobile and desktop, with explicit desktop disclosure controls and a preserved no-JavaScript hover/focus fallback.
 
 ### Documentation
 

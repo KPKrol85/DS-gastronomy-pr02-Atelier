@@ -24,11 +24,11 @@
 
 **Goal:** Resolve the verified cases where markup, CSS and JavaScript disagree about the same feature, so implemented interactions behave as their source claims.
 
-- [ ] **PH1-01 — Synchronise desktop navigation dropdown state** — **Priority:** High
-  - [ ] keep `aria-expanded` on `.nav__dropdown-toggle` aligned with the panel state the desktop rules render through `.nav__item--dropdown:hover` and `:focus-within` in `css/components/nav.css`, or give the toggle a real action above the 1024px breakpoint
-  - [ ] replace the unconditional early exit in the dropdown click handler in `js/features/nav.js` with the desktop behaviour chosen
-  - [ ] preserve the mobile accordion behaviour, `closeNavDropdowns` and the breakpoint-change normalisation in `syncNavA11y`
-  - [ ] verify by keyboard traversal that the announced state matches the visible panel on both sides of the 1024px breakpoint
+- [x] **PH1-01 — Synchronise desktop navigation dropdown state** — **Priority:** High
+  - [x] keep `aria-expanded` on `.nav__dropdown-toggle` aligned with the panel state the desktop rules render through `.nav__item--dropdown:hover` and `:focus-within` in `css/components/nav.css`, or give the toggle a real action above the 1024px breakpoint
+  - [x] replace the unconditional early exit in the dropdown click handler in `js/features/nav.js` with the desktop behaviour chosen
+  - [x] preserve the mobile accordion behaviour, `closeNavDropdowns` and the breakpoint-change normalisation in `syncNavA11y`
+  - [x] verify by keyboard traversal that the announced state matches the visible panel on both sides of the 1024px breakpoint
   - **Completion condition:** on all 11 pages the toggle's `aria-expanded` matches whether the submenu links are visible and focusable, and the button performs an action at every width
   - **Source:** `daily-AUDIT.md` — P1-06
 
