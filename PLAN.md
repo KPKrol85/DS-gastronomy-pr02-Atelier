@@ -47,11 +47,11 @@
   - **Completion condition:** the `#network-status` region reports only real online/offline transitions
   - **Source:** `daily-AUDIT.md` — P1-03
 
-- [ ] **PH1-04 — Expose menu filter state and result changes** — **Priority:** High
-  - [ ] add `aria-pressed` to the `.menu-filters__btn` controls in `menu.html` and keep it synchronised with the `is-active` class in `js/features/menu.js`
-  - [ ] give `.menu-filters__empty` a live role so the no-results message is announced when it becomes visible
-  - [ ] announce the resulting item count, or its absence, after a search term or tag filter is applied
-  - [ ] verify that the announced state matches the visible filter after switching tags and after clearing the search field
+- [x] **PH1-04 — Expose menu filter state and result changes** — **Priority:** High
+  - [x] add `aria-pressed` to the `.menu-filters__btn` controls in `menu.html` and keep it synchronised with the `is-active` class in `js/features/menu.js`
+  - [x] give `.menu-filters__empty` a live role so the no-results message is announced when it becomes visible
+  - [x] announce the resulting item count, or its absence, after a search term or tag filter is applied
+  - [x] verify that the announced state matches the visible filter after switching tags and after clearing the search field
   - **Completion condition:** applying a filter or search reports the selected filter and the resulting state without relying on visual feedback
   - **Source:** `daily-AUDIT.md` — P1-05
 

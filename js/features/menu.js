@@ -269,7 +269,40 @@ export function initMenuPage() {
     var activeTag = "*";
     var term = "";
 
-    function apply() {
+    function pluralizeItems(n) {
+      var mod10 = n % 10;
+      var mod100 = n % 100;
+      if (n === 1) return "pozycję";
+      if (mod10 >= 2 && mod10 <= 4 && !(mod100 >= 12 && mod100 <= 14)) return "pozycje";
+      return "pozycji";
+    }
+
+    function setActiveButton(activeBtn) {
+      /* A single boolean drives both the visual state and the state exposed to assistive technology. */
+      buttons.forEach(function (b) {
+        var isActive = b === activeBtn;
+        b.classList.toggle("is-active", isActive);
+        b.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
+    }
+
+    function reportResults(visibleCount, announce) {
+      /*
+       The result message doubles as the live region: it stays in the accessibility tree and is
+       revealed visually only when nothing matches. Page initialisation reports without announcing,
+       so the unfiltered result set is not read out on load.
+      */
+      if (!emptyInfo) return;
+      var isEmpty = visibleCount === 0;
+      emptyInfo.classList.toggle("visually-hidden", !isEmpty);
+      if (isEmpty) {
+        emptyInfo.textContent = "Brak pozycji spełniających kryteria.";
+        return;
+      }
+      emptyInfo.textContent = announce ? "Znaleziono " + visibleCount + " " + pluralizeItems(visibleCount) + "." : "";
+    }
+
+    function apply(announce) {
       /*
        Filtering is computed client-side from normalized text + semantic tags.
        Both criteria are combined to keep search and category filters in sync.
@@ -289,10 +322,7 @@ export function initMenuPage() {
         card.style.display = show ? "" : "none";
         if (show) visibleCount++;
       });
-      if (emptyInfo) {
-        emptyInfo.hidden = visibleCount !== 0;
-        if (visibleCount === 0) emptyInfo.textContent = "Brak pozycji spełniających kryteria.";
-      }
+      reportResults(visibleCount, announce === true);
     }
 
     var debounceTimer = null;
@@ -311,18 +341,16 @@ export function initMenuPage() {
       "input",
       debounced(function () {
         term = search.value || "";
-        apply();
+        apply(true);
       }, 200)
     );
 
     buttonsWrap.addEventListener("click", function (e) {
       var btn = e.target.closest(".menu-filters__btn[data-filter]");
       if (!btn) return;
-      buttons.forEach(function (b) {
-        b.classList.toggle("is-active", b === btn);
-      });
+      setActiveButton(btn);
       activeTag = btn.getAttribute("data-filter") || "*";
-      apply();
+      apply(true);
     });
 
     apply();

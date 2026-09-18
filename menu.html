@@ -717,16 +717,16 @@
             <label for="menu-search" class="visually-hidden">Szukaj w menu</label>
             <input id="menu-search" class="input input--search menu-filters__input" type="search" placeholder="Szukaj w menu (np. kaczka, burrata…)" inputmode="search" />
             <div class="menu-filters__group" role="group" aria-label="Filtry tagów">
-              <button type="button" class="btn btn--ghost menu-filters__btn is-active" data-filter="*">Wszystko</button>
-              <button type="button" class="btn btn--ghost menu-filters__btn" data-filter="Wegetariańskie">Wegetariańskie</button>
-              <button type="button" class="btn btn--ghost menu-filters__btn" data-filter="Wegańskie">Wegańskie</button>
-              <button type="button" class="btn btn--ghost menu-filters__btn" data-filter="Bezglutenowe">Bezglutenowe</button>
-              <button type="button" class="btn btn--ghost menu-filters__btn" data-filter="Signature">Signature</button>
-              <button type="button" class="btn btn--ghost menu-filters__btn" data-filter="Spicy">Spicy</button>
-              <button type="button" class="btn btn--ghost menu-filters__btn" data-filter="Bezalkoholowe">Bezalkoholowe</button>
+              <button type="button" class="btn btn--ghost menu-filters__btn is-active" data-filter="*" aria-pressed="true">Wszystko</button>
+              <button type="button" class="btn btn--ghost menu-filters__btn" data-filter="Wegetariańskie" aria-pressed="false">Wegetariańskie</button>
+              <button type="button" class="btn btn--ghost menu-filters__btn" data-filter="Wegańskie" aria-pressed="false">Wegańskie</button>
+              <button type="button" class="btn btn--ghost menu-filters__btn" data-filter="Bezglutenowe" aria-pressed="false">Bezglutenowe</button>
+              <button type="button" class="btn btn--ghost menu-filters__btn" data-filter="Signature" aria-pressed="false">Signature</button>
+              <button type="button" class="btn btn--ghost menu-filters__btn" data-filter="Spicy" aria-pressed="false">Spicy</button>
+              <button type="button" class="btn btn--ghost menu-filters__btn" data-filter="Bezalkoholowe" aria-pressed="false">Bezalkoholowe</button>
             </div>
           </div>
-          <p class="menu-filters__empty" hidden>Brak pozycji spełniających kryteria.</p>
+          <p class="menu-filters__empty visually-hidden" role="status" aria-live="polite" aria-atomic="true"></p>
         </div>
       </section>
 
