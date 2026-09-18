@@ -26,6 +26,7 @@ All significant changes to this project are documented in this file.
 - Adopted the bilingual KP_CODE proprietary license and aligned root npm license metadata and README licensing notices, preserving third-party licenses.
 - Synchronized navigation dropdown visibility and `aria-expanded` state across mobile and desktop, with explicit desktop disclosure controls and a preserved no-JavaScript hover/focus fallback.
 - Aligned the reduced JavaScript entry with shipped page markup by initializing the shared demo disclosure and reveal features on legal and system pages.
+- Corrected connectivity-state initialization so network status notifications are shown only for genuine online and offline transitions.
 
 ### Documentation
 

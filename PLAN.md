@@ -40,10 +40,10 @@
   - **Completion condition:** no page ships feature markup that its JavaScript entry never initialises
   - **Source:** `daily-AUDIT.md` — P1-02
 
-- [ ] **PH1-03 — Seed connectivity state without announcing a transition** — **Priority:** High
-  - [ ] initialise `lastState` in `js/features/network.js` from the current `navigator.onLine` value without rendering the recovery message
-  - [ ] preserve the offline message, the four-second auto-hide and the `.offline-note` insertion on the menu and gallery heroes for genuine transitions
-  - [ ] verify that a normal online load on a `js/script.js` page shows no banner, and that going offline and back online still announces both directions
+- [x] **PH1-03 — Seed connectivity state without announcing a transition** — **Priority:** High
+  - [x] initialise `lastState` in `js/features/network.js` from the current `navigator.onLine` value without rendering the recovery message
+  - [x] preserve the offline message, the four-second auto-hide and the `.offline-note` insertion on the menu and gallery heroes for genuine transitions
+  - [x] verify that a normal online load on a `js/script.js` page shows no banner, and that going offline and back online still announces both directions
   - **Completion condition:** the `#network-status` region reports only real online/offline transitions
   - **Source:** `daily-AUDIT.md` — P1-03
 

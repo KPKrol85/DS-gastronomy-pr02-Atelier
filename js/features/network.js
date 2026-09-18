@@ -41,7 +41,7 @@ export function initNetworkStatusBanner() {
   }
 
   var hideTimer = null;
-  var lastState = null;
+  var lastState = typeof navigator !== "undefined" && "onLine" in navigator ? navigator.onLine : true;
 
   function update(isOnline) {
     if (lastState === isOnline) return;
@@ -65,8 +65,6 @@ export function initNetworkStatusBanner() {
     setOfflineNotes(isOnline);
   }
 
-  var isOnline = typeof navigator !== "undefined" && "onLine" in navigator ? navigator.onLine : true;
-  update(isOnline);
   window.addEventListener("online", function () {
     update(true);
   });
