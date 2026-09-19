@@ -38,6 +38,9 @@ Każda podstrona jest osobnym dokumentem HTML. Wspólny nagłówek i stopka są 
 
 ```text
 ./
+├── .github/
+│   └── workflows/
+│       └── quality.yml     # workflow CI: kontrole źródeł i paczki
 ├── index.html
 ├── about.html
 ├── menu.html
@@ -65,6 +68,9 @@ Każda podstrona jest osobnym dokumentem HTML. Wspólny nagłówek i stopka są 
 │   ├── qa-links.js
 │   ├── qa-server.js
 │   └── images/build-images.js
+├── docs/
+│   ├── CHANGELOG.md        # zapis znaczących zmian
+│   └── settings.md         # opis skryptów npm i workflow
 ├── dist/                   # generated production package (ignored)
 ├── manifest.webmanifest
 ├── sw.js
@@ -74,7 +80,6 @@ Każda podstrona jest osobnym dokumentem HTML. Wspólny nagłówek i stopka są 
 ├── _redirects
 ├── package.json
 ├── package-lock.json
-├── CHANGELOG.md
 └── LICENSE
 ```
 
@@ -129,6 +134,19 @@ Skonfigurowane kontrole obejmują:
 
 QA źródeł nie buduje produkcji; QA dist sprawdza przygotowaną paczkę i nie przebudowuje jej. Kontrole lokalne pomijają zewnętrzne adresy, a nie bundle produkcyjne. Runner `scripts/qa-server.js` używa tego samego http-server i właściwego katalogu; zamyka serwer także po błędzie. Nie wymaga Windows WMIC. Port 5173 musi być wolny. Automatyczny audyt dostępności nie potwierdza pełnej zgodności WCAG.
 
+### Ciągła integracja
+
+Repozytorium zawiera jeden workflow GitHub Actions: [`.github/workflows/quality.yml`](.github/workflows/quality.yml). Uruchamia się przy push do `main`, przy pull requeście kierowanym do `main` oraz ręcznie przez `workflow_dispatch`.
+
+Zadanie działa na `ubuntu-latest`: pobiera repozytorium, konfiguruje Node.js 22 z cache zależności npm, a następnie wykonuje kolejno:
+
+1. `npm ci` — instalacja zależności z pliku lock.
+2. `npm run qa` — kontrole źródeł.
+3. `npm run build` — build paczki produkcyjnej.
+4. `npm run qa:dist` — walidacja zbudowanej paczki.
+
+Workflow wyłącznie weryfikuje projekt i zbudowaną paczkę. Nie publikuje ani nie wdraża witryny; opisane niżej wdrożenie na Netlify pozostaje poza tym procesem.
+
 ### Wdrożenie
 
 Repozytorium przygotowuje statyczną paczkę `dist/` oraz pliki `_headers` i `_redirects` w formacie Netlify. Reguły określają nagłówki, cache i odpowiedź 404. Ścieżki manifestu, Service Workera i metadanych zakładają publikację w katalogu głównym domeny.
@@ -169,7 +187,7 @@ Skonfigurowano minifikację CSS i bundling/minifikację JS. Obrazy korzystają z
 - Utrzymuj dane w `data/menu.json` oraz statyczne karty HTML pełniące rolę fallbacku.
 - Zmiany stron i publicznych zasobów zestawiaj z listami w `scripts/build-config.js`, `sw.js`, `manifest.webmanifest` i `sitemap.xml`.
 - Po zmianach zasobów cache aktualizuj `CACHE_VERSION` w `sw.js`.
-- [CHANGELOG.md](CHANGELOG.md) jest zapisem znaczących ukończonych zmian; aktualizuj go, gdy zakres zadania na to pozwala, lub zgłoś potrzebę wpisu.
+- [CHANGELOG.md](docs/CHANGELOG.md) jest zapisem znaczących ukończonych zmian; aktualizuj go, gdy zakres zadania na to pozwala, lub zgłoś potrzebę wpisu.
 
 ### Licencja
 
@@ -217,6 +235,9 @@ Each page is a separate HTML document. Shared header and footer markup is stored
 
 ```text
 ./
+├── .github/
+│   └── workflows/
+│       └── quality.yml     # CI workflow: source and package checks
 ├── index.html
 ├── about.html
 ├── menu.html
@@ -244,6 +265,9 @@ Each page is a separate HTML document. Shared header and footer markup is stored
 │   ├── qa-links.js
 │   ├── qa-server.js
 │   └── images/build-images.js
+├── docs/
+│   ├── CHANGELOG.md        # record of significant changes
+│   └── settings.md         # npm scripts and workflow reference
 ├── dist/                   # generated production package (ignored)
 ├── manifest.webmanifest
 ├── sw.js
@@ -253,7 +277,6 @@ Each page is a separate HTML document. Shared header and footer markup is stored
 ├── _redirects
 ├── package.json
 ├── package-lock.json
-├── CHANGELOG.md
 └── LICENSE
 ```
 
@@ -308,6 +331,19 @@ Configured checks include:
 
 Source QA does not build production; dist QA checks the prepared package without rebuilding it. Local checks skip external addresses, not production bundles. The `scripts/qa-server.js` runner uses the same http-server and the appropriate directory; it closes the server even after failures. It does not require Windows WMIC. Port 5173 must be free. Automated accessibility auditing does not establish full WCAG compliance.
 
+### Continuous Integration
+
+The repository contains one GitHub Actions workflow: [`.github/workflows/quality.yml`](.github/workflows/quality.yml). It runs on pushes to `main`, on pull requests targeting `main`, and manually through `workflow_dispatch`.
+
+The job runs on `ubuntu-latest`: it checks out the repository, sets up Node.js 22 with npm dependency caching, and then runs in order:
+
+1. `npm ci` — install locked dependencies.
+2. `npm run qa` — source quality checks.
+3. `npm run build` — production package build.
+4. `npm run qa:dist` — validation of the built package.
+
+The workflow only validates the project and the built package. It does not publish or deploy the website; the Netlify deployment described below remains outside this process.
+
 ### Deployment
 
 The repository prepares a static `dist/` package and `_headers` and `_redirects` files in Netlify format. Rules define headers, caching and the 404 response. Manifest, Service Worker and metadata paths assume deployment at the domain root.
@@ -348,7 +384,7 @@ CSS minification and JS bundling/minification are configured. Images use `pictur
 - Maintain `data/menu.json` and the static HTML cards used as fallback content.
 - Check page and public asset changes against the lists in `scripts/build-config.js`, `sw.js`, `manifest.webmanifest` and `sitemap.xml`.
 - Update `CACHE_VERSION` in `sw.js` when cached resources change.
-- [CHANGELOG.md](CHANGELOG.md) records significant completed changes; update it when task scope permits, or report that an entry is needed.
+- [CHANGELOG.md](docs/CHANGELOG.md) records significant completed changes; update it when task scope permits, or report that an entry is needed.
 
 ### License
 

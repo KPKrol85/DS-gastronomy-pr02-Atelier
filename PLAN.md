@@ -147,11 +147,11 @@
 
 **Goal:** Bring the documented repository layout and the executable source contract back in line with the files that exist.
 
-- [ ] **PH5-01 — Correct the README layout and workflow references** — **Priority:** Medium
-  - [ ] update both changelog links in `README.md` to `docs/CHANGELOG.md`
-  - [ ] add the `docs/` directory, including `docs/settings.md`, to both project-structure trees and remove the root `CHANGELOG.md` entry from both
-  - [ ] document the `.github/workflows/quality.yml` workflow and the checks it runs on push and pull request to `main`
-  - [ ] verify every path listed in both trees exists in the repository
+- [x] **PH5-01 — Correct the README layout and workflow references** — **Priority:** Medium
+  - [x] update both changelog links in `README.md` to `docs/CHANGELOG.md`
+  - [x] add the `docs/` directory, including `docs/settings.md`, to both project-structure trees and remove the root `CHANGELOG.md` entry from both
+  - [x] document the `.github/workflows/quality.yml` workflow and the checks it runs on push and pull request to `main`
+  - [x] verify every path listed in both trees exists in the repository
   - **Completion condition:** both language sections of `README.md` describe the current documentation layout and CI contract
   - **Source:** `daily-AUDIT.md` — P2-09
 

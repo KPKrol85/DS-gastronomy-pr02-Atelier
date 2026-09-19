@@ -43,6 +43,8 @@ All significant changes to this project are documented in this file.
 ### Documentation
 
 - Established the canonical changelog and its maintenance rule for significant completed changes, including tasks with restricted documentation scope.
+- Established the canonical changelog and its maintenance rule for significant completed changes, including tasks with restricted documentation scope.
+- Corrected bilingual README paths and project trees, and documented the GitHub Actions quality workflow and its separation from deployment.
 
 ### Build and Tooling
 
