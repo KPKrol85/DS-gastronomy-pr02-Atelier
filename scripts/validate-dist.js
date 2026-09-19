@@ -14,6 +14,12 @@ const REDUCED_ENTRY_PAGES = ["404.html", "cookies.html", "polityka-prywatnosci.h
 const IMPORT_STATEMENT = /\bimport\s+([\s\S]*?)\s+from\s*(['"])([^'"]+)\2\s*;?/g;
 const HTML_COMMENT = /<!--[\s\S]*?-->/g;
 const JS_COMMENT_OR_LITERAL = /\/\*[\s\S]*?\*\/|\/\/[^\r\n]*|'(?:[^'\\\r\n]|\\[\s\S])*'|"(?:[^"\\\r\n]|\\[\s\S])*"|`(?:[^`\\]|\\[\s\S])*`/g;
+const MENU_DATA = "data/menu.json";
+const MENU_PAGE = "menu.html";
+const FEATURED_PAGE = "index.html";
+const FEATURED_CATEGORIES = ["przystawki", "dania-glowne", "desery"];
+const FEATURED_SIZE = 3;
+const OPEN_TAG = /<([\w-]+)\b[^>]*>/g;
 
 function read(base, file) {
   return fs.readFileSync(path.join(base, file), "utf8");
@@ -91,6 +97,154 @@ function hasMeta(head, name, content) {
     && (tagAttribute(tag[0], "content") || "").toLowerCase() === content);
 }
 
+/*
+ Menu cards nest <ul class="menu-card__tags"> and <li class="menu-card__tag"> inside
+ themselves, so outermost elements are collected by tracking tag depth: the first
+ closing tag of a name never ends an element that still has an open descendant.
+*/
+function elementsOf(html, tagName, start = 0) {
+  const boundary = new RegExp(`</?${tagName}\\b[^>]*>`, "gi");
+  boundary.lastIndex = start;
+  const found = [];
+  let depth = 0;
+  let open = "";
+  let contentStart = 0;
+  for (let match = boundary.exec(html); match; match = boundary.exec(html)) {
+    if (!match[0].startsWith("</")) {
+      depth += 1;
+      if (depth === 1) {
+        open = match[0];
+        contentStart = boundary.lastIndex;
+      }
+    } else if (depth > 0) {
+      depth -= 1;
+      if (depth === 0) found.push({ tag: open, content: html.slice(contentStart, match.index) });
+    }
+  }
+  return found;
+}
+
+function classNames(tag) {
+  return (tagAttribute(tag, "class") || "").split(" ").filter(Boolean);
+}
+
+// Indentation and line breaks inside a card carry no meaning; the words do.
+function elementText(markup) {
+  return markup.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+}
+
+function cardField(card, className) {
+  for (const tag of card.matchAll(OPEN_TAG)) {
+    if (!classNames(tag[0]).includes(className)) continue;
+    const element = elementsOf(card, tag[1], tag.index)[0];
+    return element ? elementText(element.content) : null;
+  }
+  return null;
+}
+
+function listsWith(html, attribute) {
+  return [...html.matchAll(OPEN_TAG)].flatMap((tag) =>
+    tagAttribute(tag[0], attribute) === null
+      ? []
+      : [{ tag: tag[0], element: elementsOf(html, tag[1], tag.index)[0] }]);
+}
+
+// Every direct <li> child of a static menu list, read as the fields the data owns.
+function staticCards(scope, listContent) {
+  return elementsOf(listContent, "li").map((card, index) => {
+    const position = `${scope} card ${index + 1}`;
+    const title = cardField(card.content, "card__title");
+    const price = cardField(card.content, "menu-card__price");
+    assert(title, `${position} carries no .card__title`);
+    assert(price, `${position} carries no .menu-card__price`);
+    return { position, title, price };
+  });
+}
+
+/*
+ Mirrors renderFeaturedMenu() in js/features/menu.js: the first item of each preferred
+ category in that order, replaced by the first three dataset items when the preferred
+ categories yield fewer than three. Any other trio is a drift, not an alternative.
+*/
+function featuredSelection(items) {
+  const selection = FEATURED_CATEGORIES
+    .map((category) => items.find((item) => item.category === category))
+    .filter(Boolean);
+  return selection.length < FEATURED_SIZE ? items.slice(0, FEATURED_SIZE) : selection;
+}
+
+function validateCompleteMenu(items) {
+  const byTitle = new Map();
+  for (const item of items) {
+    assert(!byTitle.has(item.title),
+      `${MENU_DATA} lists "${item.title}" twice; a static menu cannot mirror it unambiguously`);
+    byTitle.set(item.title, item);
+  }
+
+  const html = read(rootDir, MENU_PAGE).replace(HTML_COMMENT, "");
+  const cards = [];
+  const categories = new Set();
+  for (const list of listsWith(html, "data-menu-category")) {
+    const category = tagAttribute(list.tag, "data-menu-category");
+    assert(category, `${MENU_PAGE} has a [data-menu-category] list without a category name`);
+    const scope = `${MENU_PAGE} [data-menu-category="${category}"]`;
+    assert(list.element, `${scope} is never closed`);
+    assert(!categories.has(category), `${MENU_PAGE} repeats the [data-menu-category="${category}"] list`);
+    categories.add(category);
+    cards.push(...staticCards(scope, list.element.content).map((card) => ({ ...card, category })));
+  }
+
+  const mirrored = new Set();
+  for (const card of cards) {
+    const item = byTitle.get(card.title);
+    assert(item, `${card.position} is an unexpected menu item: `
+      + `"${card.title}" (${card.price}) has no entry in ${MENU_DATA}`);
+    assert(!mirrored.has(card.title), `${card.position} duplicates the menu item "${card.title}"`);
+    mirrored.add(card.title);
+    assert.equal(card.category, item.category, `${card.position} places "${card.title}" in `
+      + `"${card.category}" where ${MENU_DATA} assigns it to "${item.category}"`);
+    assert.equal(card.price, item.price, `${card.position} prices "${card.title}" at `
+      + `"${card.price}" where ${MENU_DATA} says "${item.price}"`);
+  }
+  for (const item of items) {
+    assert(mirrored.has(item.title), `${MENU_PAGE} is missing the menu item "${item.title}" `
+      + `(${item.category}, ${item.price}) that ${MENU_DATA} defines`);
+  }
+  assert.equal(cards.length, items.length,
+    `${MENU_PAGE} holds ${cards.length} static menu cards for the ${items.length} items in ${MENU_DATA}`);
+}
+
+function validateFeaturedMenu(items) {
+  const html = read(rootDir, FEATURED_PAGE).replace(HTML_COMMENT, "");
+  const lists = listsWith(html, "data-menu-featured");
+  assert.equal(lists.length, 1,
+    `${FEATURED_PAGE} must carry exactly one [data-menu-featured] list, found ${lists.length}`);
+  assert.equal(tagAttribute(lists[0].tag, "data-menu-featured"), "true",
+    `${FEATURED_PAGE} featured list is not [data-menu-featured="true"], so renderFeaturedMenu() never fills it`);
+  assert(lists[0].element, `${FEATURED_PAGE} [data-menu-featured] list is never closed`);
+
+  const cards = staticCards(`${FEATURED_PAGE} [data-menu-featured]`, lists[0].element.content);
+  const selection = featuredSelection(items);
+  assert.equal(cards.length, selection.length, `${FEATURED_PAGE} shows ${cards.length} featured cards `
+    + `where renderFeaturedMenu() selects ${selection.length}`);
+  selection.forEach((item, index) => {
+    const card = cards[index];
+    assert.equal(card.title, item.title, `${card.position} shows "${card.title}" where `
+      + `renderFeaturedMenu() selects "${item.title}" from ${MENU_DATA}`);
+    assert.equal(card.price, item.price, `${card.position} prices "${item.title}" at `
+      + `"${card.price}" where ${MENU_DATA} says "${item.price}"`);
+  });
+}
+
+// The rendered menu and the static fallback both claim to show data/menu.json.
+function validateMenuParity() {
+  const data = JSON.parse(read(rootDir, MENU_DATA));
+  const items = Array.isArray(data.items) ? data.items : [];
+  assert(items.length, `${MENU_DATA} carries no items for the static menus to mirror`);
+  validateCompleteMenu(items);
+  validateFeaturedMenu(items);
+}
+
 function validateSource() {
   for (const directory of ["css", "js"]) {
     assert(!filesBelow(path.join(rootDir, directory)).some((file) => /\.min\.(css|js)$/.test(file)),
@@ -122,6 +276,7 @@ function validateSource() {
     assert(hasMeta(head, "theme-color", "#ffffff"),
       `${page} is missing <meta name="theme-color" content="#ffffff"> in <head>`);
   }
+  validateMenuParity();
 }
 
 function assertReference(reference, owner) {

@@ -177,9 +177,10 @@
 
 ## Optional future improvements
 
-- [ ] **O-01 — Add a menu data and static fallback parity check**
+- [x] **O-01 — Add a menu data and static fallback parity check**
   - **Value:** `data/menu.json` and the static fallback cards in `menu.html` and `index.html` currently list the same 18 titles and prices; a comparison inside `scripts/validate-dist.js` would catch future divergence between the JavaScript and no-JavaScript menus at the same moment as the other contract checks.
   - **Scope boundary:** safeguard against future drift; the two sources agree today, so this corrects no current defect.
+  - **Verification:** `validateMenuParity()` in `scripts/validate-dist.js` runs as the last step of `validateSource()`, so it is enforced by `npm run qa:source` and, through the existing `validateSource()` call, by `npm run qa:dist:integrity`. It reads `data/menu.json` as the canonical dataset and derives every expectation from it; no dish name, price or category count is hard-coded. Against `menu.html` it matches all 18 static cards in the six `[data-menu-category]` lists on title, price and category membership, and rejects missing, unexpected and duplicate cards. Against `index.html` it rebuilds the `renderFeaturedMenu()` selection — the first item of `przystawki`, `dania-glowne` and `desery` in that order, falling back to the first three dataset items — and compares it to the `[data-menu-featured="true"]` cards by title, price and position, so a different dish that merely exists in `data/menu.json` is still rejected. `npm run qa:source` passes on the corrected tree and exited non-zero for nine deliberately introduced inconsistencies: a changed `menu.html` price, a renamed static card, a removed static card, a changed `index.html` featured price, a featured card swapped for another dataset dish, a changed `data/menu.json` price, a changed `data/menu.json` title, a card moved into the wrong category and a duplicated card. Each failure named the affected page and item, and every temporary change was restored byte-for-byte.
 
 - [ ] **O-02 — Extend ESLint coverage to the service worker and build scripts**
   - **Value:** `npm run lint` runs ESLint over `js/` only, leaving `sw.js` and the six files under `scripts/` as the only JavaScript in the repository without static analysis in CI.
