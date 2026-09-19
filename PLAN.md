@@ -15,10 +15,9 @@
 ## Current priorities
 
 1. `PH1-01` — Make the optimized image tree reproducible before the generator is run again.
-2. `PH1-02` — Re-target the gallery page's metadata and structured data.
-3. `PH1-03` — Align the menu download control with the file it delivers.
-4. `PH2-01` — Restore a visible focus indicator on the contact form fields.
-5. `PH2-02` — Ship the contact page dialog in the shared closed state.
+2. `PH1-03` — Align the menu download control with the file it delivers.
+3. `PH2-01` — Restore a visible focus indicator on the contact form fields.
+4. `PH2-02` — Ship the contact page dialog in the shared closed state.
 
 ## Phase 1 — Asset generation and public content integrity
 
@@ -33,11 +32,11 @@
   - **Completion condition:** `npm run images:build` reproduces the tracked `assets/img-optimized/` tree without removing a referenced file, and `npm run qa` passes afterwards
   - **Source:** `AUDIT.md` — P1-02
 
-- [ ] **PH1-02 — Re-target the gallery page's metadata and structured data** — **Priority:** High
-  - [ ] replace `gallery.html`'s `meta name="description"`, `og:title`, `og:description`, `twitter:title` and `twitter:description`, all currently copied from `about.html`, with text describing the gallery
-  - [ ] correct the JSON-LD `BreadcrumbList` terminal item so its name and URL match the gallery page and its own canonical URL
-  - [ ] remove the `FAQPage` node from `gallery.html`, whose six questions render only on `about.html`
-  - [ ] verify no two of the eight pages listed in `sitemap.xml` share a meta description or `og:title`
+- [x] **PH1-02 — Re-target the gallery page's metadata and structured data** — **Priority:** High
+  - [x] replace `gallery.html`'s `meta name="description"`, `og:title`, `og:description`, `twitter:title` and `twitter:description`, all currently copied from `about.html`, with text describing the gallery
+  - [x] correct the JSON-LD `BreadcrumbList` terminal item so its name and URL match the gallery page and its own canonical URL
+  - [x] remove the `FAQPage` node from `gallery.html`, whose six questions render only on `about.html`
+  - [x] verify no two of the eight pages listed in `sitemap.xml` share a meta description or `og:title`
   - **Completion condition:** every metadata and structured-data value served on `gallery.html` describes `gallery.html`, and no page declares structured data whose content is absent from it
   - **Source:** `AUDIT.md` — P1-01
 

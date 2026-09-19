@@ -40,6 +40,7 @@ All significant changes to this project are documented in this file.
 - Reduced redundant contact-form live-region updates so progress status is rewritten only when the validation summary actually changes.
 - Removed the ineffective lightbox backdrop listener and consolidated control initialization while preserving navigation, accessibility metadata and focus restoration.
 - Corrected the `cytrusowe-ciasto` source filename and added its missing 720×480 menu image variant, restoring reproducible optimized-image builds.
+- Corrected gallery metadata and breadcrumb structured data, removing FAQ markup unrelated to the gallery page.
 
 ### Documentation
 
