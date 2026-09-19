@@ -1,0 +1,211 @@
+# Atelier No.02 — Development Plan
+
+**Last reviewed:** 2026-09-19
+**Project type:** Multi-page static front-end demonstration site (HTML, modular CSS, Vanilla JavaScript ES Modules) with a Node.js build and QA pipeline, Netlify-format hosting configuration and a manually maintained service worker and web manifest layer
+**Plan status:** Active
+
+## Planning principles
+
+- The plan reflects the repository state verified at the review date. It supersedes `docs/archive/plans/PLAN-2026-09-19.md`, whose items are all complete and archived.
+- A main item is checked only when every required subtask is complete.
+- Canonical sources are the 11 root HTML pages, `css/style.css` and its modules, the entries and modules under `js/`, `sw.js`, `data/menu.json`, `assets/img-src/` and the files under `scripts/`. `dist/` is generated output and is never edited directly; `assets/img-optimized/` is tracked output produced from `assets/img-src/`.
+- Items converted from `AUDIT.md` carry their source identifier; each was re-verified against current source before inclusion.
+- When a task completes, evaluate whether the change belongs in `docs/CHANGELOG.md` and record it there when scope permits.
+
+## Current priorities
+
+1. `PH1-01` — Make the optimized image tree reproducible before the generator is run again.
+2. `PH1-02` — Re-target the gallery page's metadata and structured data.
+3. `PH1-03` — Align the menu download control with the file it delivers.
+4. `PH2-01` — Restore a visible focus indicator on the contact form fields.
+5. `PH2-02` — Ship the contact page dialog in the shared closed state.
+
+## Phase 1 — Asset generation and public content integrity
+
+**Goal:** Make the generated image tree reproducible from its sources, and make public metadata and the one download control describe what the pages actually deliver.
+
+- [ ] **PH1-01 — Restore reproducibility of the optimized image tree** — **Priority:** Critical
+  - [ ] rename `assets/img-src/subpage-menu/desery/cytrusowe-ciasto-720x48-.jpg` to the `720x480` form the sibling sources use, so `parseSizeFromName()` in `scripts/images/build-images.js` matches it and the variant is resized
+  - [ ] add the missing 720x480 variant entry for the `cytrusowe-ciasto` item in `data/menu.json`, so the rendered card offers the same candidates as the static fallback card
+  - [ ] confirm every file under `assets/img-optimized/` has a correspondingly named source under `assets/img-src/` before the generator is run again
+  - [ ] run `npm run images:build`, then confirm with `git status` that no tracked output was deleted and that `cytrusowe-ciasto-720x480.avif`, `.webp` and `.jpg` are present
+  - [ ] run `npm run qa` afterwards to confirm the six references from `menu.html` and `index.html` still resolve
+  - **Completion condition:** `npm run images:build` reproduces the tracked `assets/img-optimized/` tree without removing a referenced file, and `npm run qa` passes afterwards
+  - **Source:** `AUDIT.md` — P1-02
+
+- [ ] **PH1-02 — Re-target the gallery page's metadata and structured data** — **Priority:** High
+  - [ ] replace `gallery.html`'s `meta name="description"`, `og:title`, `og:description`, `twitter:title` and `twitter:description`, all currently copied from `about.html`, with text describing the gallery
+  - [ ] correct the JSON-LD `BreadcrumbList` terminal item so its name and URL match the gallery page and its own canonical URL
+  - [ ] remove the `FAQPage` node from `gallery.html`, whose six questions render only on `about.html`
+  - [ ] verify no two of the eight pages listed in `sitemap.xml` share a meta description or `og:title`
+  - **Completion condition:** every metadata and structured-data value served on `gallery.html` describes `gallery.html`, and no page declares structured data whose content is absent from it
+  - **Source:** `AUDIT.md` — P1-01
+
+- [ ] **PH1-03 — Align the menu download control with the file it delivers** — **Priority:** High
+  - [ ] decide whether the project ships a real menu document in the promised format or presents the existing `assets/docs/menu.svg` honestly
+  - [ ] apply the decision across the surrounding copy, the visible button label, the `aria-label`, the `type` attribute and the `download` filename in the menu call to action, so all of them name one format
+  - [ ] if the existing file is retained, replace its `Sample Menu Document` title, its placeholder description and its visible text with content matching the advertised document
+  - [ ] if a new document is added under `assets/docs/`, confirm `npm run qa:links` and `npm run qa:dist:integrity` resolve it
+  - **Completion condition:** the control's visible label, accessible name, `type` and downloaded filename describe the same format, and the delivered file contains the menu it advertises rather than placeholder text
+  - **Source:** `AUDIT.md` — P1-03
+
+## Phase 2 — Contact page keyboard accessibility
+
+**Goal:** Close the two keyboard defects on the only page with a form, both of which sit outside what the configured loaded-state accessibility run can detect.
+
+- [ ] **PH2-01 — Restore a visible focus indicator on the contact form fields** — **Priority:** High
+  - [ ] point the `.form input:focus-visible, .form textarea:focus-visible` rule in `css/components/forms.css` at the existing `--focus-ring` token, or another theme-aware value, instead of the fixed `color-mix(in oklab, var(--burgundy) 30%, white)`
+  - [ ] confirm the chosen value clears 3:1 against both the field `--input-bg` and the surrounding `--bone` panel in the light and dark themes
+  - [ ] leave the `.is-invalid` border and ring treatment unchanged
+  - [ ] verify by keyboard that `#name`, `#email` and `#message` each show a distinguishable outline in both themes
+  - **Completion condition:** the computed focus outline on the three fields reaches at least 3:1 against both adjacent surfaces in each theme
+  - **Source:** `AUDIT.md` — P1-04
+
+- [ ] **PH2-02 — Ship the contact page dialog in the shared closed state** — **Priority:** High
+  - [ ] add the missing `inert` attribute to `#demo-legal-modal` in `contact.html`, matching the `aria-hidden="true" hidden inert` wrapper the other nine pages ship
+  - [ ] verify no control inside the closed dialog is reachable by Tab on `contact.html`, both on a first visit and with a stored `kp-demo-accepted` acknowledgement
+  - [ ] verify the dialog still opens, traps focus and closes on a first visit
+  - **Completion condition:** all ten pages carrying `#demo-legal-modal` ship identical initial wrapper attributes, and the closed dialog contributes no tab stop
+  - **Source:** `AUDIT.md` — P1-05
+
+## Phase 3 — Public content consistency
+
+**Goal:** Make the interface state the same capabilities and the same contact details as the project's own terms, on every page that repeats them.
+
+- [ ] **PH3-01 — Align reservation wording with the contact form and the terms** — **Priority:** Medium
+  - [ ] rewrite the contact page hero lead and the contact section lead so they describe the three-field message form rather than a booking
+  - [ ] revise the `Rezerwacja` controls on `index.html` and `menu.html` and the `Rezerwacje i kontakt z restauracją` shortcut description in `manifest.webmanifest`
+  - [ ] keep the restaurant presentation intact while removing any implication that a channel accepts a binding reservation, order or payment
+  - [ ] verify the remaining wording no longer contradicts the effects listed in `regulamin.html` or the cookies policy statement that the service accepts no binding reservations
+  - **Completion condition:** no public control, lead or manifest shortcut promises a service the contact form and the terms exclude
+  - **Source:** `AUDIT.md` — P2-02
+
+- [ ] **PH3-02 — Replace the About FAQ with a project-focused FAQ and regenerate its structured data** — **Priority:** Medium
+  - [ ] author replacement entries covering the demonstration character of the site, the non-binding contact form, the demonstration menu, KP_Code Digital Studio's authorship and the front-end capabilities the project implements
+  - [ ] replace the six visible FAQ entries on `about.html`, keeping the existing card markup, heading ranks and reveal attributes
+  - [ ] regenerate the `FAQPage` node in the same page's JSON-LD from the adopted wording, so each question and answer matches the visible text
+  - [ ] verify no entry states reservation lead times, allergy handling at booking, group bookings or gift-voucher orders
+  - **Completion condition:** the visible FAQ and the `FAQPage` node state the same project-focused content, and neither describes a service the terms exclude
+  - **Depends on:** `PH3-01`
+  - **Source:** `AUDIT.md` — P2-02
+
+- [ ] **PH3-03 — Publish one canonical street address** — **Priority:** Medium
+  - [ ] adopt the operator address stated in `regulamin.html` as the canonical form
+  - [ ] reconcile the footer address text on the eight pages that omit the premises number, together with the `<address>` block and the location sentence on `contact.html`
+  - [ ] align the embedded map query on `contact.html` with the address used by the map link `href` on all 11 pages
+  - [ ] verify one address string appears in every public location that displays it
+  - **Completion condition:** the visible address, the map link target and the embedded map query state the same address on every page
+  - **Source:** `AUDIT.md` — P2-05
+
+- [ ] **PH3-04 — Keep visible label text inside every accessible name** — **Priority:** Medium
+  - [ ] extend or remove the `aria-label` on the 17 links and buttons whose accessible name omits their visible text, including the footer address link repeated on all 11 pages
+  - [ ] where the label adds useful context, keep the visible text as the start of the accessible name instead of replacing it
+  - [ ] verify every interactive element with visible text has an accessible name containing that text
+  - **Completion condition:** no link or button carries an `aria-label` that omits its own visible text
+  - **Depends on:** `PH1-03`, `PH3-01`, `PH3-03`
+  - **Source:** `AUDIT.md` — P2-03
+
+- [ ] **PH3-05 — Refresh the sitemap freshness signals** — **Priority:** Low
+  - [ ] update each `lastmod` in `sitemap.xml` to the last substantive change of the page it describes, once the content work in Phases 1 and 3 has landed
+  - [ ] verify the eight listed URLs are unchanged and every `lastmod` matches or postdates its page's revision
+  - **Completion condition:** no `lastmod` value predates the content it describes
+  - **Depends on:** `PH1-02`, `PH3-01`, `PH3-02`, `PH3-03`
+  - **Source:** `AUDIT.md` — P2-06
+
+## Phase 4 — Runtime behaviour and remaining accessibility details
+
+**Goal:** Make the offline messaging reach the case it was written for, and keep a generated control out of 24 heading names.
+
+- [ ] **PH4-01 — Render the offline state on a page that loads offline** — **Priority:** Medium
+  - [ ] in `js/features/network.js`, render the offline banner and the hero notes once at initialisation when the page starts with `navigator.onLine` false
+  - [ ] keep the restored-connection message limited to genuine online transitions, and keep the four-second auto-hide and the `.offline-note[data-auto]` cleanup unchanged
+  - [ ] verify the initialisation path renders the banner and the matching hero note on `menu.html` and `gallery.html` when the page starts offline, and renders neither on a normal online load
+  - **Completion condition:** the offline messaging appears on an offline page load, and no recovery notice is announced without a real transition
+  - **Verification limit:** `js/bootstrap.js` skips service worker registration on localhost and both QA servers bind to `127.0.0.1`, so a genuinely cache-served offline load cannot be reproduced by the configured checks; verification covers the initialisation path only
+  - **Source:** `AUDIT.md` — P2-01
+
+- [ ] **PH4-02 — Keep the menu copy-link control out of heading names** — **Priority:** Medium
+  - [ ] change `initAnchors()` in `js/features/menu.js` so the generated `.anchor` is not a descendant of the `h2` or `h3` whose accessible name it currently extends, or give it a name that is not folded into the heading text
+  - [ ] keep the control keyboard-reachable, and keep its copy behaviour and its temporary confirmation label intact
+  - [ ] keep the opacity-based reveal in `css/pages/menu.css` working for whichever element now owns the control
+  - [ ] verify the computed accessible name of each of the 24 menu headings is its visible text alone
+  - **Completion condition:** menu heading names contain no control label, and the copy-link control remains reachable and operable by keyboard
+  - **Source:** `AUDIT.md` — P2-04
+
+## Phase 5 — Shared page contracts and token hygiene
+
+**Goal:** Bring the last drifted per-page block onto the shared contract, make that contract machine-enforced, and remove the one misspelled design token.
+
+- [ ] **PH5-01 — Bring 404.html onto the shared body class contract** — **Priority:** Low
+  - [ ] give `404.html` the `page` class and a `page--404` modifier alongside its existing `data-page` attribute, matching the other ten pages
+  - [ ] confirm the `.page`-scoped card rules and the desktop `.page .page-hero__lead` rule do not change the page's current rendering
+  - [ ] verify the page still passes `npm run qa:html`
+  - **Completion condition:** every page's `<body>` carries the shared `page` class alongside its page modifier
+  - **Source:** `AUDIT.md` — P2-07
+
+- [ ] **PH5-02 — Assert the shared per-page block invariants in the source contract** — **Priority:** Medium
+  - [ ] extend `validateSource()` in `scripts/validate-dist.js` to assert that every page's `<body>` carries the `page` class and a `page--*` modifier consistent with its `data-page` value
+  - [ ] assert that every page shipping `#demo-legal-modal` ships the wrapper with the same initial attributes, so the state is not maintained by hand across ten copies
+  - [ ] verify `npm run qa:source` fails on a page deliberately changed to violate either assertion, and passes on the corrected tree
+  - **Completion condition:** `npm run qa:source` rejects both a drifted body contract and a drifted dialog wrapper
+  - **Depends on:** `PH2-02`, `PH5-01`
+  - **Source:** `AUDIT.md` — P1-05, P2-07
+
+- [ ] **PH5-03 — Correct the misspelled shadow token** — **Priority:** Low
+  - [ ] rename `--shodow-box-sm` in `css/base/tokens.css` to match the naming of the surrounding shadow tokens
+  - [ ] update its single consumer in `css/pages/legal.css`
+  - [ ] verify the legal-page rule still resolves and no stylesheet references an undefined custom property
+  - **Completion condition:** the shadow tokens follow one naming pattern and the legal-page shadow still renders
+  - **Source:** `AUDIT.md` — P2-08
+
+## Phase 6 — Documentation contracts
+
+**Goal:** Keep the documented repository layout in step with the files the repository actually contains.
+
+- [ ] **PH6-01 — Record the root planning and audit documents in the README** — **Priority:** Low
+  - [ ] add `AUDIT.md` and `PLAN.md` to both project-structure trees in `README.md`
+  - [ ] state in both language sections that `PLAN.md` is the active development plan and `AUDIT.md` the current audit, alongside the existing links to the archived plan and audit
+  - [ ] verify every path listed in both trees exists in the repository
+  - **Completion condition:** both language sections of `README.md` describe the current documentation layout, including the root plan and audit
+
+## Phase 7 — Release hygiene and final verification
+
+**Goal:** Ship the cache contract for the corrected pages and confirm the tree passes the project's own source and production pipelines.
+
+- [ ] **PH7-01 — Raise the service worker cache version for the shipped content changes** — **Priority:** Medium
+  - [ ] raise `CACHE_VERSION` in `sw.js` once the page and asset changes in Phases 1 to 5 have landed
+  - [ ] confirm every `FILES_TO_CACHE` entry still resolves against the source tree and the built package
+  - **Completion condition:** returning visitors receive the corrected pages instead of the previously cached copies
+  - **Depends on:** Phases 1 to 5
+
+- [ ] **PH7-02 — Run the full source and production pipeline** — **Priority:** Medium
+  - [ ] run `npm run qa` and record the ESLint, source contract, HTML validation, link and pa11y-ci results
+  - [ ] run `npm run build`, then `npm run qa:dist`
+  - [ ] optional: run `npm run qa:links:external` once, since no external address in the repository has been contacted by any recorded check
+  - [ ] record any failure as a new plan item rather than leaving it undocumented
+  - **Completion condition:** both pipelines complete, or every failure is recorded as a tracked item
+  - **Depends on:** Phases 1 to 6
+
+## Optional future improvements
+
+- [ ] **O-01 — Assert image output reproducibility in the validation script**
+  - **Value:** `scripts/validate-dist.js` already resolves the 158 image variants declared in `data/menu.json`, but nothing checks that every file under `assets/img-optimized/` has a correspondingly named source under `assets/img-src/`. The same assertion inside `validateSource()` would surface a malformed source name in CI, before `npm run images:build` removes the output tree.
+  - **Scope boundary:** optional safeguard using tooling already present; it does not change the generator or the image workflow.
+  - **Depends on:** `PH1-01`
+  - **Source:** `AUDIT.md` — Extra quality improvements
+
+- [ ] **O-02 — Extend the source contract to per-page metadata uniqueness**
+  - **Value:** asserting that titles, descriptions, `og:title` values and breadcrumb terminal items are unique per page and agree with that page's own canonical URL would catch the copy-paste drift behind `PH1-02` in the same place the project already enforces its other per-page invariants.
+  - **Scope boundary:** optional coverage extension; no metadata problem other than the one in `PH1-02` was detected.
+  - **Depends on:** `PH1-02`
+  - **Source:** `AUDIT.md` — Extra quality improvements
+
+- [ ] **O-03 — Limit the production package to the font files the current release serves**
+  - **Value:** `assetEntries` in `scripts/build-config.js` copies `assets/fonts` wholesale, yet `css/base/typography.css` declares only the four variable fonts; `lato-400-latin.woff2`, `lato-700-latin.woff2`, `montserrat-400-latin.woff2` and `montserrat-700-latin.woff2` are referenced by no `@font-face` rule and by no page.
+  - **Scope boundary:** packaging only, and declining it is equally valid. The files stay tracked with their licensing and attribution notices, and the retained SVG icons under `assets/icons/svg-icon/` are out of scope here.
+  - **Source:** `AUDIT.md` — Extra quality improvements
+
+## Deferred work
+
+- [ ] **D-01 — Integrate the retained SVG icon set**
+  - **Reason:** seven of the nine icons in `assets/icons/svg-icon/` are referenced by no page, stylesheet or module; only `icon-sun.svg` and `icon-moon.svg` are in use. They are retained for a planned visual refinement phase and an `icons.js` integration, neither of which exists in the repository, so no implementation scope can be defined from current evidence. The files remain tracked and are not candidates for removal.
