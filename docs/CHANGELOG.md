@@ -38,6 +38,7 @@ All significant changes to this project are documented in this file.
 - Activated the reveal direction and stagger authoring contract, with immediate no-motion rendering for reduced-motion users and fallback environments.
 - Simplified scrollspy ownership so IntersectionObserver exclusively tracks active sections when available, with the scroll-offset algorithm retained as a fallback and responsive observer geometry rebuilt on resize.
 - Reduced redundant contact-form live-region updates so progress status is rewritten only when the validation summary actually changes.
+- Removed the ineffective lightbox backdrop listener and consolidated control initialization while preserving navigation, accessibility metadata and focus restoration.
 
 ### Documentation
 

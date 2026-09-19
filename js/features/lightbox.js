@@ -10,6 +10,8 @@ export function initLightbox() {
     overlay.setAttribute("role", "dialog");
     overlay.setAttribute("aria-modal", "true");
     overlay.setAttribute("aria-label", "Podgląd zdjęcia");
+    overlay.setAttribute("aria-describedby", "lb-caption");
+    overlay.setAttribute("aria-keyshortcuts", "Esc ArrowLeft ArrowRight F");
 
     const modal = document.createElement("div");
     modal.className = "lb-modal";
@@ -24,6 +26,7 @@ export function initLightbox() {
 
     const caption = document.createElement("figcaption");
     caption.className = "lb-caption";
+    caption.id = "lb-caption";
 
     const controls = document.createElement("div");
     controls.className = "lb-controls";
@@ -31,6 +34,7 @@ export function initLightbox() {
     prevBtn.type = "button";
     prevBtn.className = "lb-btn lb-prev";
     prevBtn.setAttribute("aria-label", "Poprzednie zdjęcie");
+    prevBtn.setAttribute("title", "Poprzednie zdjęcie");
     prevBtn.textContent = "←";
     const counter = document.createElement("span");
     counter.className = "lb-counter";
@@ -39,35 +43,21 @@ export function initLightbox() {
     nextBtn.type = "button";
     nextBtn.className = "lb-btn lb-next";
     nextBtn.setAttribute("aria-label", "Następne zdjęcie");
+    nextBtn.setAttribute("title", "Następne zdjęcie");
     nextBtn.textContent = "→";
     const fullBtn = document.createElement("button");
     fullBtn.type = "button";
     fullBtn.className = "lb-btn lb-full";
     fullBtn.setAttribute("aria-label", "Pełny ekran");
+    fullBtn.setAttribute("title", "Pełny ekran");
     fullBtn.textContent = "⤢";
     const closeBtn = document.createElement("button");
     closeBtn.type = "button";
     closeBtn.className = "lb-btn lb-close";
     closeBtn.setAttribute("aria-label", "Zamknij podgląd");
+    closeBtn.setAttribute("title", "Zamknij podgląd");
     closeBtn.textContent = "×";
     controls.append(prevBtn, counter, nextBtn, fullBtn, closeBtn);
-    try {
-      prevBtn.textContent = "←";
-      nextBtn.textContent = "→";
-      closeBtn.textContent = "×";
-      prevBtn.setAttribute("aria-label", "Poprzednie zdjęcie");
-      prevBtn.setAttribute("title", "Poprzednie zdjęcie");
-      nextBtn.setAttribute("aria-label", "Następne zdjęcie");
-      nextBtn.setAttribute("title", "Następne zdjęcie");
-      fullBtn.setAttribute("aria-label", "Pełny ekran");
-      fullBtn.setAttribute("title", "Pełny ekran");
-      closeBtn.setAttribute("aria-label", "Zamknij podgląd");
-      closeBtn.setAttribute("title", "Zamknij podgląd");
-      caption.id = "lb-caption";
-      overlay.setAttribute("aria-label", "Podgląd zdjęcia");
-      overlay.setAttribute("aria-describedby", "lb-caption");
-      overlay.setAttribute("aria-keyshortcuts", "Esc ArrowLeft ArrowRight F");
-    } catch (e) {}
 
     const live = document.createElement("div");
     live.className = "visually-hidden";
@@ -200,10 +190,6 @@ export function initLightbox() {
     index = (index - 1 + group.length) % group.length;
     render(index);
   }
-
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) return;
-  });
 
   document.addEventListener("keydown", (e) => {
     if (!html.classList.contains("lb-open")) return;

@@ -136,10 +136,10 @@
   - **Completion condition:** the progress region is written only when its message actually changes
   - **Source:** `daily-AUDIT.md` — P2-04
 
-- [ ] **PH4-03 — Remove dead lightbox interaction code** — **Priority:** Low
-  - [ ] remove the overlay `click` handler in `js/features/lightbox.js` that contains only an early return, or implement the backdrop dismissal it implies
-  - [ ] collapse the duplicated control-label initialisation into a single assignment
-  - [ ] verify the lightbox still opens, navigates, toggles fullscreen and closes
+- [x] **PH4-03 — Remove dead lightbox interaction code** — **Priority:** Low
+  - [x] remove the overlay `click` handler in `js/features/lightbox.js` that contains only an early return, or implement the backdrop dismissal it implies
+  - [x] collapse the duplicated control-label initialisation into a single assignment
+  - [x] verify the lightbox still opens, navigates, toggles fullscreen and closes
   - **Completion condition:** the module contains no handler or assignment without an effect
   - **Source:** `daily-AUDIT.md` — P2-08
 
