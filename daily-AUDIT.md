@@ -183,18 +183,21 @@ None detected.
 - **Evidence:** `data/menu.json` holds 18 items and the static fallback cards in `menu.html` and `index.html` currently reproduce the same 18 titles and prices exactly; `scripts/validate-dist.js` verifies the JSON image variants but not this correspondence.
 - **Potential value:** The fallback is the documented no-JavaScript and fetch-failure path, so silent divergence would publish two different menus to two different audiences. A comparison in the existing validation script would catch it at the same moment as the other contract checks.
 - **Scope boundary:** The two sources agree today, so this is a safeguard against future drift rather than a correction of a current defect.
+- **Status:** RESOLVED — implemented and verified. Details are recorded in `docs/CHANGELOG.md`.
 
 ### Extend lint coverage to the service worker and build scripts
 
 - **Evidence:** `package.json` runs `eslint "js/**/*.js"`, which excludes `sw.js` and the six files under `scripts/`.
 - **Potential value:** The service worker and the build/validation scripts are the files whose failure has the widest blast radius, and they are currently the only JavaScript in the repository with no static analysis in CI.
 - **Scope boundary:** Optional tooling coverage; no current defect in those files was detected in this audit.
+- **Status:** RESOLVED — implemented and verified. Details are recorded in `docs/CHANGELOG.md`.
 
 ### Include the contact page in the automated accessibility run
 
 - **Evidence:** `.pa11yci` lists 10 URLs and omits `contact.html`, which is the only page in the project with a form.
 - **Potential value:** The page with the most interactive controls, validation messaging and live regions is the one the scan never sees, which is where the automated check would have the most to report.
 - **Scope boundary:** Optional coverage extension; the omission is documented in `README.md` and `docs/settings.md`, so it is an intentional current limitation rather than a defect.
+- **Status:** RESOLVED — implemented and verified. Details are recorded in `docs/CHANGELOG.md`.
 
 ## Verification performed
 
