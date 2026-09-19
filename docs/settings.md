@@ -81,7 +81,7 @@ Dev i preview używają portu 5173; uruchamiaj je osobno. Przed QA zatrzymaj rę
 ### `qa:a11y`
 
 - command: `pa11y-ci`
-- what it does: Dotychczasowa .pa11yci: WCAG2AA/htmlcs, 10 stron, bez contact.html. Wymaga serwera.
+- what it does: Konfiguracja .pa11yci: WCAG2AA/htmlcs, wszystkie 11 stron łącznie z contact.html. Wymaga serwera.
 
 ### `qa:server`
 

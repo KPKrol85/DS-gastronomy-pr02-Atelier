@@ -129,10 +129,10 @@ Skonfigurowane kontrole obejmują:
 | `npm run qa` | ESLint, kontrakt źródeł, HTML, uruchomienie dev, lokalne linki/zasoby/fragmenty i pa11y-ci. |
 | `npm run qa:dist` | Integralność istniejącego `dist/`, produkcyjny HTML, uruchomienie preview, lokalne linki/zasoby/fragmenty i pa11y-ci. Najpierw uruchom build. |
 | `npm run qa:links` | Wszystkie 11 stron i ich lokalne zasoby, w tym importy CSS i fonty; wymaga działającego dev albo preview. |
-| `npm run qa:a11y` | Dotychczasowe 10 adresów z `.pa11yci`, HTML CodeSniffer, WCAG2AA; bez `contact.html`. |
+| `npm run qa:a11y` | Wszystkie 11 adresów z `.pa11yci`, w tym `contact.html`, HTML CodeSniffer, WCAG2AA. |
 | `npm run qa:links:external` | Opcjonalna kontrola także zewnętrznych linków na działającym serwerze. |
 
-QA źródeł nie buduje produkcji; QA dist sprawdza przygotowaną paczkę i nie przebudowuje jej. Kontrole lokalne pomijają zewnętrzne adresy, a nie bundle produkcyjne. Runner `scripts/qa-server.js` używa tego samego http-server i właściwego katalogu; zamyka serwer także po błędzie. Nie wymaga Windows WMIC. Port 5173 musi być wolny. Automatyczny audyt dostępności nie potwierdza pełnej zgodności WCAG.
+QA źródeł nie buduje produkcji; QA dist sprawdza przygotowaną paczkę i nie przebudowuje jej. Kontrole lokalne pomijają zewnętrzne adresy, a nie bundle produkcyjne. Runner `scripts/qa-server.js` używa tego samego http-server i właściwego katalogu; zamyka serwer także po błędzie. Nie wymaga Windows WMIC. Port 5173 musi być wolny. Automatyczny audyt dostępności nie potwierdza pełnej zgodności WCAG. Strona kontaktowa jest sprawdzana w stanie po załadowaniu; audyt nie obejmuje interaktywnych stanów walidacji formularza.
 
 ### Ciągła integracja
 
@@ -326,10 +326,10 @@ Configured checks include:
 | `npm run qa` | ESLint, source contract, HTML, dev startup, local links/assets/fragments and pa11y-ci. |
 | `npm run qa:dist` | Integrity of existing `dist/`, production HTML, preview startup, local links/assets/fragments and pa11y-ci. Run build first. |
 | `npm run qa:links` | All 11 pages and local resources, including CSS imports and fonts; requires a running dev or preview server. |
-| `npm run qa:a11y` | Existing 10 addresses in `.pa11yci`, HTML CodeSniffer, WCAG2AA; excludes `contact.html`. |
+| `npm run qa:a11y` | All 11 addresses in `.pa11yci`, including `contact.html`, HTML CodeSniffer, WCAG2AA. |
 | `npm run qa:links:external` | Optional external link checking against a running server. |
 
-Source QA does not build production; dist QA checks the prepared package without rebuilding it. Local checks skip external addresses, not production bundles. The `scripts/qa-server.js` runner uses the same http-server and the appropriate directory; it closes the server even after failures. It does not require Windows WMIC. Port 5173 must be free. Automated accessibility auditing does not establish full WCAG compliance.
+Source QA does not build production; dist QA checks the prepared package without rebuilding it. Local checks skip external addresses, not production bundles. The `scripts/qa-server.js` runner uses the same http-server and the appropriate directory; it closes the server even after failures. It does not require Windows WMIC. Port 5173 must be free. Automated accessibility auditing does not establish full WCAG compliance. The contact page is checked in its loaded state; the audit does not cover the form's interactive validation states.
 
 ### Continuous Integration
 

@@ -60,3 +60,4 @@ All significant changes to this project are documented in this file.
 - Added npm workflows for ESLint, HTML validation, local and external link checks, and configured pa11y-ci accessibility audits.
 - Extended source contract validation to reject demonstration-modal markup without its JavaScript initializer and incomplete theme bootstrap or colour metadata across all 11 pages.
 - Added source validation to keep the complete static menu and featured cards consistent with canonical menu data, including item selection, prices, categories and completeness.
+- Extended automated accessibility checks to all 11 pages, including the contact form page, with successful source and production validation.
