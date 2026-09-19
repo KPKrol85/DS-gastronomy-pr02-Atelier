@@ -24,12 +24,12 @@
 
 **Goal:** Make the generated image tree reproducible from its sources, and make public metadata and the one download control describe what the pages actually deliver.
 
-- [ ] **PH1-01 — Restore reproducibility of the optimized image tree** — **Priority:** Critical
-  - [ ] rename `assets/img-src/subpage-menu/desery/cytrusowe-ciasto-720x48-.jpg` to the `720x480` form the sibling sources use, so `parseSizeFromName()` in `scripts/images/build-images.js` matches it and the variant is resized
-  - [ ] add the missing 720x480 variant entry for the `cytrusowe-ciasto` item in `data/menu.json`, so the rendered card offers the same candidates as the static fallback card
-  - [ ] confirm every file under `assets/img-optimized/` has a correspondingly named source under `assets/img-src/` before the generator is run again
-  - [ ] run `npm run images:build`, then confirm with `git status` that no tracked output was deleted and that `cytrusowe-ciasto-720x480.avif`, `.webp` and `.jpg` are present
-  - [ ] run `npm run qa` afterwards to confirm the six references from `menu.html` and `index.html` still resolve
+- [x] **PH1-01 — Restore reproducibility of the optimized image tree** — **Priority:** Critical
+  - [x] rename `assets/img-src/subpage-menu/desery/cytrusowe-ciasto-720x48-.jpg` to the `720x480` form the sibling sources use, so `parseSizeFromName()` in `scripts/images/build-images.js` matches it and the variant is resized
+  - [x] add the missing 720x480 variant entry for the `cytrusowe-ciasto` item in `data/menu.json`, so the rendered card offers the same candidates as the static fallback card
+  - [x] confirm every file under `assets/img-optimized/` has a correspondingly named source under `assets/img-src/` before the generator is run again
+  - [x] run `npm run images:build`, then confirm with `git status` that no tracked output was deleted and that `cytrusowe-ciasto-720x480.avif`, `.webp` and `.jpg` are present
+  - [x] run `npm run qa` afterwards to confirm the six references from `menu.html` and `index.html` still resolve
   - **Completion condition:** `npm run images:build` reproduces the tracked `assets/img-optimized/` tree without removing a referenced file, and `npm run qa` passes afterwards
   - **Source:** `AUDIT.md` — P1-02
 
