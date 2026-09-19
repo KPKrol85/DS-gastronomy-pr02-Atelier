@@ -57,3 +57,4 @@ All significant changes to this project are documented in this file.
 ### Testing
 
 - Added npm workflows for ESLint, HTML validation, local and external link checks, and configured pa11y-ci accessibility audits.
+- Extended source contract validation to reject demonstration-modal markup without its JavaScript initializer and incomplete theme bootstrap or colour metadata across all 11 pages.

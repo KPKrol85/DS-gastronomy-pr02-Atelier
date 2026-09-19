@@ -155,10 +155,10 @@
   - **Completion condition:** both language sections of `README.md` describe the current documentation layout and CI contract
   - **Source:** `daily-AUDIT.md` — P2-09
 
-- [ ] **PH5-02 — Extend the source contract check to the page contracts that drifted** — **Priority:** Medium
-  - [ ] in `validateSource()` (`scripts/validate-dist.js`), assert that `#demo-legal-modal` markup appears only on pages whose JavaScript entry initialises it
-  - [ ] assert that every page in `htmlPages` carries the inline theme bootstrap, the `js/bootstrap.js` reference and the colour metadata
-  - [ ] verify `npm run qa:source` fails on a page deliberately changed to violate either contract, and passes on the corrected tree
+- [x] **PH5-02 — Extend the source contract check to the page contracts that drifted** — **Priority:** Medium
+  - [x] in `validateSource()` (`scripts/validate-dist.js`), assert that `#demo-legal-modal` markup appears only on pages whose JavaScript entry initialises it
+  - [x] assert that every page in `htmlPages` carries the inline theme bootstrap, the `js/bootstrap.js` reference and the colour metadata
+  - [x] verify `npm run qa:source` fails on a page deliberately changed to violate either contract, and passes on the corrected tree
   - **Completion condition:** `npm run qa:source` rejects both drift patterns this plan corrects
   - **Depends on:** `PH1-02`, `PH2-02`
 
