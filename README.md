@@ -69,6 +69,11 @@ Każda podstrona jest osobnym dokumentem HTML. Wspólny nagłówek i stopka są 
 │   ├── qa-server.js
 │   └── images/build-images.js
 ├── docs/
+│   ├── archive/            # zarchiwizowane dokumenty projektu
+│   │   ├── audits/
+│   │   │   └── daily-AUDIT-2026-09-19.md
+│   │   └── plans/
+│   │       └── PLAN-2026-09-19.md
 │   ├── CHANGELOG.md        # zapis znaczących zmian
 │   └── settings.md         # opis skryptów npm i workflow
 ├── dist/                   # generated production package (ignored)
@@ -188,6 +193,8 @@ Skonfigurowano minifikację CSS i bundling/minifikację JS. Obrazy korzystają z
 - Zmiany stron i publicznych zasobów zestawiaj z listami w `scripts/build-config.js`, `sw.js`, `manifest.webmanifest` i `sitemap.xml`.
 - Po zmianach zasobów cache aktualizuj `CACHE_VERSION` w `sw.js`.
 - [CHANGELOG.md](docs/CHANGELOG.md) jest zapisem znaczących ukończonych zmian; aktualizuj go, gdy zakres zadania na to pozwala, lub zgłoś potrzebę wpisu.
+- [Zakończony plan rozwoju](docs/archive/plans/PLAN-2026-09-19.md) zachowuje ukończony plan wdrożenia wraz z zapisem weryfikacji; jest dokumentem archiwalnym, a nie aktywną listą zadań.
+- [Zamknięty audyt frontendowy](docs/archive/audits/daily-AUDIT-2026-09-19.md) zachowuje historyczne ustalenia audytu i statusy ich rozwiązania.
 
 ### Licencja
 
@@ -266,6 +273,11 @@ Each page is a separate HTML document. Shared header and footer markup is stored
 │   ├── qa-server.js
 │   └── images/build-images.js
 ├── docs/
+│   ├── archive/            # archived project documents
+│   │   ├── audits/
+│   │   │   └── daily-AUDIT-2026-09-19.md
+│   │   └── plans/
+│   │       └── PLAN-2026-09-19.md
 │   ├── CHANGELOG.md        # record of significant changes
 │   └── settings.md         # npm scripts and workflow reference
 ├── dist/                   # generated production package (ignored)
@@ -385,6 +397,8 @@ CSS minification and JS bundling/minification are configured. Images use `pictur
 - Check page and public asset changes against the lists in `scripts/build-config.js`, `sw.js`, `manifest.webmanifest` and `sitemap.xml`.
 - Update `CACHE_VERSION` in `sw.js` when cached resources change.
 - [CHANGELOG.md](docs/CHANGELOG.md) records significant completed changes; update it when task scope permits, or report that an entry is needed.
+- [Completed development plan](docs/archive/plans/PLAN-2026-09-19.md) preserves the finished implementation plan together with its verification record; it is an archived document, not an active task list.
+- [Resolved frontend audit](docs/archive/audits/daily-AUDIT-2026-09-19.md) preserves the historical audit findings and their resolution statuses.
 
 ### License
 
