@@ -166,14 +166,14 @@
 
 **Goal:** Confirm the corrected tree passes the project's own source and production contracts.
 
-- [ ] **PH6-01 — Run the full source and production pipeline** — **Priority:** Medium
-  - [ ] install locked dependencies with `npm ci`
-  - [ ] run `npm run qa` and record the ESLint, source contract, HTML validation, link and pa11y-ci results
-  - [ ] run `npm run build`, then `npm run qa:dist`
-  - [ ] capture any failure as a new plan item rather than leaving it undocumented
+- [x] **PH6-01 — Run the full source and production pipeline** — **Priority:** Medium
+  - [x] install locked dependencies with `npm ci`
+  - [x] run `npm run qa` and record the ESLint, source contract, HTML validation, link and pa11y-ci results
+  - [x] run `npm run build`, then `npm run qa:dist`
+  - [x] capture any failure as a new plan item rather than leaving it undocumented
   - **Completion condition:** both pipelines complete, or every failure is recorded as a tracked item
   - **Depends on:** Phases 1–5
-  - **Note:** `daily-AUDIT.md` reports these commands as not run and `node_modules/` is absent from the current checkout, so their current results are unknown
+  - **Verification:** `npm ci`, `npm run qa`, `npm run build` and `npm run qa:dist` each completed successfully, in that order, on Windows 11 with Node.js 22.23.2 and npm 10.9.8 — the same Node.js 22 major version `.github/workflows/quality.yml` pins for CI. Source QA: ESLint clean, source asset contract passed, `html-validate` clean over the 11 root pages, 528 links/assets/fragments checked with 0 broken, 10/10 pa11y-ci URLs passed. Build: static packaging, CSS, JS and integrity over 11 pages all passed. Production QA against `dist/`: integrity passed, production HTML clean, 528 links/assets/fragments checked with 0 broken, 10/10 pa11y-ci URLs passed. No failure occurred, so no new plan item was required. `.pa11yci` covers 10 of the 11 pages; `contact.html` stays out of the accessibility run under `O-03`. This run supersedes the earlier note that these commands had not been run.
 
 ## Optional future improvements
 
