@@ -15,9 +15,8 @@
 ## Current priorities
 
 1. `PH1-01` — Make the optimized image tree reproducible before the generator is run again.
-2. `PH1-03` — Align the menu download control with the file it delivers.
-3. `PH2-01` — Restore a visible focus indicator on the contact form fields.
-4. `PH2-02` — Ship the contact page dialog in the shared closed state.
+2. `PH2-01` — Restore a visible focus indicator on the contact form fields.
+3. `PH2-02` — Ship the contact page dialog in the shared closed state.
 
 ## Phase 1 — Asset generation and public content integrity
 
@@ -40,11 +39,11 @@
   - **Completion condition:** every metadata and structured-data value served on `gallery.html` describes `gallery.html`, and no page declares structured data whose content is absent from it
   - **Source:** `AUDIT.md` — P1-01
 
-- [ ] **PH1-03 — Align the menu download control with the file it delivers** — **Priority:** High
-  - [ ] decide whether the project ships a real menu document in the promised format or presents the existing `assets/docs/menu.svg` honestly
-  - [ ] apply the decision across the surrounding copy, the visible button label, the `aria-label`, the `type` attribute and the `download` filename in the menu call to action, so all of them name one format
-  - [ ] if the existing file is retained, replace its `Sample Menu Document` title, its placeholder description and its visible text with content matching the advertised document
-  - [ ] if a new document is added under `assets/docs/`, confirm `npm run qa:links` and `npm run qa:dist:integrity` resolve it
+- [x] **PH1-03 — Align the menu download control with the file it delivers** — **Priority:** High
+  - [x] decide whether the project ships a real menu document in the promised format or presents the existing `assets/docs/menu.svg` honestly — the project ships a real PDF, generated from `data/menu.json` as `assets/docs/menu.pdf`
+  - [x] apply the decision across the surrounding copy, the visible button label, the `aria-label`, the `type` attribute and the `download` filename in the menu call to action, so all of them name one format — the `aria-label` is dropped, leaving the visible text as the accessible name
+  - [x] the existing file is not retained: `assets/docs/menu.svg`, with its `Sample Menu Document` title, its placeholder description and its placeholder visible text, is removed once no source file references it
+  - [x] `assets/docs/menu.pdf` is added under `assets/docs/`, and `npm run qa:links` and `npm run qa:dist:integrity` resolve it
   - **Completion condition:** the control's visible label, accessible name, `type` and downloaded filename describe the same format, and the delivered file contains the menu it advertises rather than placeholder text
   - **Source:** `AUDIT.md` — P1-03
 

@@ -60,7 +60,7 @@ Każda podstrona jest osobnym dokumentem HTML. Wspólny nagłówek i stopka są 
 │   ├── img-optimized/      # wygenerowane warianty
 │   ├── fonts/
 │   ├── icons/
-│   └── docs/menu.svg
+│   └── docs/menu.pdf
 ├── scripts/
 │   ├── build-config.js
 │   ├── build-dist.js
@@ -264,7 +264,7 @@ Each page is a separate HTML document. Shared header and footer markup is stored
 │   ├── img-optimized/      # generated variants
 │   ├── fonts/
 │   ├── icons/
-│   └── docs/menu.svg
+│   └── docs/menu.pdf
 ├── scripts/
 │   ├── build-config.js
 │   ├── build-dist.js
