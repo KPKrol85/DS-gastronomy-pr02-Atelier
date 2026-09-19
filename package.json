@@ -30,7 +30,7 @@
     "build:css": "postcss css/style.css -o dist/css/style.min.css --no-map",
     "build:js": "esbuild js/script.js js/core.js --bundle --minify --outdir=dist/js --out-extension:.js=.min.js --target=es2018",
     "images:build": "node scripts/images/build-images.js",
-    "lint": "eslint \"js/**/*.js\"",
+    "lint": "eslint \"js/**/*.js\" \"sw.js\" \"scripts/**/*.js\"",
     "qa:source": "node scripts/validate-dist.js --source",
     "qa:html": "html-validate \"*.html\"",
     "qa:links": "node scripts/qa-links.js",

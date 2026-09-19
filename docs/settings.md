@@ -55,8 +55,8 @@ Dev i preview używają portu 5173; uruchamiaj je osobno. Przed QA zatrzymaj rę
 
 ### `lint`
 
-- command: `eslint "js/**/*.js"`
-- what it does: ESLint dla źródeł JavaScript.
+- command: `eslint "js/**/*.js" "sw.js" "scripts/**/*.js"`
+- what it does: ESLint dla modułów JavaScript przeglądarki, Service Workera `sw.js` i skryptów Node.js w `scripts/`.
 
 ### `qa:source`
 

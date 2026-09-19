@@ -53,6 +53,7 @@ All significant changes to this project are documented in this file.
 - Added explicit dev/build/preview/qa/qa:dist workflows, production integrity checks and dist-based link/accessibility QA; restored the required bootstrap script in the deployment package and removed tracked source-tree bundles and obsolete command aliases.
 - Added PostCSS and esbuild asset builds, a local static development server and explicit `dist/` packaging of pages, selected public assets and static-hosting configuration.
 - Added a Sharp image-generation workflow from `assets/img-src/` to `assets/img-optimized/`, producing AVIF, WebP and JPEG or PNG variants.
+- Extended ESLint coverage to browser modules, the Service Worker and all Node.js build and QA scripts with environment-specific globals, and removed an unused image-build declaration.
 
 ### Testing
 
