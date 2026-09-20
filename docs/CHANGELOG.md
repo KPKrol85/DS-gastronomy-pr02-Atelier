@@ -52,6 +52,7 @@ All significant changes to this project are documented in this file.
 - Rendered the existing offline banner and page-specific hero notices on initial offline loads while preserving connectivity transition behaviour.
 - Separated menu copy-link controls from all 24 headings, preserving clean accessible names, keyboard operation and responsive reveal behaviour.
 - Aligned the 404 page with the shared body class contract without changing its rendering or runtime behaviour.
+- Enforced shared body and closed demo-modal wrapper contracts in source QA with actionable validation errors.
 
 ### Documentation
 

@@ -139,10 +139,10 @@
   - **Completion condition:** every page's `<body>` carries the shared `page` class alongside its page modifier
   - **Source:** `AUDIT.md` — P2-07
 
-- [ ] **PH5-02 — Assert the shared per-page block invariants in the source contract** — **Priority:** Medium
-  - [ ] extend `validateSource()` in `scripts/validate-dist.js` to assert that every page's `<body>` carries the `page` class and a `page--*` modifier consistent with its `data-page` value
-  - [ ] assert that every page shipping `#demo-legal-modal` ships the wrapper with the same initial attributes, so the state is not maintained by hand across ten copies
-  - [ ] verify `npm run qa:source` fails on a page deliberately changed to violate either assertion, and passes on the corrected tree
+- [x] **PH5-02 — Assert the shared per-page block invariants in the source contract** — **Priority:** Medium
+  - [x] extend `validateSource()` in `scripts/validate-dist.js` to assert that every page's `<body>` carries the `page` class and a `page--*` modifier consistent with its `data-page` value
+  - [x] assert that every page shipping `#demo-legal-modal` ships the wrapper with the same initial attributes, so the state is not maintained by hand across ten copies
+  - [x] verify `npm run qa:source` fails on a page deliberately changed to violate either assertion, and passes on the corrected tree
   - **Completion condition:** `npm run qa:source` rejects both a drifted body contract and a drifted dialog wrapper
   - **Depends on:** `PH2-02`, `PH5-01`
   - **Source:** `AUDIT.md` — P1-05, P2-07

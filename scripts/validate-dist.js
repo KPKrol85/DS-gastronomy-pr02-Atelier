@@ -10,6 +10,12 @@ const {
 const DEMO_MODAL_MODULE = path.join(rootDir, "js", "features", "demo-modal.js");
 const DEMO_MODAL_INITIALIZER = "initDemoLegalModal";
 const DEMO_MODAL_MARKUP = /\bid=(['"])demo-legal-modal\1/;
+const DEMO_MODAL_ID = "demo-legal-modal";
+const DEMO_MODAL_CLASS = "demo-legal-modal";
+const DEMO_MODAL_OPEN_CLASS = "is-open";
+const DEMO_MODAL_CLOSED_ATTRIBUTES = ["hidden", "inert"];
+const PAGE_CLASS = "page";
+const PAGE_MODIFIER = "page--";
 const REDUCED_ENTRY_PAGES = ["404.html", "cookies.html", "polityka-prywatnosci.html", "regulamin.html"];
 const IMPORT_STATEMENT = /\bimport\s+([\s\S]*?)\s+from\s*(['"])([^'"]+)\2\s*;?/g;
 const HTML_COMMENT = /<!--[\s\S]*?-->/g;
@@ -20,6 +26,8 @@ const FEATURED_PAGE = "index.html";
 const FEATURED_CATEGORIES = ["przystawki", "dania-glowne", "desery"];
 const FEATURED_SIZE = 3;
 const OPEN_TAG = /<([\w-]+)\b[^>]*>/g;
+const TAG_NAME = /^<\s*([\w:-]+)/;
+const TAG_ATTRIBUTE = /\s+([^\s/=>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>]+)))?/y;
 
 function read(base, file) {
   return fs.readFileSync(path.join(base, file), "utf8");
@@ -70,11 +78,27 @@ function documentHead(page, html) {
   return head[1].replace(HTML_COMMENT, "");
 }
 
-function tagAttribute(tag, name) {
-  for (const attribute of tag.matchAll(/([\w-]+)=(['"])(.*?)\2/g)) {
-    if (attribute[1].toLowerCase() === name) return attribute[3].trim().replace(/\s+/g, " ");
+/*
+ Attributes of one open tag, a boolean attribute holding "". The scan is sticky, so it can
+ only step from one attribute to the next: a name written inside a quoted value is never
+ read as an attribute of its own, and aria-hidden never answers for the hidden attribute.
+*/
+function tagAttributes(tag) {
+  const name = tag.match(TAG_NAME);
+  const attributes = new Map();
+  if (!name) return attributes;
+  TAG_ATTRIBUTE.lastIndex = name[0].length;
+  for (let match = TAG_ATTRIBUTE.exec(tag); match; match = TAG_ATTRIBUTE.exec(tag)) {
+    const key = match[1].toLowerCase();
+    const value = match[2] ?? match[3] ?? match[4] ?? "";
+    if (!attributes.has(key)) attributes.set(key, value.trim().replace(/\s+/g, " "));
   }
-  return null;
+  return attributes;
+}
+
+function tagAttribute(tag, name) {
+  const value = tagAttributes(tag).get(name);
+  return value === undefined ? null : value;
 }
 
 function hasThemePreload(head) {
@@ -126,6 +150,21 @@ function elementsOf(html, tagName, start = 0) {
 
 function classNames(tag) {
   return (tagAttribute(tag, "class") || "").split(" ").filter(Boolean);
+}
+
+function openTag(html, tagName) {
+  for (const tag of html.matchAll(OPEN_TAG)) {
+    if (tag[1].toLowerCase() === tagName) return tag[0];
+  }
+  return null;
+}
+
+// The element carrying the id, never an id spelled out in a script or a neighbouring tag.
+function elementById(html, id) {
+  for (const tag of html.matchAll(OPEN_TAG)) {
+    if (tagAttribute(tag[0], "id") === id) return tag[0];
+  }
+  return null;
 }
 
 // Indentation and line breaks inside a card carry no meaning; the words do.
@@ -245,6 +284,46 @@ function validateMenuParity() {
   validateFeaturedMenu(items);
 }
 
+/*
+ Every page opens the same block: the shared page class, one page-- modifier and the
+ data-page value that modifier is named after. Any further body class stays the page's own.
+*/
+function validateBodyContract(page, markup) {
+  const tag = openTag(markup, "body");
+  assert(tag, `${page} has no opening <body> tag to carry the shared page contract`);
+  const scope = `${page}: <body>`;
+  const classes = classNames(tag);
+  assert(classes.includes(PAGE_CLASS), `${scope} is missing the shared ${PAGE_CLASS} class`);
+  const dataPage = tagAttribute(tag, "data-page");
+  assert(dataPage, `${scope} is missing a non-empty data-page value`);
+  const modifiers = classes.filter((className) => className.startsWith(PAGE_MODIFIER));
+  assert.equal(modifiers.length, 1, modifiers.length === 0
+    ? `${scope} is missing its ${PAGE_MODIFIER}${dataPage} modifier`
+    : `${scope} carries the page modifiers ${modifiers.join(", ")} where one is expected`);
+  assert.equal(modifiers[0], `${PAGE_MODIFIER}${dataPage}`,
+    `${scope} modifier ${modifiers[0]} does not match data-page="${dataPage}"`);
+}
+
+/*
+ initDemoLegalModal() opens the dialog, so every copy of the wrapper ships closed. A copy
+ that drifts leaves its controls focusable inside an aria-hidden subtree before a script runs.
+*/
+function validateDemoModalWrapper(page, markup) {
+  const scope = `${page}: #${DEMO_MODAL_ID}`;
+  const tag = elementById(markup, DEMO_MODAL_ID);
+  assert(tag, `${scope} is not carried by any element of the page`);
+  const classes = classNames(tag);
+  assert(classes.includes(DEMO_MODAL_CLASS), `${scope} is missing the ${DEMO_MODAL_CLASS} class`);
+  assert(!classes.includes(DEMO_MODAL_OPEN_CLASS),
+    `${scope} ships the ${DEMO_MODAL_OPEN_CLASS} class, so the dialog is open before any script runs`);
+  const attributes = tagAttributes(tag);
+  assert(attributes.has("aria-hidden"), `${scope} is missing aria-hidden`);
+  assert.equal(attributes.get("aria-hidden"), "true", `${scope} must start with aria-hidden="true"`);
+  for (const attribute of DEMO_MODAL_CLOSED_ATTRIBUTES) {
+    assert(attributes.has(attribute), `${scope} is missing ${attribute}`);
+  }
+}
+
 function validateSource() {
   for (const directory of ["css", "js"]) {
     assert(!filesBelow(path.join(rootDir, directory)).some((file) => /\.min\.(css|js)$/.test(file)),
@@ -258,13 +337,17 @@ function validateSource() {
     const entry = REDUCED_ENTRY_PAGES.includes(page) ? "js/core.js" : "js/script.js";
     assert(html.includes(`src="${entry}"`), `${page} is missing its source JS entry`);
 
+    const markup = html.replace(HTML_COMMENT, "");
+    validateBodyContract(page, markup);
+
     if (!demoModalEntries.has(entry)) {
       demoModalEntries.set(entry, initializesDemoModal(path.join(rootDir, entry)));
     }
-    if (DEMO_MODAL_MARKUP.test(html.replace(HTML_COMMENT, ""))) {
+    if (DEMO_MODAL_MARKUP.test(markup)) {
       assert(demoModalEntries.get(entry),
         `${page} ships #demo-legal-modal markup its entry never initialises: `
         + `no executed path from ${entry} reaches ${DEMO_MODAL_INITIALIZER}()`);
+      validateDemoModalWrapper(page, markup);
     }
 
     const head = documentHead(page, html);
