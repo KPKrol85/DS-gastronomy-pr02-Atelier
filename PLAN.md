@@ -93,10 +93,10 @@
   - **Completion condition:** the visible address, the map link target and the embedded map query state the same address on every page
   - **Source:** `AUDIT.md` — P2-05
 
-- [ ] **PH3-04 — Keep visible label text inside every accessible name** — **Priority:** Medium
-  - [ ] extend or remove the `aria-label` on the 17 links and buttons whose accessible name omits their visible text, including the footer address link repeated on all 11 pages
-  - [ ] where the label adds useful context, keep the visible text as the start of the accessible name instead of replacing it
-  - [ ] verify every interactive element with visible text has an accessible name containing that text
+- [x] **PH3-04 — Keep visible label text inside every accessible name** — **Priority:** Medium
+  - [x] extend or remove the `aria-label` on the 17 links and buttons whose accessible name omits their visible text, including the footer address link repeated on all 11 pages
+  - [x] where the label adds useful context, keep the visible text as the start of the accessible name instead of replacing it
+  - [x] verify every interactive element with visible text has an accessible name containing that text
   - **Completion condition:** no link or button carries an `aria-label` that omits its own visible text
   - **Depends on:** `PH1-03`, `PH3-01`, `PH3-03`
   - **Source:** `AUDIT.md` — P2-03

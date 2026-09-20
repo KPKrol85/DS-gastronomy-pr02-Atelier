@@ -47,6 +47,7 @@ All significant changes to this project are documented in this file.
 - Aligned contact and reservation messaging across the home, contact and menu pages, SEO metadata and web manifest with the site's non-binding contact form.
 - Replaced the About FAQ and matching structured data with project-focused content, and removed misleading reservation messaging from the location and contact sections.
 - Standardized the author address and map destinations across all pages, with subtle KP_Code Digital Studio address captions.
+- Aligned accessible names with visible labels across site-wide address links and key navigation CTAs.
 
 ### Documentation
 
