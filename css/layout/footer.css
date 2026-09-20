@@ -92,6 +92,8 @@
 .footer__contact-item--address {
   max-width: 22ch;
   margin: var(--space-2) auto;
+  flex-direction: column;
+  gap: 0;
 }
 .footer__contact-item a {
   color: inherit;

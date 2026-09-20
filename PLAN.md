@@ -85,11 +85,11 @@
   - **Depends on:** `PH3-01`
   - **Source:** `AUDIT.md` — P2-02
 
-- [ ] **PH3-03 — Publish one canonical street address** — **Priority:** Medium
-  - [ ] adopt the operator address stated in `regulamin.html` as the canonical form
-  - [ ] reconcile the footer address text on the eight pages that omit the premises number, together with the `<address>` block and the location sentence on `contact.html`
-  - [ ] align the embedded map query on `contact.html` with the address used by the map link `href` on all 11 pages
-  - [ ] verify one address string appears in every public location that displays it
+- [x] **PH3-03 — Publish one canonical street address** — **Priority:** Medium
+  - [x] adopt the operator address stated in `regulamin.html` as the canonical form
+  - [x] reconcile the footer address text on the eight pages that omit the premises number, together with the `<address>` block and the location sentence on `contact.html`
+  - [x] align the embedded map query on `contact.html` with the address used by the map link `href` on all 11 pages
+  - [x] verify one address string appears in every public location that displays it
   - **Completion condition:** the visible address, the map link target and the embedded map query state the same address on every page
   - **Source:** `AUDIT.md` — P2-05
 
