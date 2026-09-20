@@ -42,6 +42,7 @@ All significant changes to this project are documented in this file.
 - Corrected the `cytrusowe-ciasto` source filename and added its missing 720×480 menu image variant, restoring reproducible optimized-image builds.
 - Corrected gallery metadata and breadcrumb structured data, removing FAQ markup unrelated to the gallery page.
 - Replaced the placeholder menu download with a complete demonstration PDF containing all 18 menu items, and aligned the download control with the delivered format.
+- Improved keyboard focus visibility on contact form fields using the theme-aware focus-ring token, with verified contrast in both themes.
 
 ### Documentation
 

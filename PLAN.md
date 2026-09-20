@@ -15,8 +15,7 @@
 ## Current priorities
 
 1. `PH1-01` — Make the optimized image tree reproducible before the generator is run again.
-2. `PH2-01` — Restore a visible focus indicator on the contact form fields.
-3. `PH2-02` — Ship the contact page dialog in the shared closed state.
+2. `PH2-02` — Ship the contact page dialog in the shared closed state.
 
 ## Phase 1 — Asset generation and public content integrity
 
@@ -51,11 +50,11 @@
 
 **Goal:** Close the two keyboard defects on the only page with a form, both of which sit outside what the configured loaded-state accessibility run can detect.
 
-- [ ] **PH2-01 — Restore a visible focus indicator on the contact form fields** — **Priority:** High
-  - [ ] point the `.form input:focus-visible, .form textarea:focus-visible` rule in `css/components/forms.css` at the existing `--focus-ring` token, or another theme-aware value, instead of the fixed `color-mix(in oklab, var(--burgundy) 30%, white)`
-  - [ ] confirm the chosen value clears 3:1 against both the field `--input-bg` and the surrounding `--bone` panel in the light and dark themes
-  - [ ] leave the `.is-invalid` border and ring treatment unchanged
-  - [ ] verify by keyboard that `#name`, `#email` and `#message` each show a distinguishable outline in both themes
+- [x] **PH2-01 — Restore a visible focus indicator on the contact form fields** — **Priority:** High
+  - [x] point the `.form input:focus-visible, .form textarea:focus-visible` rule in `css/components/forms.css` at the existing `--focus-ring` token, or another theme-aware value, instead of the fixed `color-mix(in oklab, var(--burgundy) 30%, white)`
+  - [x] confirm the chosen value clears 3:1 against both the field `--input-bg` and the surrounding `--bone` panel in the light and dark themes
+  - [x] leave the `.is-invalid` border and ring treatment unchanged
+  - [x] verify by keyboard that `#name`, `#email` and `#message` each show a distinguishable outline in both themes
   - **Completion condition:** the computed focus outline on the three fields reaches at least 3:1 against both adjacent surfaces in each theme
   - **Source:** `AUDIT.md` — P1-04
 
