@@ -15,7 +15,6 @@
 ## Current priorities
 
 1. `PH1-01` — Make the optimized image tree reproducible before the generator is run again.
-2. `PH2-02` — Ship the contact page dialog in the shared closed state.
 
 ## Phase 1 — Asset generation and public content integrity
 
@@ -58,10 +57,10 @@
   - **Completion condition:** the computed focus outline on the three fields reaches at least 3:1 against both adjacent surfaces in each theme
   - **Source:** `AUDIT.md` — P1-04
 
-- [ ] **PH2-02 — Ship the contact page dialog in the shared closed state** — **Priority:** High
-  - [ ] add the missing `inert` attribute to `#demo-legal-modal` in `contact.html`, matching the `aria-hidden="true" hidden inert` wrapper the other nine pages ship
-  - [ ] verify no control inside the closed dialog is reachable by Tab on `contact.html`, both on a first visit and with a stored `kp-demo-accepted` acknowledgement
-  - [ ] verify the dialog still opens, traps focus and closes on a first visit
+- [x] **PH2-02 — Ship the contact page dialog in the shared closed state** — **Priority:** High
+  - [x] add the missing `inert` attribute to `#demo-legal-modal` in `contact.html`, matching the `aria-hidden="true" hidden inert` wrapper the other nine pages ship
+  - [x] verify no control inside the closed dialog is reachable by Tab on `contact.html`, both on a first visit and with a stored `kp-demo-accepted` acknowledgement
+  - [x] verify the dialog still opens, traps focus and closes on a first visit
   - **Completion condition:** all ten pages carrying `#demo-legal-modal` ship identical initial wrapper attributes, and the closed dialog contributes no tab stop
   - **Source:** `AUDIT.md` — P1-05
 

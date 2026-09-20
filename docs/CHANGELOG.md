@@ -43,6 +43,7 @@ All significant changes to this project are documented in this file.
 - Corrected gallery metadata and breadcrumb structured data, removing FAQ markup unrelated to the gallery page.
 - Replaced the placeholder menu download with a complete demonstration PDF containing all 18 menu items, and aligned the download control with the delivered format.
 - Improved keyboard focus visibility on contact form fields using the theme-aware focus-ring token, with verified contrast in both themes.
+- Restored the contact dialog's inert closed state, preventing its controls from entering the keyboard tab order before acceptance and on returning visits.
 
 ### Documentation
 
