@@ -46,6 +46,7 @@ All significant changes to this project are documented in this file.
 - Restored the contact dialog's inert closed state, preventing its controls from entering the keyboard tab order before acceptance and on returning visits.
 - Aligned contact and reservation messaging across the home, contact and menu pages, SEO metadata and web manifest with the site's non-binding contact form.
 - Replaced the About FAQ and matching structured data with project-focused content, and removed misleading reservation messaging from the location and contact sections.
+- Standardized the author address and map destinations across all pages, with subtle KP_Code Digital Studio address captions.
 
 ### Documentation
 
