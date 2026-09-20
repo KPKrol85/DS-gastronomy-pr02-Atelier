@@ -132,10 +132,10 @@
 
 **Goal:** Bring the last drifted per-page block onto the shared contract, make that contract machine-enforced, and remove the one misspelled design token.
 
-- [ ] **PH5-01 — Bring 404.html onto the shared body class contract** — **Priority:** Low
-  - [ ] give `404.html` the `page` class and a `page--404` modifier alongside its existing `data-page` attribute, matching the other ten pages
-  - [ ] confirm the `.page`-scoped card rules and the desktop `.page .page-hero__lead` rule do not change the page's current rendering
-  - [ ] verify the page still passes `npm run qa:html`
+- [x] **PH5-01 — Bring 404.html onto the shared body class contract** — **Priority:** Low
+  - [x] give `404.html` the `page` class and a `page--404` modifier alongside its existing `data-page` attribute, matching the other ten pages
+  - [x] confirm the `.page`-scoped card rules and the desktop `.page .page-hero__lead` rule do not change the page's current rendering
+  - [x] verify the page still passes `npm run qa:html`
   - **Completion condition:** every page's `<body>` carries the shared `page` class alongside its page modifier
   - **Source:** `AUDIT.md` — P2-07
 

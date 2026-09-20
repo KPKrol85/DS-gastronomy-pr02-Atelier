@@ -51,6 +51,7 @@ All significant changes to this project are documented in this file.
 - Updated sitemap modification dates to reflect verified substantive revisions across all eight indexed pages.
 - Rendered the existing offline banner and page-specific hero notices on initial offline loads while preserving connectivity transition behaviour.
 - Separated menu copy-link controls from all 24 headings, preserving clean accessible names, keyboard operation and responsive reveal behaviour.
+- Aligned the 404 page with the shared body class contract without changing its rendering or runtime behaviour.
 
 ### Documentation
 
