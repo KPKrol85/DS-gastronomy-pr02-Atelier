@@ -68,11 +68,11 @@
 
 **Goal:** Make the interface state the same capabilities and the same contact details as the project's own terms, on every page that repeats them.
 
-- [ ] **PH3-01 — Align reservation wording with the contact form and the terms** — **Priority:** Medium
-  - [ ] rewrite the contact page hero lead and the contact section lead so they describe the three-field message form rather than a booking
-  - [ ] revise the `Rezerwacja` controls on `index.html` and `menu.html` and the `Rezerwacje i kontakt z restauracją` shortcut description in `manifest.webmanifest`
-  - [ ] keep the restaurant presentation intact while removing any implication that a channel accepts a binding reservation, order or payment
-  - [ ] verify the remaining wording no longer contradicts the effects listed in `regulamin.html` or the cookies policy statement that the service accepts no binding reservations
+- [x] **PH3-01 — Align reservation wording with the contact form and the terms** — **Priority:** Medium
+  - [x] rewrite the contact page hero lead and the contact section lead so they describe the three-field message form rather than a booking
+  - [x] revise the `Rezerwacja` controls on `index.html` and `menu.html` and the `Rezerwacje i kontakt z restauracją` shortcut description in `manifest.webmanifest`
+  - [x] keep the restaurant presentation intact while removing any implication that a channel accepts a binding reservation, order or payment
+  - [x] verify the remaining wording no longer contradicts the effects listed in `regulamin.html` or the cookies policy statement that the service accepts no binding reservations
   - **Completion condition:** no public control, lead or manifest shortcut promises a service the contact form and the terms exclude
   - **Source:** `AUDIT.md` — P2-02
 
