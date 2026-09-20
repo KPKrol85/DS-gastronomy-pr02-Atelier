@@ -120,11 +120,11 @@
   - **Verification limit:** `js/bootstrap.js` skips service worker registration on localhost and both QA servers bind to `127.0.0.1`, so a genuinely cache-served offline load cannot be reproduced by the configured checks; verification covers the initialisation path only
   - **Source:** `AUDIT.md` — P2-01
 
-- [ ] **PH4-02 — Keep the menu copy-link control out of heading names** — **Priority:** Medium
-  - [ ] change `initAnchors()` in `js/features/menu.js` so the generated `.anchor` is not a descendant of the `h2` or `h3` whose accessible name it currently extends, or give it a name that is not folded into the heading text
-  - [ ] keep the control keyboard-reachable, and keep its copy behaviour and its temporary confirmation label intact
-  - [ ] keep the opacity-based reveal in `css/pages/menu.css` working for whichever element now owns the control
-  - [ ] verify the computed accessible name of each of the 24 menu headings is its visible text alone
+- [x] **PH4-02 — Keep the menu copy-link control out of heading names** — **Priority:** Medium
+  - [x] change `initAnchors()` in `js/features/menu.js` so the generated `.anchor` is not a descendant of the `h2` or `h3` whose accessible name it currently extends, or give it a name that is not folded into the heading text
+  - [x] keep the control keyboard-reachable, and keep its copy behaviour and its temporary confirmation label intact
+  - [x] keep the opacity-based reveal in `css/pages/menu.css` working for whichever element now owns the control
+  - [x] verify the computed accessible name of each of the 24 menu headings is its visible text alone
   - **Completion condition:** menu heading names contain no control label, and the copy-link control remains reachable and operable by keyboard
   - **Source:** `AUDIT.md` — P2-04
 

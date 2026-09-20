@@ -410,7 +410,9 @@ export function initMenuPage() {
         id = slugify(el.textContent);
         if (id) el.setAttribute("id", id);
       }
-      if (!id || el.querySelector(".anchor")) return;
+      var parent = el.parentNode;
+      /* The heading keeps its own accessible name only while the control stays outside it, so the guard tracks the wrapper, not a descendant. */
+      if (!id || !parent || (parent.classList && parent.classList.contains("anchor-group"))) return;
       var a = document.createElement("a");
       a.className = "anchor";
       a.href = "#" + id;
@@ -438,7 +440,11 @@ export function initMenuPage() {
         }
         if (typeof history !== "undefined" && history.replaceState) history.replaceState(null, "", "#" + id);
       });
-      el.appendChild(a);
+      var group = document.createElement("div");
+      group.className = "anchor-group";
+      parent.insertBefore(group, el);
+      group.appendChild(el);
+      group.appendChild(a);
     }
     document.querySelectorAll(".page--menu .menu-section__header h2").forEach(addAnchor);
     document.querySelectorAll(".page--menu .card__title").forEach(addAnchor);
