@@ -101,9 +101,9 @@
   - **Depends on:** `PH1-03`, `PH3-01`, `PH3-03`
   - **Source:** `AUDIT.md` — P2-03
 
-- [ ] **PH3-05 — Refresh the sitemap freshness signals** — **Priority:** Low
-  - [ ] update each `lastmod` in `sitemap.xml` to the last substantive change of the page it describes, once the content work in Phases 1 and 3 has landed
-  - [ ] verify the eight listed URLs are unchanged and every `lastmod` matches or postdates its page's revision
+- [x] **PH3-05 — Refresh the sitemap freshness signals** — **Priority:** Low
+  - [x] update each `lastmod` in `sitemap.xml` to the last substantive change of the page it describes, once the content work in Phases 1 and 3 has landed
+  - [x] verify the eight listed URLs are unchanged and every `lastmod` matches or postdates its page's revision
   - **Completion condition:** no `lastmod` value predates the content it describes
   - **Depends on:** `PH1-02`, `PH3-01`, `PH3-02`, `PH3-03`
   - **Source:** `AUDIT.md` — P2-06

@@ -48,6 +48,7 @@ All significant changes to this project are documented in this file.
 - Replaced the About FAQ and matching structured data with project-focused content, and removed misleading reservation messaging from the location and contact sections.
 - Standardized the author address and map destinations across all pages, with subtle KP_Code Digital Studio address captions.
 - Aligned accessible names with visible labels across site-wide address links and key navigation CTAs.
+- Updated sitemap modification dates to reflect verified substantive revisions across all eight indexed pages.
 
 ### Documentation
 
