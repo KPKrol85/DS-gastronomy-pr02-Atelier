@@ -147,10 +147,10 @@
   - **Depends on:** `PH2-02`, `PH5-01`
   - **Source:** `AUDIT.md` — P1-05, P2-07
 
-- [ ] **PH5-03 — Correct the misspelled shadow token** — **Priority:** Low
-  - [ ] rename `--shodow-box-sm` in `css/base/tokens.css` to match the naming of the surrounding shadow tokens
-  - [ ] update its single consumer in `css/pages/legal.css`
-  - [ ] verify the legal-page rule still resolves and no stylesheet references an undefined custom property
+- [x] **PH5-03 — Correct the misspelled shadow token** — **Priority:** Low
+  - [x] rename `--shodow-box-sm` in `css/base/tokens.css` to match the naming of the surrounding shadow tokens
+  - [x] update its single consumer in `css/pages/legal.css`
+  - [x] verify the legal-page rule still resolves and no stylesheet references an undefined custom property
   - **Completion condition:** the shadow tokens follow one naming pattern and the legal-page shadow still renders
   - **Source:** `AUDIT.md` — P2-08
 

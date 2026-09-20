@@ -53,7 +53,7 @@
   border-color: var(--tab-active-border);
   color: var(--burgundy);
   transform: translateY(-1px);
-  box-shadow: var(--shodow-box-sm);
+  box-shadow: var(--shadow-box-sm);
 }
 .toc__link:active {
   transform: none;
