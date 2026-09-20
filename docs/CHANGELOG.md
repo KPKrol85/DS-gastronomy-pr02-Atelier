@@ -45,6 +45,7 @@ All significant changes to this project are documented in this file.
 - Improved keyboard focus visibility on contact form fields using the theme-aware focus-ring token, with verified contrast in both themes.
 - Restored the contact dialog's inert closed state, preventing its controls from entering the keyboard tab order before acceptance and on returning visits.
 - Aligned contact and reservation messaging across the home, contact and menu pages, SEO metadata and web manifest with the site's non-binding contact form.
+- Replaced the About FAQ and matching structured data with project-focused content, and removed misleading reservation messaging from the location and contact sections.
 
 ### Documentation
 

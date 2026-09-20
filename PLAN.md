@@ -76,11 +76,11 @@
   - **Completion condition:** no public control, lead or manifest shortcut promises a service the contact form and the terms exclude
   - **Source:** `AUDIT.md` — P2-02
 
-- [ ] **PH3-02 — Replace the About FAQ with a project-focused FAQ and regenerate its structured data** — **Priority:** Medium
-  - [ ] author replacement entries covering the demonstration character of the site, the non-binding contact form, the demonstration menu, KP_Code Digital Studio's authorship and the front-end capabilities the project implements
-  - [ ] replace the six visible FAQ entries on `about.html`, keeping the existing card markup, heading ranks and reveal attributes
-  - [ ] regenerate the `FAQPage` node in the same page's JSON-LD from the adopted wording, so each question and answer matches the visible text
-  - [ ] verify no entry states reservation lead times, allergy handling at booking, group bookings or gift-voucher orders
+- [x] **PH3-02 — Replace the About FAQ with a project-focused FAQ and regenerate its structured data** — **Priority:** Medium
+  - [x] author replacement entries covering the demonstration character of the site, the non-binding contact form, the demonstration menu, KP_Code Digital Studio's authorship and the front-end capabilities the project implements
+  - [x] replace the six visible FAQ entries on `about.html`, keeping the existing card markup, heading ranks and reveal attributes
+  - [x] regenerate the `FAQPage` node in the same page's JSON-LD from the adopted wording, so each question and answer matches the visible text
+  - [x] verify no entry states reservation lead times, allergy handling at booking, group bookings or gift-voucher orders
   - **Completion condition:** the visible FAQ and the `FAQPage` node state the same project-focused content, and neither describes a service the terms exclude
   - **Depends on:** `PH3-01`
   - **Source:** `AUDIT.md` — P2-02
