@@ -112,10 +112,10 @@
 
 **Goal:** Make the offline messaging reach the case it was written for, and keep a generated control out of 24 heading names.
 
-- [ ] **PH4-01 — Render the offline state on a page that loads offline** — **Priority:** Medium
-  - [ ] in `js/features/network.js`, render the offline banner and the hero notes once at initialisation when the page starts with `navigator.onLine` false
-  - [ ] keep the restored-connection message limited to genuine online transitions, and keep the four-second auto-hide and the `.offline-note[data-auto]` cleanup unchanged
-  - [ ] verify the initialisation path renders the banner and the matching hero note on `menu.html` and `gallery.html` when the page starts offline, and renders neither on a normal online load
+- [x] **PH4-01 — Render the offline state on a page that loads offline** — **Priority:** Medium
+  - [x] in `js/features/network.js`, render the offline banner and the hero notes once at initialisation when the page starts with `navigator.onLine` false
+  - [x] keep the restored-connection message limited to genuine online transitions, and keep the four-second auto-hide and the `.offline-note[data-auto]` cleanup unchanged
+  - [x] verify the initialisation path renders the banner and the matching hero note on `menu.html` and `gallery.html` when the page starts offline, and renders neither on a normal online load
   - **Completion condition:** the offline messaging appears on an offline page load, and no recovery notice is announced without a real transition
   - **Verification limit:** `js/bootstrap.js` skips service worker registration on localhost and both QA servers bind to `127.0.0.1`, so a genuinely cache-served offline load cannot be reproduced by the configured checks; verification covers the initialisation path only
   - **Source:** `AUDIT.md` — P2-01

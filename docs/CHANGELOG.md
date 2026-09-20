@@ -49,6 +49,7 @@ All significant changes to this project are documented in this file.
 - Standardized the author address and map destinations across all pages, with subtle KP_Code Digital Studio address captions.
 - Aligned accessible names with visible labels across site-wide address links and key navigation CTAs.
 - Updated sitemap modification dates to reflect verified substantive revisions across all eight indexed pages.
+- Rendered the existing offline banner and page-specific hero notices on initial offline loads while preserving connectivity transition behaviour.
 
 ### Documentation
 

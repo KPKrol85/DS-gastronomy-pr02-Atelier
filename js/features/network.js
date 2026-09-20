@@ -43,6 +43,13 @@ export function initNetworkStatusBanner() {
   var hideTimer = null;
   var lastState = typeof navigator !== "undefined" && "onLine" in navigator ? navigator.onLine : true;
 
+  function showOfflineState() {
+    banner.textContent = "Jesteś offline — część treści może być niedostępna.";
+    banner.classList.add("is-visible");
+    banner.classList.add("is-offline");
+    setOfflineNotes(false);
+  }
+
   function update(isOnline) {
     if (lastState === isOnline) return;
     lastState = isOnline;
@@ -50,19 +57,21 @@ export function initNetworkStatusBanner() {
       clearTimeout(hideTimer);
       hideTimer = null;
     }
-    if (isOnline) {
-      banner.textContent = "Połączenie przywrócone.";
-      banner.classList.add("is-visible");
-      banner.classList.remove("is-offline");
-      hideTimer = setTimeout(function () {
-        banner.classList.remove("is-visible");
-      }, 4000);
-    } else {
-      banner.textContent = "Jesteś offline — część treści może być niedostępna.";
-      banner.classList.add("is-visible");
-      banner.classList.add("is-offline");
+    if (!isOnline) {
+      showOfflineState();
+      return;
     }
-    setOfflineNotes(isOnline);
+    banner.textContent = "Połączenie przywrócone.";
+    banner.classList.add("is-visible");
+    banner.classList.remove("is-offline");
+    hideTimer = setTimeout(function () {
+      banner.classList.remove("is-visible");
+    }, 4000);
+    setOfflineNotes(true);
+  }
+
+  if (!lastState) {
+    showOfflineState();
   }
 
   window.addEventListener("online", function () {
