@@ -158,10 +158,10 @@
 
 **Goal:** Keep the documented repository layout in step with the files the repository actually contains.
 
-- [ ] **PH6-01 — Record the root planning and audit documents in the README** — **Priority:** Low
-  - [ ] add `AUDIT.md` and `PLAN.md` to both project-structure trees in `README.md`
-  - [ ] state in both language sections that `PLAN.md` is the active development plan and `AUDIT.md` the current audit, alongside the existing links to the archived plan and audit
-  - [ ] verify every path listed in both trees exists in the repository
+- [x] **PH6-01 — Record the root planning and audit documents in the README** — **Priority:** Low
+  - [x] add `AUDIT.md` and `PLAN.md` to both project-structure trees in `README.md`
+  - [x] state in both language sections that `PLAN.md` is the active development plan and `AUDIT.md` the current audit, alongside the existing links to the archived plan and audit
+  - [x] verify every path listed in both trees exists in the repository
   - **Completion condition:** both language sections of `README.md` describe the current documentation layout, including the root plan and audit
 
 ## Phase 7 — Release hygiene and final verification

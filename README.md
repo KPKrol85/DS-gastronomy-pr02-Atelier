@@ -52,6 +52,8 @@ Każda podstrona jest osobnym dokumentem HTML. Wspólny nagłówek i stopka są 
 ├── offline.html
 ├── thank-you.html
 ├── 404.html
+├── AUDIT.md
+├── PLAN.md
 ├── css/                    # wyłącznie źródła CSS
 ├── js/                     # źródła: wejścia, bootstrap, app/, core/, features/
 ├── data/menu.json
@@ -193,6 +195,8 @@ Skonfigurowano minifikację CSS i bundling/minifikację JS. Obrazy korzystają z
 - Zmiany stron i publicznych zasobów zestawiaj z listami w `scripts/build-config.js`, `sw.js`, `manifest.webmanifest` i `sitemap.xml`.
 - Po zmianach zasobów cache aktualizuj `CACHE_VERSION` w `sw.js`.
 - [CHANGELOG.md](docs/CHANGELOG.md) jest zapisem znaczących ukończonych zmian; aktualizuj go, gdy zakres zadania na to pozwala, lub zgłoś potrzebę wpisu.
+- [PLAN.md](PLAN.md) jest aktywnym planem rozwoju projektu i zawiera bieżące zadania oraz warunki ich ukończenia.
+- [AUDIT.md](AUDIT.md) jest bieżącym dokumentem audytowym projektu i źródłem ustaleń technicznych uwzględnianych w planie.
 - [Zakończony plan rozwoju](docs/archive/plans/PLAN-2026-09-19.md) zachowuje ukończony plan wdrożenia wraz z zapisem weryfikacji; jest dokumentem archiwalnym, a nie aktywną listą zadań.
 - [Zamknięty audyt frontendowy](docs/archive/audits/daily-AUDIT-2026-09-19.md) zachowuje historyczne ustalenia audytu i statusy ich rozwiązania.
 
@@ -256,6 +260,8 @@ Each page is a separate HTML document. Shared header and footer markup is stored
 ├── offline.html
 ├── thank-you.html
 ├── 404.html
+├── AUDIT.md
+├── PLAN.md
 ├── css/                    # CSS sources only
 ├── js/                     # sources: entries, bootstrap, app/, core/, features/
 ├── data/menu.json
@@ -397,6 +403,8 @@ CSS minification and JS bundling/minification are configured. Images use `pictur
 - Check page and public asset changes against the lists in `scripts/build-config.js`, `sw.js`, `manifest.webmanifest` and `sitemap.xml`.
 - Update `CACHE_VERSION` in `sw.js` when cached resources change.
 - [CHANGELOG.md](docs/CHANGELOG.md) records significant completed changes; update it when task scope permits, or report that an entry is needed.
+- [PLAN.md](PLAN.md) is the active development plan, containing current tasks and their completion conditions.
+- [AUDIT.md](AUDIT.md) is the current project audit and the source of technical findings reflected in the development plan.
 - [Completed development plan](docs/archive/plans/PLAN-2026-09-19.md) preserves the finished implementation plan together with its verification record; it is an archived document, not an active task list.
 - [Resolved frontend audit](docs/archive/audits/daily-AUDIT-2026-09-19.md) preserves the historical audit findings and their resolution statuses.
 
