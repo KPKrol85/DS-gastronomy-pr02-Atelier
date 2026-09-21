@@ -1,4 +1,4 @@
-const CACHE_VERSION = "1.3";
+const CACHE_VERSION = "1.4";
 const CACHE_NAME = `atelierno02-v${CACHE_VERSION}`;
 
 const FILES_TO_CACHE = [

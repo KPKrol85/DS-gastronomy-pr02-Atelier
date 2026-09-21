@@ -168,9 +168,9 @@
 
 **Goal:** Ship the cache contract for the corrected pages and confirm the tree passes the project's own source and production pipelines.
 
-- [ ] **PH7-01 — Raise the service worker cache version for the shipped content changes** — **Priority:** Medium
-  - [ ] raise `CACHE_VERSION` in `sw.js` once the page and asset changes in Phases 1 to 5 have landed
-  - [ ] confirm every `FILES_TO_CACHE` entry still resolves against the source tree and the built package
+- [x] **PH7-01 — Raise the service worker cache version for the shipped content changes** — **Priority:** Medium
+  - [x] raise `CACHE_VERSION` in `sw.js` once the page and asset changes in Phases 1 to 5 have landed
+  - [x] confirm every `FILES_TO_CACHE` entry still resolves against the source tree and the built package
   - **Completion condition:** returning visitors receive the corrected pages instead of the previously cached copies
   - **Depends on:** Phases 1 to 5
 
