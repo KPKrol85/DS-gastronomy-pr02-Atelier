@@ -174,13 +174,30 @@
   - **Completion condition:** returning visitors receive the corrected pages instead of the previously cached copies
   - **Depends on:** Phases 1 to 5
 
-- [ ] **PH7-02 — Run the full source and production pipeline** — **Priority:** Medium
-  - [ ] run `npm run qa` and record the ESLint, source contract, HTML validation, link and pa11y-ci results
-  - [ ] run `npm run build`, then `npm run qa:dist`
-  - [ ] optional: run `npm run qa:links:external` once, since no external address in the repository has been contacted by any recorded check
-  - [ ] record any failure as a new plan item rather than leaving it undocumented
+- [x] **PH7-02 — Run the full source and production pipeline** — **Priority:** Medium
+  - [x] run `npm run qa` and record the ESLint, source contract, HTML validation, link and pa11y-ci results
+  - [x] run `npm run build`, then `npm run qa:dist`
+  - [x] optional: run `npm run qa:links:external` once, since no external address in the repository has been contacted by any recorded check
+  - [x] record any failure as a new plan item rather than leaving it undocumented
+  - **Result:** run on 2026-09-21 at `c5525df`. `npm run qa` passed in full: ESLint clean, source asset contract passed, `html-validate` clean over the 11 root pages, 528 links, assets and fragments checked with 0 broken, and pa11y-ci 11/11 URLs at 0 errors. `npm run build` and `npm run qa:dist` passed: 11 pages, `atelierno02-v1.4` with its precache rewritten to the minified bundles, 528 references checked with 0 broken, and pa11y-ci 11/11 URLs at 0 errors. `npm run qa:links:external` ran once and reported 66 broken references across two external hosts, tracked below as `PH7-03` and `PH7-04`.
   - **Completion condition:** both pipelines complete, or every failure is recorded as a tracked item
   - **Depends on:** Phases 1 to 6
+
+- [ ] **PH7-03 — Correct the malformed LinkedIn profile address in the page footers** — **Priority:** Medium
+  - [ ] replace `https://www.linkedin.com/kpkrol85` with the intended profile address in all 11 root HTML pages
+  - [ ] re-run `npm run qa:links:external` against a local server and confirm that no `linkedin.com` failure remains
+  - **Evidence:** the `PH7-02` external check reported `404` for `https://www.linkedin.com/kpkrol85`, one distinct address in 12 occurrences, counting the site root and `index.html` separately. An independent request to the same address also returned `404`, while the `/in/` form of the same handle returned LinkedIn's `999` bot-protection status rather than `404`; a member profile path requires the `/in/` segment, so the stored address cannot resolve. The build copies the same reference into `dist/`.
+  - **Completion condition:** the footer profile link resolves and the external link check reports no `linkedin.com` failure
+  - **Depends on:** the project owner confirming the intended profile address
+  - **Source:** `PH7-02` verification run
+
+- [ ] **PH7-04 — Confirm the canonical production host behind the absolute page metadata** — **Priority:** Medium
+  - [ ] establish whether `https://gastronomy-project-02.netlify.app/` is still the address this release is served from
+  - [ ] depending on that answer, restore the deployment at that host or update the canonical, Open Graph, Twitter and JSON-LD references to the host actually served
+  - **Evidence:** the `PH7-02` external check reported `404` for 30 distinct `https://gastronomy-project-02.netlify.app/` addresses in 54 occurrences, including the site root. An independent request to the root returned Netlify's own `Not Found` body, so the origin answers but serves no site at that hostname. The addresses are absolute self-references in `<link rel="canonical">`, `og:url`, `og:image`, `twitter:image` and the JSON-LD graph, present in both the source pages and `dist/`. Whether this is a source defect or a deployment state cannot be decided from the local tree.
+  - **Completion condition:** the canonical host is confirmed and the absolute metadata addresses resolve against it
+  - **Depends on:** the project owner confirming the deployment target
+  - **Source:** `PH7-02` verification run
 
 ## Optional future improvements
 
