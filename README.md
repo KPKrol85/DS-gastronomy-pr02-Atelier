@@ -10,7 +10,7 @@ Projekt obejmuje stronę główną, informacje o restauracji, menu, galerię, ko
 
 ### Wersja online
 
-[Adres demo wskazany w repozytorium](https://gastronomy-project-02.netlify.app/) pochodzi z regulaminu i metadanych stron. Dostępność witryny oraz zgodność wdrożonej wersji z bieżącym kodem nie zostały potwierdzone.
+[Witryna produkcyjna](https://gastronomy-pr02-atelier.netlify.app/) jest publikowana ręcznie na Netlify przez właściciela projektu. Wdrożona wersja może być starsza niż bieżący stan repozytorium.
 
 ### Kluczowe funkcje
 
@@ -218,7 +218,7 @@ The project includes a homepage, restaurant information, menu, gallery, contact,
 
 ### Live Version
 
-[Demo address stated in the repository](https://gastronomy-project-02.netlify.app/) comes from the terms and page metadata. Website availability and whether the deployed version matches the current code have not been confirmed.
+[The production website](https://gastronomy-pr02-atelier.netlify.app/) is published manually to Netlify by the project owner. The deployed version may be older than the current state of the repository.
 
 ### Key Features
 

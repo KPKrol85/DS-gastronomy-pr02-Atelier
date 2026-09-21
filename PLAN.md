@@ -189,11 +189,11 @@
   - **Depends on:** the project owner confirming the intended profile address — confirmed on 2026-09-21, the owner opening the profile in a browser and supplying the public address `https://www.linkedin.com/in/kp-code/`
   - **Source:** `PH7-02` verification run
 
-- [ ] **PH7-04 — Confirm the canonical production host behind the absolute page metadata** — **Priority:** Medium
-  - [ ] establish whether `https://gastronomy-project-02.netlify.app/` is still the address this release is served from
-  - [ ] depending on that answer, restore the deployment at that host or update the canonical, Open Graph, Twitter and JSON-LD references to the host actually served
+- [x] **PH7-04 — Confirm the canonical production host behind the absolute page metadata** — **Priority:** Medium
+  - [x] establish the address this release is served from
+  - [x] update the canonical, Open Graph, Twitter, JSON-LD, sitemap and robots references to the host actually served
   - **Completion condition:** the canonical host is confirmed and the absolute metadata addresses resolve against it
-  - **Depends on:** the project owner confirming the deployment target
+  - **Depends on:** the project owner confirming the deployment target — confirmed on 2026-09-21, the owner naming `https://gastronomy-pr02-atelier.netlify.app/` as the established Netlify production site
   - **Source:** `PH7-02` verification run
 
 ## Optional future improvements

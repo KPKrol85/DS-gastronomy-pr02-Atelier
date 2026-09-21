@@ -56,6 +56,7 @@ All significant changes to this project are documented in this file.
 - Corrected the small box-shadow token name and its legal-page consumer without changing the rendered shadow.
 - Raised the Service Worker cache version to v1.4 and synchronized bilingual README references, verifying all 19 precache entries in source and production.
 - Corrected the LinkedIn profile URL across all 11 page footers and verified the updated link in source and production HTML.
+- Aligned production URLs, SEO metadata, sitemap, robots and form host detection with the confirmed Atelier Netlify domain.
 
 ### Documentation
 
