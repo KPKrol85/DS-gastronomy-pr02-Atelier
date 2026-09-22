@@ -17,6 +17,7 @@ All significant changes to this project are documented in this file.
 - Added a contact form configured for native Netlify Forms POST submission, honeypot filtering, field validation and submission progress feedback.
 - Added a dismissible demonstration notice with keyboard focus handling and a locally persisted acknowledgement.
 - Added a standalone PWA manifest and Service Worker caching with network-first navigation, cache-first assets, an offline fallback and connection-status notices.
+- Added source validation for optimized image assets to detect outputs without corresponding original images.
 
 ### Changed
 

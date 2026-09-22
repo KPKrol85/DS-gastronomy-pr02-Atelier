@@ -25,6 +25,11 @@ const MENU_PAGE = "menu.html";
 const FEATURED_PAGE = "index.html";
 const FEATURED_CATEGORIES = ["przystawki", "dania-glowne", "desery"];
 const FEATURED_SIZE = 3;
+const IMAGE_SOURCES = "assets/img-src";
+const IMAGE_OUTPUTS = "assets/img-optimized";
+const RASTER_SOURCE_FORMATS = [".jpg", ".jpeg", ".png"];
+const DERIVED_RASTER_FORMATS = [".avif", ".webp"];
+const VECTOR_FORMAT = ".svg";
 const OPEN_TAG = /<([\w-]+)\b[^>]*>/g;
 const TAG_NAME = /^<\s*([\w:-]+)/;
 const TAG_ATTRIBUTE = /\s+([^\s/=>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>]+)))?/y;
@@ -324,6 +329,42 @@ function validateDemoModalWrapper(page, markup) {
   }
 }
 
+/*
+ Relative paths below a directory, each carrying the lower-cased extension build-images.js
+ names its outputs after, so both image trees are read the same way. A missing tree holds none.
+*/
+function imagesBelow(directory) {
+  if (!fs.existsSync(directory)) return [];
+  return filesBelow(directory).map((file) => {
+    const relative = path.relative(directory, file).split(path.sep).join("/");
+    const extension = path.extname(relative);
+    return relative.slice(0, relative.length - extension.length) + extension.toLowerCase();
+  });
+}
+
+/*
+ build-images.js removes assets/img-optimized/ and rebuilds it from assets/img-src/, so an
+ output no source can produce survives only until the next image build. Every generated file is
+ therefore read back to the source that names it, under the same relative directory and stem:
+ .avif and .webp are encoded from any supported raster, an original-format raster keeps its
+ source extension, and an .svg is copied unchanged. Provenance only; no image bytes are read.
+*/
+function validateImageProvenance() {
+  const sources = new Set(imagesBelow(path.join(rootDir, IMAGE_SOURCES)));
+  for (const relative of imagesBelow(path.join(rootDir, IMAGE_OUTPUTS))) {
+    const extension = path.extname(relative);
+    const stem = relative.slice(0, relative.length - extension.length);
+    const formats = extension === VECTOR_FORMAT ? [VECTOR_FORMAT]
+      : DERIVED_RASTER_FORMATS.includes(extension) ? RASTER_SOURCE_FORMATS
+        : RASTER_SOURCE_FORMATS.includes(extension) ? [extension] : [];
+    if (!formats.length) continue;
+    const expected = formats.map((format) => `${stem}${format}`);
+    assert(expected.some((candidate) => sources.has(candidate)),
+      `Missing image source for ${IMAGE_OUTPUTS}/${relative}: expected `
+      + expected.map((candidate) => `${IMAGE_SOURCES}/${candidate}`).join(" or "));
+  }
+}
+
 function validateSource() {
   for (const directory of ["css", "js"]) {
     assert(!filesBelow(path.join(rootDir, directory)).some((file) => /\.min\.(css|js)$/.test(file)),
@@ -360,6 +401,7 @@ function validateSource() {
       `${page} is missing <meta name="theme-color" content="#ffffff"> in <head>`);
   }
   validateMenuParity();
+  validateImageProvenance();
 }
 
 function assertReference(reference, owner) {

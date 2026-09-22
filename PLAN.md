@@ -198,7 +198,7 @@
 
 ## Optional future improvements
 
-- [ ] **O-01 — Assert image output reproducibility in the validation script**
+- [x] **O-01 — Assert image output reproducibility in the validation script**
   - **Value:** `scripts/validate-dist.js` already resolves the 158 image variants declared in `data/menu.json`, but nothing checks that every file under `assets/img-optimized/` has a correspondingly named source under `assets/img-src/`. The same assertion inside `validateSource()` would surface a malformed source name in CI, before `npm run images:build` removes the output tree.
   - **Scope boundary:** optional safeguard using tooling already present; it does not change the generator or the image workflow.
   - **Depends on:** `PH1-01`
