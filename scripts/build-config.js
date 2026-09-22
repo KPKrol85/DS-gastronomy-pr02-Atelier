@@ -27,7 +27,10 @@ const assetEntries = [
   "js/bootstrap.js",
   "data/menu.json",
   "assets/docs",
-  "assets/fonts",
+  "assets/fonts/montserrat-vari-latin.woff2",
+  "assets/fonts/montserrat-vari-latin-ext.woff2",
+  "assets/fonts/playfair-display-vari-latin.woff2",
+  "assets/fonts/playfair-display-vari-latin-ext.woff2",
   "assets/icons",
   "assets/img-optimized",
 ];

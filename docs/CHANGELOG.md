@@ -74,6 +74,7 @@ All significant changes to this project are documented in this file.
 - Added PostCSS and esbuild asset builds, a local static development server and explicit `dist/` packaging of pages, selected public assets and static-hosting configuration.
 - Added a Sharp image-generation workflow from `assets/img-src/` to `assets/img-optimized/`, producing AVIF, WebP and JPEG or PNG variants.
 - Extended ESLint coverage to browser modules, the Service Worker and all Node.js build and QA scripts with environment-specific globals, and removed an unused image-build declaration.
+- Limited production font packaging to four referenced variable WOFF2 files while retaining all source fonts.
 
 ### Testing
 

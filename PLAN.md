@@ -210,7 +210,7 @@
   - **Depends on:** `PH1-02`
   - **Source:** `AUDIT.md` — Extra quality improvements
 
-- [ ] **O-03 — Limit the production package to the font files the current release serves**
+- [x] **O-03 — Limit the production package to the font files the current release serves**
   - **Value:** `assetEntries` in `scripts/build-config.js` copies `assets/fonts` wholesale, yet `css/base/typography.css` declares only the four variable fonts; `lato-400-latin.woff2`, `lato-700-latin.woff2`, `montserrat-400-latin.woff2` and `montserrat-700-latin.woff2` are referenced by no `@font-face` rule and by no page.
   - **Scope boundary:** packaging only, and declining it is equally valid. The files stay tracked with their licensing and attribution notices, and the retained SVG icons under `assets/icons/svg-icon/` are out of scope here.
   - **Source:** `AUDIT.md` — Extra quality improvements
