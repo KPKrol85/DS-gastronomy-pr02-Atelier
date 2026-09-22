@@ -30,6 +30,18 @@ const IMAGE_OUTPUTS = "assets/img-optimized";
 const RASTER_SOURCE_FORMATS = [".jpg", ".jpeg", ".png"];
 const DERIVED_RASTER_FORMATS = [".avif", ".webp"];
 const VECTOR_FORMAT = ".svg";
+const PRODUCTION_ORIGIN = "https://gastronomy-pr02-atelier.netlify.app";
+const HOME_PAGE = "index.html";
+const BREADCRUMB_TYPE = "BreadcrumbList";
+const JSON_LD_SCRIPT = /<script\b[^>]*\btype=(['"])application\/ld\+json\1[^>]*>([\s\S]*?)<\/script>/gi;
+const UNIQUE_METADATA = [
+  ["title", "page title"],
+  ["description", "meta description"],
+  ["ogTitle", "og:title"],
+  ["breadcrumbName", "breadcrumb terminal name"],
+  ["canonical", "canonical URL"],
+];
+const SELF_REFERENCES = [["ogUrl", "og:url"], ["breadcrumbItem", "breadcrumb terminal item"]];
 const OPEN_TAG = /<([\w-]+)\b[^>]*>/g;
 const TAG_NAME = /^<\s*([\w:-]+)/;
 const TAG_ATTRIBUTE = /\s+([^\s/=>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>]+)))?/y;
@@ -365,12 +377,151 @@ function validateImageProvenance() {
   }
 }
 
+// The content of the first <meta> whose attribute carries the value, never a later namesake.
+function metaContent(head, attribute, value) {
+  for (const tag of head.matchAll(/<meta\b[^>]*>/gi)) {
+    if (tagAttribute(tag[0], attribute) === value) return tagAttribute(tag[0], "content");
+  }
+  return null;
+}
+
+function linkHref(head, rel) {
+  for (const tag of head.matchAll(/<link\b[^>]*>/gi)) {
+    if ((tagAttribute(tag[0], "rel") || "").toLowerCase() === rel) return tagAttribute(tag[0], "href");
+  }
+  return null;
+}
+
+function documentTitle(head) {
+  const title = head.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i);
+  return title ? title[1].replace(/\s+/g, " ").trim() : null;
+}
+
+/*
+ Every JSON-LD node the head declares, read as data and lifted out of the @graph wrapper the
+ project writes its pages with, so a node is found by its @type rather than by where it sits.
+*/
+function structuredDataNodes(page, head) {
+  const nodes = [];
+  for (const script of head.matchAll(JSON_LD_SCRIPT)) {
+    let data = null;
+    try {
+      data = JSON.parse(script[2]);
+    } catch (error) {
+      assert.fail(`${page}: an application/ld+json block is not parseable JSON: ${error.message}`);
+    }
+    for (const entry of [data].flat()) {
+      if (!entry) continue;
+      nodes.push(...(Array.isArray(entry["@graph"]) ? entry["@graph"] : [entry]));
+    }
+  }
+  return nodes.filter(Boolean);
+}
+
+/*
+ The ListItem standing for the page itself: the highest breadcrumb position, not the last entry
+ written and never the homepage entry every trail opens with. A trail whose terminal item cannot
+ be decided — declared twice, positionless or tied — is reported instead of guessed at.
+*/
+function terminalBreadcrumb(page, head) {
+  const trails = structuredDataNodes(page, head).filter((node) => node["@type"] === BREADCRUMB_TYPE);
+  if (!trails.length) return null;
+  const scope = `${page}: ${BREADCRUMB_TYPE}`;
+  assert.equal(trails.length, 1,
+    `${scope} is declared ${trails.length} times, so no single trail describes the page`);
+  const items = trails[0].itemListElement;
+  assert(Array.isArray(items) && items.length, `${scope} carries no itemListElement entries`);
+  const positions = items.map((item, index) => {
+    const position = Number(item && item.position);
+    assert(Number.isFinite(position), `${scope} entry ${index + 1} carries no numeric position`);
+    return position;
+  });
+  const terminalPosition = Math.max(...positions);
+  assert.equal(positions.filter((position) => position === terminalPosition).length, 1,
+    `${scope} declares position ${terminalPosition} more than once, so its terminal item is ambiguous`);
+  const terminal = items[positions.indexOf(terminalPosition)];
+  const reference = typeof terminal.item === "string" ? terminal.item : terminal.item?.["@id"];
+  const named = `${scope} terminal item at position ${terminalPosition}`;
+  assert(typeof terminal.name === "string" && terminal.name.trim(), `${named} carries no name`);
+  assert(typeof reference === "string" && reference.trim(), `${named} carries no item URL`);
+  return { name: terminal.name.replace(/\s+/g, " ").trim(), item: reference.trim() };
+}
+
+// What one page says about itself. A field the page does not declare stays null and is not invented.
+function pageMetadata(page, head) {
+  const breadcrumb = terminalBreadcrumb(page, head);
+  return {
+    page,
+    title: documentTitle(head),
+    description: metaContent(head, "name", "description"),
+    ogTitle: metaContent(head, "property", "og:title"),
+    ogUrl: metaContent(head, "property", "og:url"),
+    canonical: linkHref(head, "canonical"),
+    breadcrumbName: breadcrumb && breadcrumb.name,
+    breadcrumbItem: breadcrumb && breadcrumb.item,
+  };
+}
+
+/*
+ One field, compared only against itself on the other pages. A page repeating its own <title> as
+ its og:title is its own wording; the same wording on two pages is the copy-paste this guards.
+*/
+function assertUniqueMetadata(entries, field, label) {
+  const owners = new Map();
+  for (const entry of entries) {
+    const value = entry[field];
+    if (!value) continue;
+    const owner = owners.get(value);
+    assert(owner === undefined,
+      `Duplicate ${label}: ${owner} and ${entry.page} both declare "${value}"`);
+    owners.set(value, entry.page);
+  }
+}
+
+/*
+ One page, one address. The canonical a page declares names that page on the production host, the
+ homepage answering to the site root, and every other absolute self-reference repeats that exact
+ canonical. Silence stays silence: 404.html declares no canonical and no og:url, thank-you.html no
+ og:url, and four pages no breadcrumb, none of which this asks them to start declaring.
+*/
+function validateSelfReference(entry) {
+  const { page, canonical } = entry;
+  if (canonical !== null) {
+    const expected = `${PRODUCTION_ORIGIN}/${page === HOME_PAGE ? "" : page}`;
+    assert.equal(canonical, expected,
+      `${page}: canonical ${canonical} does not address this page, expected ${expected}`);
+  }
+  for (const [field, label] of SELF_REFERENCES) {
+    const value = entry[field];
+    if (!value) continue;
+    assert(canonical, `${page}: ${label} ${value} is declared with no canonical URL to agree with`);
+    assert.equal(value, canonical,
+      `${page}: ${label} ${value} does not match the page canonical ${canonical}`);
+  }
+}
+
+/*
+ PH1-02 corrected metadata copied from a neighbouring page, and nothing in the source contract had
+ noticed. Every page therefore has to name itself: a title, description, og:title and breadcrumb
+ terminal name belonging to no other page, over a canonical, og:url and breadcrumb terminal item
+ that all resolve to its own production address.
+*/
+function validateMetadataContract(entries) {
+  for (const { page, title, description } of entries) {
+    assert(title, `${page} declares no non-empty <title>`);
+    assert(description, `${page} declares no non-empty <meta name="description">`);
+  }
+  for (const [field, label] of UNIQUE_METADATA) assertUniqueMetadata(entries, field, label);
+  entries.forEach(validateSelfReference);
+}
+
 function validateSource() {
   for (const directory of ["css", "js"]) {
     assert(!filesBelow(path.join(rootDir, directory)).some((file) => /\.min\.(css|js)$/.test(file)),
       `Generated production assets found in source ${directory}/`);
   }
   const demoModalEntries = new Map();
+  const metadata = [];
   for (const page of htmlPages) {
     const html = read(rootDir, page);
     assert(!/\.min\.(css|js)/.test(html), `${page} references a production bundle`);
@@ -399,9 +550,11 @@ function validateSource() {
       `${page} is missing <meta name="color-scheme" content="light dark"> in <head>`);
     assert(hasMeta(head, "theme-color", "#ffffff"),
       `${page} is missing <meta name="theme-color" content="#ffffff"> in <head>`);
+    metadata.push(pageMetadata(page, head));
   }
   validateMenuParity();
   validateImageProvenance();
+  validateMetadataContract(metadata);
 }
 
 function assertReference(reference, owner) {

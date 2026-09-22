@@ -204,7 +204,7 @@
   - **Depends on:** `PH1-01`
   - **Source:** `AUDIT.md` — Extra quality improvements
 
-- [ ] **O-02 — Extend the source contract to per-page metadata uniqueness**
+- [x] **O-02 — Extend the source contract to per-page metadata uniqueness**
   - **Value:** asserting that titles, descriptions, `og:title` values and breadcrumb terminal items are unique per page and agree with that page's own canonical URL would catch the copy-paste drift behind `PH1-02` in the same place the project already enforces its other per-page invariants.
   - **Scope boundary:** optional coverage extension; no metadata problem other than the one in `PH1-02` was detected.
   - **Depends on:** `PH1-02`
