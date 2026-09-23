@@ -79,6 +79,7 @@ None detected.
 - **Impact:** Two of the eight indexed pages carry an identical meta description, every share of the gallery URL previews as the About page, the breadcrumb data contradicts the page's own canonical URL, and the page declares FAQ content that no visitor can find on it. How any particular search engine treats that last mismatch was not verified during this audit; what is verified is that the structured data served on `gallery.html` does not describe `gallery.html`.
 - **Recommended direction:** Re-target the gallery page's description, `og:title`, `og:description`, Twitter equivalents and breadcrumb to the gallery, and remove the `FAQPage` node from a page that does not render those questions. The gallery page needs no FAQ node of its own; the FAQ and its structured data belong to `about.html`, where their content accuracy is addressed separately in [P2-02].
 - **Verification criteria:** No two indexed pages share a meta description; `gallery.html`'s `og:title` and breadcrumb terminal item name the gallery and its own URL; no page declares structured data whose content is absent from that page.
+- **Status:** RESOLVED — implemented and verified. Details are recorded in `docs/CHANGELOG.md`.
 
 ### [P1-02] npm run images:build would delete three referenced optimized images it cannot regenerate
 
@@ -89,6 +90,7 @@ None detected.
 - **Impact:** A documented maintenance command is destructive in the current repository state. The three deleted files are referenced six times — by the static menu card at `menu.html:1406` and the featured dessert card on `index.html` — so `npm run qa:links`, `npm run qa:dist:integrity` and the 720w breakpoint would all break immediately after running it, and the originals are not recoverable from the source tree.
 - **Recommended direction:** Correct the source filename so the generator reproduces the referenced 720x480 variants, and add the missing 720 variant entry for that item in `data/menu.json` so the rendered card offers the same candidates as the static fallback.
 - **Verification criteria:** Every file under `assets/img-optimized/` is reproducible from a correspondingly named file under `assets/img-src/`, and `npm run qa` passes after `npm run images:build`.
+- **Status:** RESOLVED — implemented and verified. Details are recorded in `docs/CHANGELOG.md`.
 
 ### [P1-03] Menu page offers a PDF download and delivers a placeholder SVG
 
@@ -99,6 +101,7 @@ None detected.
 - **Impact:** The only download offered on the site promises the current menu in PDF form and delivers a placeholder in a different format. Every visitor who uses the control receives a file that states it is a sample, on a public page that otherwise presents complete, accurate menu content.
 - **Recommended direction:** Either supply a real menu document in the format the copy promises and align the button label, `type` and `download` name with it, or change the copy and the control to describe what is actually provided.
 - **Verification criteria:** The download control's visible label, accessible name, `type` and downloaded filename all describe the same format, and the delivered file contains the menu it advertises rather than placeholder text.
+- **Status:** RESOLVED — implemented and verified. Details are recorded in `docs/CHANGELOG.md`.
 
 ### [P1-04] Contact form focus indicator is effectively invisible in the light theme
 
@@ -110,6 +113,7 @@ None detected.
 - **Recommended direction:** Point the field focus rule at the existing `--focus-ring` token, or at another theme-aware value that clears 3:1 against both the field background and the surrounding panel in light and dark themes.
 - **Verification criteria:** The computed focus outline on `#name`, `#email` and `#message` reaches at least 3:1 against both adjacent surfaces in each theme.
 - **Contrast note:** These ratios were computed from the opaque hex tokens and the declared oklab `color-mix()`; they were not measured in a rendered browser.
+- **Status:** RESOLVED — implemented and verified. Details are recorded in `docs/CHANGELOG.md`.
 
 ### [P1-05] contact.html ships the demonstration dialog without inert, leaving five hidden controls in the tab order
 
@@ -120,6 +124,7 @@ None detected.
 - **Impact:** At the end of the contact page's tab order, keyboard users encounter five invisible controls with no visible focus indicator, inside a subtree marked `aria-hidden="true"` so screen readers announce nothing as focus moves through them. Activating the accept button in that state does nothing, because `closeModal()` exits immediately when the dialog is not open.
 - **Recommended direction:** Ship the contact page's dialog wrapper in the same state as the other nine pages, and extend the existing source contract check so the initial dialog attributes are asserted rather than maintained by hand across ten copies.
 - **Verification criteria:** All ten pages that carry `#demo-legal-modal` ship the wrapper with the same initial attributes, and no control inside the closed dialog is reachable by Tab on any page.
+- **Status:** RESOLVED — implemented and verified. Details are recorded in `docs/CHANGELOG.md`.
 
 ## 6. P2 — Minor refinements
 
@@ -132,6 +137,7 @@ None detected.
 - **Impact:** The scenario the service worker exists to support is the one scenario in which the offline messaging never runs. On `menu.html` and `gallery.html` the visitor sees missing images with no explanation, on precisely the pages for which the code has a written explanation ready.
 - **Recommended direction:** Render the offline state once at initialisation when the page starts offline, while keeping the restored-connection notice limited to genuine transitions.
 - **Verification criteria:** Loading `menu.html` or `gallery.html` from cache with the network disabled shows the offline banner and the matching hero note, and a normal online load shows neither.
+- **Status:** IMPLEMENTED — verification limited to the initialisation path. `initNetworkStatusBanner()` now renders the offline banner and the matching hero note once when a page starts with `navigator.onLine` false, and the restored-connection notice still requires a genuine transition; recorded in `docs/CHANGELOG.md`. The cache-served offline load named in the verification criteria has not been exercised, because `js/bootstrap.js` skips service worker registration on localhost and both QA servers bind to `127.0.0.1`.
 
 ### [P2-02] Public copy and the About FAQ describe services the project's own terms exclude
 
@@ -142,6 +148,7 @@ None detected.
 - **Impact:** The interface and the binding document on the same site describe different capabilities, and the terms specifically deny what the contact page lead and the About FAQ promise. A visitor following the copy expects the form to place a booking, and the FAQ additionally directs gift-voucher orders through the same form; only the legal pages state that neither is possible. Because the FAQ text is duplicated into structured data, the unavailable services are also published in a machine-readable form.
 - **Recommended direction:** Align the reservation wording with the demonstrational character of the site and its contact form, without implying that any channel accepts binding reservations, so the interface and the terms agree. For the About page, the owner's decision is to replace the current restaurant-service FAQ with a project-focused FAQ describing the demonstration character of the site, the non-binding contact form, the demonstration menu, KP_Code Digital Studio's authorship and the front-end capabilities the project implements; the replacement is future implementation work, and its wording and structure belong in the development plan rather than in this audit. Whatever wording is adopted, the `FAQPage` node on `about.html` must be regenerated from it so the structured data and the visible FAQ continue to state the same thing. The page keeps its restaurant-portfolio presentation.
 - **Verification criteria:** No public control, lead or FAQ entry promises a reservation, order or service the project does not provide; the wording no longer contradicts the terms; and every question and answer in the `FAQPage` node on `about.html` matches the FAQ text visible on that page.
+- **Status:** RESOLVED — implemented and verified. Details are recorded in `docs/CHANGELOG.md`.
 
 ### [P2-03] Accessible names replace rather than extend visible labels on 17 controls
 
@@ -152,6 +159,7 @@ None detected.
 - **Impact:** Speech-input users who say the label they can see do not activate the control, which is the situation WCAG 2.1 SC 2.5.3 addresses. The pattern is systematic rather than isolated, so it covers the primary call to action on the home page, the menu page and every footer.
 - **Recommended direction:** Keep the visible text as the start of the accessible name and use the label only to extend it, or drop the label where the visible text and its context are already sufficient.
 - **Verification criteria:** Every interactive element with visible text has an accessible name that contains that text.
+- **Status:** RESOLVED — implemented and verified. Details are recorded in `docs/CHANGELOG.md`.
 
 ### [P2-04] Menu anchor links append a control label to 24 heading names
 
@@ -162,6 +170,7 @@ None detected.
 - **Impact:** On the site's main content page, heading-by-heading navigation reads a 30-character control label after all 24 headings. Confirming the exact announcement requires screen-reader verification, but the name computation follows from the markup the module produces.
 - **Recommended direction:** Keep the anchor out of the heading's accessible name — for example by placing it outside the heading element, or by giving it a name that is not folded into the heading text.
 - **Verification criteria:** The computed accessible name of each menu heading is its visible text alone, and the copy-link control remains reachable and operable by keyboard.
+- **Status:** RESOLVED — implemented and verified. Details are recorded in `docs/CHANGELOG.md`.
 
 ### [P2-05] The published street address differs between page groups
 
@@ -172,6 +181,7 @@ None detected.
 - **Impact:** The site presents the same address in two forms, one complete and one missing the premises number, and on eight pages the visible text is less specific than the map link target attached to it. Because the header, footer and dialog are hand-duplicated across 11 pages rather than generated, this is the kind of drift that recurs.
 - **Recommended direction:** Treat the form stated in the terms as canonical and reconcile the footers, the contact page `<address>` and the map query against it.
 - **Verification criteria:** One address string appears in every public location that displays it, and the map query and link target match it.
+- **Status:** RESOLVED — implemented and verified. Details are recorded in `docs/CHANGELOG.md`.
 
 ### [P2-06] sitemap.xml lastmod values predate every current page revision
 
@@ -182,6 +192,7 @@ None detected.
 - **Impact:** The one machine-readable freshness signal the project publishes is roughly eleven months behind the content it describes, on every page it lists. Crawlers that use `lastmod` for recrawl scheduling are told nothing has changed.
 - **Recommended direction:** Bring the `lastmod` values in line with the pages' actual revision dates, and add the sitemap to the list of files reconciled when public routes or page content change.
 - **Verification criteria:** Each `lastmod` matches or postdates the last substantive change to the page it describes.
+- **Status:** IMPLEMENTED — not re-confirmed against later revisions. All eight `lastmod` values were refreshed to 2026-09-20 with the URL set unchanged; recorded in `docs/CHANGELOG.md`. Every listed page has since been revised without a `lastmod` change — production-host canonical, Open Graph and JSON-LD URLs and the LinkedIn footer link on 2026-09-21, shared icon markup on 2026-09-23 — and whether those revisions are substantive, and so whether the verification criteria still hold, has not been decided.
 
 ### [P2-07] 404.html omits the shared page class its stylesheet layer depends on
 
@@ -192,6 +203,7 @@ None detected.
 - **Impact:** No visible defect now, but any card, lead paragraph or other shared component added to the 404 page silently loses its styling. The source contract check asserts four `<head>` requirements on every page and nothing about the body contract, so the drift would not be caught.
 - **Recommended direction:** Bring the 404 page's body onto the same class contract as the other ten, and extend `validateSource()` to assert it the way it already asserts the head.
 - **Verification criteria:** Every page's `<body>` carries the shared `page` class alongside its page modifier, and the contract check fails if one does not.
+- **Status:** RESOLVED — implemented and verified. Details are recorded in `docs/CHANGELOG.md`.
 
 ### [P2-08] A design token is defined and consumed under a misspelled name
 
@@ -202,6 +214,7 @@ None detected.
 - **Impact:** The correctly spelled `var(--shadow-box-sm)` resolves to nothing, and a `box-shadow` declaration using it is silently dropped rather than reported. The custom-property scan performed here found no undefined property in the stylesheets, so this is the only latent instance.
 - **Recommended direction:** Rename the declaration and its single usage to match the naming used by the surrounding shadow tokens.
 - **Verification criteria:** No token in `css/base/tokens.css` deviates from the naming used by its group, and the legal-page rule still resolves.
+- **Status:** RESOLVED — implemented and verified. Details are recorded in `docs/CHANGELOG.md`.
 
 ## 7. Extra quality improvements
 
@@ -211,6 +224,7 @@ None detected.
 - **Current evidence:** The comparison performed during this audit derived the expected output set from `assets/img-src/` in a few lines and found the three unreproducible files behind [P1-02]. The validation script already resolves all 158 image variants declared in `data/menu.json`, but nothing checks the source-to-output relationship that `npm run images:build` depends on.
 - **Potential value:** The generator deletes the whole output tree before rebuilding it, so a malformed or missing source is discovered only after the tracked assets are gone. The same check inside `validateSource()` would surface it alongside the other contract failures, in CI, before the command is ever run.
 - **Scope boundary:** Optional safeguard using tooling already present; it does not change the generator or the image workflow.
+- **Status:** RESOLVED — implemented and verified. Details are recorded in `docs/CHANGELOG.md`.
 
 ### Extend the source contract to per-page metadata uniqueness
 
@@ -218,6 +232,7 @@ None detected.
 - **Current evidence:** The contract check already reads every page's `<head>` and asserts four theme requirements there. The metadata block copied from `about.html` into `gallery.html` behind [P1-01] survived HTML validation, the link crawl and the accessibility run, because each artefact is individually valid.
 - **Potential value:** Asserting that titles, descriptions, `og:title` values and breadcrumb terminal items are unique per page and agree with that page's own canonical URL would catch this whole class of copy-paste drift in the same place the project already enforces its other per-page invariants.
 - **Scope boundary:** Optional coverage extension; no current metadata problem other than the one reported above was detected.
+- **Status:** RESOLVED — implemented and verified. Details are recorded in `docs/CHANGELOG.md`.
 
 ### Limit the production package to assets the current build serves
 
@@ -225,6 +240,7 @@ None detected.
 - **Current evidence:** `assetEntries` copies `assets/fonts` and `assets/icons` wholesale into `dist/`, so every tracked file in them ships regardless of whether the current release references it. Four of the eight tracked font files — `lato-400-latin.woff2`, `lato-700-latin.woff2`, `montserrat-400-latin.woff2` and `montserrat-700-latin.woff2` — are referenced by no `@font-face` rule; the stylesheets declare only the four variable-font files, and the two preloads on the content pages point at two of those. Seven of the nine SVG icons in `assets/icons/svg-icon/` are likewise unreferenced by any page, stylesheet or module today, with only `icon-sun.svg` and `icon-moon.svg` in use; the owner retains these icons for a planned visual refinement phase and a planned `icons.js` integration, neither of which exists in the repository at the time of this audit.
 - **Potential value:** A package limited to what the current release serves is smaller and easier to reason about when reviewing what a deployment actually exposes. This concerns packaging only, and it can be applied to the four unreferenced font files without touching the retained icons.
 - **Scope boundary:** Optional and packaging-scoped. Assets retained in the source repository for planned work — including the seven SVG icons — should stay tracked, and any third-party licensing and attribution notices they carry, together with the `README.md` instruction to preserve them, remain applicable whether or not a file is currently rendered or shipped. Nothing currently breaks, so declining this change is equally valid.
+- **Status:** RESOLVED for the font files — `assetEntries` in `scripts/build-config.js` now packages only the four variable WOFF2 files that `css/base/typography.css` declares, and all eight source fonts stay tracked; recorded in `docs/CHANGELOG.md`. As this item's scope boundary allows, `assets/icons` is still copied wholesale, so the seven retained SVG files — now rendered from path data copied into `js/features/icons.js` rather than referenced as files — still ship in the package.
 
 ## 8. Current readiness conclusion
 
