@@ -217,5 +217,6 @@
 
 ## Deferred work
 
-- [ ] **D-01 — Integrate the retained SVG icon set**
+- [x] **D-01 — Integrate the retained SVG icon set**
   - **Reason:** seven of the nine icons in `assets/icons/svg-icon/` are referenced by no page, stylesheet or module; only `icon-sun.svg` and `icon-moon.svg` are in use. They are retained for a planned visual refinement phase and an `icons.js` integration, neither of which exists in the repository, so no implementation scope can be defined from current evidence. The files remain tracked and are not candidates for removal.
+  - **Completed:** `js/features/icons.js` renders the seven icons, with their unchanged path data, shared viewBox and Font Awesome notice, into `<svg data-icon>` placeholders from both entries, `js/app/init.js` and `js/core.js`. The placeholders replace the duplicated inline phone, mail, GitHub, Instagram, X and Facebook definitions in all 11 footers and in the `index.html` and `contact.html` contact details, and add the home icon to the seven breadcrumb home links. LinkedIn keeps its inline icon, `icon-sun.svg` and `icon-moon.svg` stay separate theme-toggle assets, all nine files remain tracked, and `CACHE_VERSION` in `sw.js` is raised to 1.5.
