@@ -76,6 +76,7 @@ The opportunities below sit inside that already-solid system: cases where an est
 - **Acceptance criteria:** At least one section type other than the current default consumes `--section-y-sm`, `-lg` or `-xl`; every section-level block still resolves to a defined token rather than a hard-coded padding value; page layouts otherwise reflow unchanged at all breakpoints.
 - **Impact:** Medium
 - **Effort:** Small
+- **Status:** COMPLETED — Increased homepage and inner-page hero vertical spacing using the existing `--section-y-lg` token while preserving standard section and footer spacing.
 
 ## Selection summary
 

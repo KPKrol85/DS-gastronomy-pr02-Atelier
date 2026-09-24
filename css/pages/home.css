@@ -2,7 +2,7 @@
 .hero {
   position: relative;
   background: linear-gradient(160deg, rgba(201, 162, 39, 0.12), rgba(107, 30, 47, 0.08)), var(--cream);
-  padding: var(--section-y-md) 0;
+  padding: var(--section-y-lg) 0;
   overflow: hidden;
 }
 .hero::before {
