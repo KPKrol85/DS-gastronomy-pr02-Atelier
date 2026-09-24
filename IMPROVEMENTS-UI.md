@@ -24,7 +24,7 @@ The opportunities below sit inside that already-solid system: cases where an est
 - **Acceptance criteria:** The computed font-size of `index.html`'s `<h1>` is larger than the computed font-size of its `<h2 class="section__title">` elements, and the homepage hero's layout, spacing and responsive behavior are otherwise unchanged.
 - **Impact:** High
 - **Effort:** Small
-- **Status:** COMPLETED — `.hero__title` in `css/pages/home.css` now sets `font-size: var(--fs-3xl)`; no other rule, token or markup changed. Checked in a browser at 375, 768 and 1280 px viewports: the `<h1>` computes to 28, 31.68 and 36 px against 24.175, 27.712 and 32 px for every `<h2 class="section__title">`, with no horizontal overflow, clipping or overlap, and the two-column hero grid unchanged at 768 and 1280 px.
+- **Status:** COMPLETED — Established a distinct homepage hero heading size using the existing `--fs-3xl` typography token.
 
 ### IMP-UI-02 — Menu tags render in two unrelated visual styles between the filter bar and the result cards
 
@@ -37,7 +37,7 @@ The opportunities below sit inside that already-solid system: cases where an est
 - **Acceptance criteria:** The tag badge and the filter chip for the same category share a consistent color, radius and case treatment, and the filter bar's active/hover/focus states remain visibly distinct from the passive card badges.
 - **Impact:** Medium
 - **Effort:** Medium
-- **Status:** COMPLETED — `.menu-card__tag` in `css/components/cards.css` drops `text-transform: uppercase` and takes the active filter chip's burgundy text and fill (`color-mix(in oklab, var(--burgundy) 92%, black)` on `color-mix(in oklab, var(--burgundy) 10%, white)`; dark theme `var(--burgundy)` on `color-mix(in oklab, var(--burgundy) 20%, var(--bone))`), staying borderless with no hover or focus state and the default cursor. `.menu-filters__btn` in `css/pages/menu.css` moves from `--ls-widest` to `--ls-wider` and drops its `--fs-xxxs` override, so it inherits the `--fs-xxs` its `.menu-filters__group` already sets; its border, hover, focus and `.is-active` rules are unchanged, and no token, markup or JavaScript changed. Checked in a browser at 375, 480, 768, 1024, 1280 and 1440 px, with both themes compared at 375 and 1024 px: chip and badge compute to the same font-size and letter-spacing at every width, with the same 600 weight and 12 px radius; in light theme the badge's fill and text equal the active chip's (10.4:1 contrast) and in dark theme the badge measures 6.69:1; every filter still shows exactly its tagged cards with `aria-pressed="true"` on the selected button only; there is no horizontal overflow, homepage card heights are unchanged, and `pa11y` (WCAG2AA) reports no issues on `menu.html`. The larger chip text raises the width at which all seven chips fit on one row from about 762 to 803 px, so viewports in between (e.g. a 768 px tablet in portrait) now wrap them 6+1, the arrangement narrower tablet widths already used.
+- **Status:** COMPLETED — Aligned menu filter chips and card tag badges with consistent typography and burgundy styling across light and dark themes while preserving their distinct roles.
 
 ### IMP-UI-03 — Lightbox controls fall below the site's established touch-target size on mobile
 
