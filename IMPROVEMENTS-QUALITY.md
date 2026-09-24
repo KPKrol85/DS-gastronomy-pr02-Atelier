@@ -28,6 +28,7 @@ The opportunities below are in the places those mechanisms do not reach. The Ser
 - **Acceptance criteria:** `npm run build` (through `qa:dist:integrity`) fails with a message naming `CACHE_VERSION` when the content behind any precache entry differs from the recorded fingerprint. It passes after the version is raised and the new fingerprint recorded. Changing only a page that is not precached, such as `contact.html`, does not trigger it, and `npm run qa:source` behaves as before.
 - **Impact:** High
 - **Effort:** Medium
+- **Status:** COMPLETED — Recorded a SHA-256 precache fingerprint beside `CACHE_VERSION` in `sw.js`, which the production integrity check recalculates from `dist/` and rejects on mismatch.
 
 ### IMP-QUALITY-02 — Extend menu parity to descriptions, tags and filter values
 

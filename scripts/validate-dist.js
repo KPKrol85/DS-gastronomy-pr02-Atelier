@@ -1,4 +1,5 @@
 const assert = require("node:assert/strict");
+const crypto = require("node:crypto");
 const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
@@ -45,6 +46,7 @@ const SELF_REFERENCES = [["ogUrl", "og:url"], ["breadcrumbItem", "breadcrumb ter
 const OPEN_TAG = /<([\w-]+)\b[^>]*>/g;
 const TAG_NAME = /^<\s*([\w:-]+)/;
 const TAG_ATTRIBUTE = /\s+([^\s/=>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>]+)))?/y;
+const PRECACHE_TEXT_FORMATS = [".html", ".css", ".js", ".json", ".webmanifest", ".svg"];
 
 function read(base, file) {
   return fs.readFileSync(path.join(base, file), "utf8");
@@ -562,14 +564,36 @@ function validateSource() {
   validateMetadataContract(metadata);
 }
 
+// The dist/ file a same-origin reference resolves to; an external address resolves to none.
 function assertReference(reference, owner) {
   const url = new URL(reference.replace(/&amp;/g, "&"), `http://production.local/${owner}`);
-  if (url.origin !== "http://production.local") return;
+  if (url.origin !== "http://production.local") return null;
   const relative = decodeURIComponent(url.pathname).replace(/^\//, "") || "index.html";
   const target = path.resolve(distDir, relative);
   assert(target.startsWith(distDir + path.sep), `Invalid production path: ${reference}`);
   assert(fs.existsSync(target) && fs.statSync(target).isFile(),
     `Missing production reference: ${reference} (from ${owner})`);
+  return target;
+}
+
+/*
+ One SHA-256 over what installation caches: each distinct FILES_TO_CACHE entry, in sorted order,
+ paired with the SHA-256 of the dist/ file it resolves to, so "/" and "/index.html" are two records
+ and reordering the list changes nothing. A file whose extension is one of PRECACHE_TEXT_FORMATS is
+ hashed with LF line endings, because core.autocrlf checks text out as CRLF on Windows while the CI
+ runner keeps LF; every other format is hashed byte for byte. Read-only, and independent of the
+ worker's runtime.
+*/
+function precacheFingerprint(precached) {
+  const sha256 = (data, encoding) => crypto.createHash("sha256").update(data, encoding).digest("hex");
+  const records = [...precached.keys()].sort().map((reference) => {
+    const file = precached.get(reference);
+    assert(file, `Precache entry ${reference} is not a dist/ file, so PRECACHE_FINGERPRINT cannot cover it`);
+    const bytes = fs.readFileSync(file);
+    return [reference, PRECACHE_TEXT_FORMATS.includes(path.extname(file).toLowerCase())
+      ? sha256(bytes.toString("latin1").replace(/\r\n/g, "\n"), "latin1") : sha256(bytes)];
+  });
+  return sha256(JSON.stringify(records));
 }
 
 function validateDist() {
@@ -606,13 +630,20 @@ function validateDist() {
 
   const worker = read(distDir, "sw.js");
   assert.equal(worker, productionWorker(read(rootDir, "sw.js")), "Stale production Service Worker");
-  const precache = vm.runInNewContext(`${worker}\nFILES_TO_CACHE;`, {
-    self: { addEventListener() {} },
-  }, { timeout: 1000 });
-  precache.forEach((reference) => assertReference(reference, "sw.js"));
+  const { FILES_TO_CACHE: precache, CACHE_VERSION: version, PRECACHE_FINGERPRINT: recorded } = vm.runInNewContext(
+    `${worker}\n({ FILES_TO_CACHE, CACHE_VERSION, PRECACHE_FINGERPRINT });`, {
+      self: { addEventListener() {} },
+    }, { timeout: 1000 });
+  const precached = new Map(precache.map((reference) => [reference, assertReference(reference, "sw.js")]));
   for (const source of Object.keys(productionAssets)) {
     assert(!worker.includes(`"/${source}"`), `Source asset in production precache: ${source}`);
   }
+  const calculated = precacheFingerprint(precached);
+  assert.equal(recorded, calculated,
+    `Precached content in dist/ does not match the PRECACHE_FINGERPRINT recorded in sw.js under CACHE_VERSION "${version}".\n`
+    + `  recorded:   ${recorded}\n  calculated: ${calculated}\n`
+    + "A release that changes precached content needs a raised CACHE_VERSION and the calculated fingerprint "
+    + "recorded in sw.js; update both, then run npm run build again.");
 
   const manifest = JSON.parse(read(distDir, "manifest.webmanifest"));
   for (const entry of [...manifest.icons, ...manifest.screenshots]) {

@@ -200,7 +200,7 @@ Skonfigurowano minifikację CSS i bundling/minifikację JS. Obrazy korzystają z
 - Wspólny nagłówek i stopkę edytuj wyłącznie w `partials/header.html` i `partials/footer.html`. Każdy szablon strony zawiera dokładnie jeden znacznik `<!-- partial:header -->` i jeden `<!-- partial:footer -->`; brakujący, powtórzony lub nieznany znacznik oraz wklejony blok nagłówka lub stopki przerywają QA i build.
 - Utrzymuj dane w `data/menu.json` oraz statyczne karty HTML pełniące rolę fallbacku.
 - Zmiany stron i publicznych zasobów zestawiaj z listami w `scripts/build-config.js`, `sw.js`, `manifest.webmanifest` i `sitemap.xml`.
-- Po zmianach zasobów cache aktualizuj `CACHE_VERSION` w `sw.js`.
+- Po zmianach zasobów cache aktualizuj `CACHE_VERSION` w `sw.js`. Wydanie zmieniające zawartość precache wymaga zarówno podniesienia `CACHE_VERSION`, jak i zapisania nowego `PRECACHE_FINGERPRINT` w `sw.js` — skrótu SHA-256 obliczanego z wpisów `FILES_TO_CACHE` i wskazanych przez nie plików w `dist/`. Przy niezgodności `npm run build` kończy się błędem i podaje zapisany oraz obliczony skrót. Kontrola porównuje tylko te dwie wartości, więc nie sprawdza, czy `CACHE_VERSION` podniesiono względem poprzedniego wydania.
 - [CHANGELOG.md](docs/CHANGELOG.md) jest zapisem znaczących ukończonych zmian; aktualizuj go, gdy zakres zadania na to pozwala, lub zgłoś potrzebę wpisu.
 - [Zakończony plan rozwoju z 2026-09-23](docs/archive/plans/PLAN-2026-09-23.md), który zastąpił plan z 2026-09-19, zachowuje ukończone zadania i warunki ich ukończenia; jest dokumentem archiwalnym, a nie aktywną listą zadań.
 - [Audyt techniczny z 2026-09-23](docs/archive/audits/AUDIT-2026-09-23.md) zachowuje uzgodnione ustalenia techniczne i statusy ich rozwiązania; jest dokumentem archiwalnym.
@@ -415,7 +415,7 @@ CSS minification and JS bundling/minification are configured. Images use `pictur
 - Edit the shared header and footer only in `partials/header.html` and `partials/footer.html`. Every page template contains exactly one `<!-- partial:header -->` and one `<!-- partial:footer -->` marker; a missing, repeated or unknown marker and a pasted header or footer block stop QA and the build.
 - Maintain `data/menu.json` and the static HTML cards used as fallback content.
 - Check page and public asset changes against the lists in `scripts/build-config.js`, `sw.js`, `manifest.webmanifest` and `sitemap.xml`.
-- Update `CACHE_VERSION` in `sw.js` when cached resources change.
+- Update `CACHE_VERSION` in `sw.js` when cached resources change. A release that changes precached content needs both a raised `CACHE_VERSION` and a newly recorded `PRECACHE_FINGERPRINT` in `sw.js`, the SHA-256 calculated from the `FILES_TO_CACHE` entries and the `dist/` files they resolve to. On a mismatch, `npm run build` fails and prints the recorded and calculated fingerprints. The check compares only those two values, so it does not verify that `CACHE_VERSION` was raised relative to the previous release.
 - [CHANGELOG.md](docs/CHANGELOG.md) records significant completed changes; update it when task scope permits, or report that an entry is needed.
 - [Completed development plan of 2026-09-23](docs/archive/plans/PLAN-2026-09-23.md), which superseded the 2026-09-19 plan, preserves the completed tasks and their completion conditions; it is an archived document, not an active task list.
 - [Technical audit of 2026-09-23](docs/archive/audits/AUDIT-2026-09-23.md) preserves the reconciled technical findings and their resolution statuses; it is an archived document.
