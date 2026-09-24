@@ -76,8 +76,8 @@
   padding: var(--space-1);
   border-radius: var(--radius-md);
   cursor: pointer;
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -176,8 +176,6 @@
 
 @media (min-width: 760px) {
   .lb-btn {
-    width: 44px;
-    height: 44px;
     padding: var(--space-2);
   }
   .lb-btn::before {

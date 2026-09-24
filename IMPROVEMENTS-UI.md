@@ -50,6 +50,7 @@ The opportunities below sit inside that already-solid system: cases where an est
 - **Acceptance criteria:** `.lb-btn` computes to at least 44×44px at all viewport widths, and the lightbox's existing keyboard navigation, focus trapping and fullscreen behavior are unchanged.
 - **Impact:** Medium
 - **Effort:** Small
+- **Status:** COMPLETED — Increased all lightbox controls to 44×44px across viewport sizes while preserving existing icons and interactions.
 
 ### IMP-UI-04 — About page body copy uses the system's widest letter-spacing step across seven text roles
 
