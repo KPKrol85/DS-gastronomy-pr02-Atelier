@@ -63,6 +63,7 @@ The opportunities below sit inside that already-solid system: cases where an est
 - **Acceptance criteria:** The seven listed body-copy rules in `css/pages/about.css` no longer reference `--ls-widest`, while the short uppercase label rules in the same file are unchanged.
 - **Impact:** Medium
 - **Effort:** Small
+- **Status:** COMPLETED — Aligned letter spacing across seven About page body-copy roles with the existing --ls-wide typography token.
 
 ### IMP-UI-05 — Three of the four defined section-spacing steps are never applied
 
