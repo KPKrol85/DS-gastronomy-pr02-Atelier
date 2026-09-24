@@ -2,9 +2,11 @@ const { spawn } = require("node:child_process");
 const path = require("node:path");
 const httpServer = require("http-server");
 const { rootDir, distDir } = require("./build-config.js");
+const { createSourceServer } = require("./dev-server.js");
 
 const production = process.argv.includes("--dist");
-const server = httpServer.createServer({ root: production ? distDir : rootDir, cache: -1 });
+// Source QA checks the composed pages npm run dev serves; production QA checks dist/ as built.
+const server = production ? httpServer.createServer({ root: distDir, cache: -1 }) : createSourceServer();
 let activeCheck;
 
 function runCheck(script) {
@@ -28,7 +30,7 @@ async function checkServer() {
       server.server.once("error", reject);
       server.listen(5173, "127.0.0.1", resolve);
     });
-    console.log(`QA serving ${production ? "dist/ (production)" : "repository source"} at http://127.0.0.1:5173`);
+    console.log(`QA serving ${production ? "dist/ (production)" : "repository source with composed pages"} at http://127.0.0.1:5173`);
     await runCheck(path.join(__dirname, "qa-links.js"));
     const pa11yPackage = require("pa11y-ci/package.json");
     const pa11yCli = path.join(path.dirname(require.resolve("pa11y-ci/package.json")), pa11yPackage.bin["pa11y-ci"]);

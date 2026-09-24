@@ -4,7 +4,7 @@ const path = require("node:path");
 const vm = require("node:vm");
 const {
   rootDir, distDir, htmlPages, rootFiles, assetEntries, productionAssets,
-  productionHtml, productionWorker,
+  composePage, productionHtml, productionWorker,
 } = require("./build-config.js");
 
 const DEMO_MODAL_MODULE = path.join(rootDir, "js", "features", "demo-modal.js");
@@ -237,7 +237,7 @@ function validateCompleteMenu(items) {
     byTitle.set(item.title, item);
   }
 
-  const html = read(rootDir, MENU_PAGE).replace(HTML_COMMENT, "");
+  const html = composePage(MENU_PAGE).replace(HTML_COMMENT, "");
   const cards = [];
   const categories = new Set();
   for (const list of listsWith(html, "data-menu-category")) {
@@ -271,7 +271,7 @@ function validateCompleteMenu(items) {
 }
 
 function validateFeaturedMenu(items) {
-  const html = read(rootDir, FEATURED_PAGE).replace(HTML_COMMENT, "");
+  const html = composePage(FEATURED_PAGE).replace(HTML_COMMENT, "");
   const lists = listsWith(html, "data-menu-featured");
   assert.equal(lists.length, 1,
     `${FEATURED_PAGE} must carry exactly one [data-menu-featured] list, found ${lists.length}`);
@@ -523,7 +523,12 @@ function validateSource() {
   const demoModalEntries = new Map();
   const metadata = [];
   for (const page of htmlPages) {
-    const html = read(rootDir, page);
+    /*
+     Every contract reads the composed page that the servers and the build deliver. Composing also
+     holds the shared-component contract: one whole-line marker per registered partial, no unknown,
+     repeated or nested marker, and no hand-written copy of the header or footer in the template.
+    */
+    const html = composePage(page);
     assert(!/\.min\.(css|js)/.test(html), `${page} references a production bundle`);
     assert(html.includes('href="css/style.css"'), `${page} is missing source CSS`);
     const entry = REDUCED_ENTRY_PAGES.includes(page) ? "js/core.js" : "js/script.js";
@@ -574,13 +579,14 @@ function validateDist() {
   }
   assert.deepEqual(fs.readdirSync(path.join(distDir, "css")).sort(), ["style.min.css"]);
   assert.deepEqual(fs.readdirSync(path.join(distDir, "js")).sort(), ["bootstrap.js", "core.min.js", "script.min.js"]);
-  for (const entry of ["scripts", "node_modules", "assets/img-src", "package.json"]) {
+  for (const entry of ["scripts", "partials", "node_modules", "assets/img-src", "package.json"]) {
     assert(!fs.existsSync(path.join(distDir, entry)), `Source-only entry in production: ${entry}`);
   }
 
   for (const page of htmlPages) {
     const html = read(distDir, page);
-    assert.equal(html, productionHtml(read(rootDir, page)), `Stale or incorrectly transformed HTML: ${page}`);
+    assert(!/<!--\s*partial\b/i.test(html), `${page} in dist/ still carries a partial marker, so it was never composed`);
+    assert.equal(html, productionHtml(composePage(page)), `Stale, uncomposed or incorrectly transformed HTML: ${page}`);
     for (const tag of html.matchAll(/<(?:a|link|script|img|source|iframe|form)\b[^>]*>/gi)) {
       for (const attribute of tag[0].matchAll(/\b(?:href|src|action)=(['"])(.*?)\1/gi)) {
         assertReference(attribute[2], page);

@@ -10,8 +10,8 @@ Dev i preview używają portu 5173; uruchamiaj je osobno. Przed QA zatrzymaj rę
 
 ### `dev`
 
-- command: `http-server . -a 127.0.0.1 -p 5173 -c-1`
-- what it does: Serwuje źródła repozytorium na 127.0.0.1:5173 bez cache i bez builda.
+- command: `node scripts/dev-server.js`
+- what it does: Serwuje źródła repozytorium na 127.0.0.1:5173 bez cache i bez builda. Każdą stronę (`/`, `/strona.html`, `/strona`) składa w pamięci z szablonu i partiali przy każdym żądaniu; nieistniejący adres zwraca złożoną stronę 404 ze statusem 404. Nie zapisuje plików ani nie obserwuje zmian; zmiana szablonu lub partiala jest widoczna po odświeżeniu.
 
 ### `build`
 
@@ -26,7 +26,7 @@ Dev i preview używają portu 5173; uruchamiaj je osobno. Przed QA zatrzymaj rę
 ### `qa`
 
 - command: `npm run lint && npm run qa:source && npm run qa:html && npm run qa:server`
-- what it does: Waliduje źródła: ESLint, kontrakt zasobów, HTML oraz linki/fragmenty/CSS i dostępność na dev.
+- what it does: Waliduje źródła: ESLint, kontrakt zasobów i partiali, HTML złożonych stron oraz linki/fragmenty/CSS i dostępność na składającym serwerze dev.
 
 ### `qa:dist`
 
@@ -36,7 +36,7 @@ Dev i preview używają portu 5173; uruchamiaj je osobno. Przed QA zatrzymaj rę
 ### `build:static`
 
 - command: `node scripts/build-dist.js`
-- what it does: Zastępuje dist statycznymi plikami runtime i kopiami HTML/SW. Nie minifikuje.
+- what it does: Składa wszystkie strony z szablonów i partiali, zanim usunie dist; błąd składania pozostawia poprzedni dist. Następnie zastępuje dist statycznymi plikami runtime, złożonymi stronami HTML i kopią SW. Nie minifikuje.
 
 ### `build:css`
 
@@ -61,12 +61,12 @@ Dev i preview używają portu 5173; uruchamiaj je osobno. Przed QA zatrzymaj rę
 ### `qa:source`
 
 - command: `node scripts/validate-dist.js --source`
-- what it does: Sprawdza brak wygenerowanych minifikowanych plików w css/js i wejścia źródłowe HTML.
+- what it does: Sprawdza brak wygenerowanych minifikowanych plików w css/js oraz kontrakty złożonych stron, w tym znaczniki partiali i brak ręcznie wklejonego nagłówka lub stopki w szablonach.
 
 ### `qa:html`
 
-- command: `html-validate "*.html"`
-- what it does: Waliduje HTML źródeł.
+- command: `node scripts/qa-html.js`
+- what it does: Waliduje html-validate 11 złożonych stron źródłowych z konfiguracją .htmlvalidate.json. Numery linii w błędach dotyczą złożonej strony, takiej jak z `npm run dev`.
 
 ### `qa:links`
 
@@ -86,12 +86,12 @@ Dev i preview używają portu 5173; uruchamiaj je osobno. Przed QA zatrzymaj rę
 ### `qa:server`
 
 - command: `node scripts/qa-server.js`
-- what it does: Zarządza serwerem dev na czas linków i pa11y.
+- what it does: Zarządza składającym serwerem dev (scripts/dev-server.js) na czas linków i pa11y.
 
 ### `qa:dist:integrity`
 
 - command: `node scripts/validate-dist.js`
-- what it does: Sprawdza 11 stron, zasoby, CSS, manifest, obrazy menu, bootstrap i precache SW; odrzuca źródła w dist.
+- what it does: Sprawdza 11 stron, zasoby, CSS, manifest, obrazy menu, bootstrap i precache SW; porównuje każdą stronę dist ze złożonym szablonem po przekształceniu produkcyjnym; odrzuca źródła, znaczniki i partiale w dist.
 
 ### `qa:dist:html`
 
@@ -105,8 +105,8 @@ Dev i preview używają portu 5173; uruchamiaj je osobno. Przed QA zatrzymaj rę
 
 ## Własność plików
 
-Root HTML, css/style.css, moduły CSS, wejścia JS i sw.js są kanonicznymi źródłami. scripts/build-config.js utrzymuje listę stron, plików runtime i mapowanie ścieżek. Build zmienia tylko referencje zasobów w kopiach HTML/SW; bootstrap jest kopiowany bez zmian. dist/ pozostaje ignorowany. Nie generuj ani nie edytuj css/style.min.css, js/script.min.js ani js/core.min.js w źródłach.
+Szablony stron w katalogu głównym, partials/header.html i partials/footer.html, css/style.css, moduły CSS, wejścia JS i sw.js są kanonicznymi źródłami. Wspólny nagłówek i stopka istnieją wyłącznie w partials/; szablony wskazują je znacznikami `<!-- partial:header -->` i `<!-- partial:footer -->`. scripts/build-config.js utrzymuje listę stron, rejestr partiali z composeHtml(), pliki runtime i mapowanie ścieżek. Build składa strony z partiali i zmienia tylko referencje zasobów w złożonych kopiach HTML i w kopii SW; bootstrap jest kopiowany bez zmian. dist/ pozostaje ignorowany. Nie generuj ani nie edytuj css/style.min.css, js/script.min.js ani js/core.min.js w źródłach.
 
 Usunięte komendy build:dist, clean:dist, dev:server, validate:html, check* i osobne build:js:script/core są pokryte przez powyższy workflow. Nie zmieniono zależności ani targetu es2018.
 
-Runner QA używa API istniejącego http-server w tym samym procesie, więc zamknięcie serwera nie wymaga ps-tree/wmic.exe. Lista zależności pozostaje bez zmian.
+Runner QA używa API istniejącego http-server w tym samym procesie, więc zamknięcie serwera nie wymaga ps-tree/wmic.exe. Dla źródeł uruchamia ten sam składający serwer co `npm run dev`, dla dist zwykły http-server. Lista zależności pozostaje bez zmian.

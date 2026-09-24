@@ -30,9 +30,9 @@ Projekt obejmuje stronę główną, informacje o restauracji, menu, galerię, ko
 
 ### Architektura
 
-Każda podstrona jest osobnym dokumentem HTML. Wspólny nagłówek i stopka są zapisane w poszczególnych stronach; build nie generuje ich z szablonów. `js/script.js` uruchamia `js/app/init.js`, który rozdziela inicjalizatory wspólne i funkcje stron według `data-page`. `js/core.js` jest mniejszym wejściem używanym przez strony prawne i stronę 404.
+Każda podstrona ma własny szablon HTML w katalogu głównym. Wspólny nagłówek i stopka istnieją wyłącznie w `partials/header.html` i `partials/footer.html`; szablony wskazują je całowierszowymi znacznikami `<!-- partial:header -->` i `<!-- partial:footer -->`. Funkcja `composeHtml()` w `scripts/build-config.js` wstawia partiale, zanim strona trafi do przeglądarki: serwer deweloperski w pamięci przy każdym żądaniu, a build przed zapisem do `dist/`. Przeglądarka zawsze otrzymuje więc kompletny statyczny dokument, także bez JavaScript. `js/script.js` uruchamia `js/app/init.js`, który rozdziela inicjalizatory wspólne i funkcje stron według `data-page`. `js/core.js` jest mniejszym wejściem używanym przez strony prawne i stronę 404.
 
-`css/style.css` importuje warstwy `base`, `layout`, `components` i `pages`. Źródłowy HTML ładuje zwykły CSS i wejścia ES Modules. PostCSS oraz esbuild zapisują bundle `.min.css` i `.min.js` wyłącznie w `dist/`; build przekształca odwołania w kopiach HTML. Osobny `js/bootstrap.js` synchronizuje kolor motywu i rejestruje Service Workera.
+`css/style.css` importuje warstwy `base`, `layout`, `components` i `pages`. Źródłowy HTML ładuje zwykły CSS i wejścia ES Modules. PostCSS oraz esbuild zapisują bundle `.min.css` i `.min.js` wyłącznie w `dist/`; build przekształca odwołania w złożonych kopiach HTML. Osobny `js/bootstrap.js` synchronizuje kolor motywu i rejestruje Service Workera.
 
 ### Struktura projektu
 
@@ -52,8 +52,9 @@ Każda podstrona jest osobnym dokumentem HTML. Wspólny nagłówek i stopka są 
 ├── offline.html
 ├── thank-you.html
 ├── 404.html
-├── AUDIT.md
-├── PLAN.md
+├── partials/               # jedyne źródło wspólnego nagłówka i stopki
+│   ├── header.html
+│   └── footer.html
 ├── css/                    # wyłącznie źródła CSS
 ├── js/                     # źródła: wejścia, bootstrap, app/, core/, features/
 ├── data/menu.json
@@ -67,16 +68,21 @@ Każda podstrona jest osobnym dokumentem HTML. Wspólny nagłówek i stopka są 
 │   ├── build-config.js
 │   ├── build-dist.js
 │   ├── validate-dist.js
+│   ├── dev-server.js
+│   ├── qa-html.js
 │   ├── qa-links.js
 │   ├── qa-server.js
 │   └── images/build-images.js
 ├── docs/
 │   ├── archive/            # zarchiwizowane dokumenty projektu
 │   │   ├── audits/
+│   │   │   ├── AUDIT-2026-09-23.md
 │   │   │   └── daily-AUDIT-2026-09-19.md
 │   │   └── plans/
-│   │       └── PLAN-2026-09-19.md
+│   │       ├── PLAN-2026-09-19.md
+│   │       └── PLAN-2026-09-23.md
 │   ├── CHANGELOG.md        # zapis znaczących zmian
+│   ├── CONTEXT-PROJECT.md  # techniczny kontekst projektu
 │   └── settings.md         # opis skryptów npm i workflow
 ├── dist/                   # generated production package (ignored)
 ├── manifest.webmanifest
@@ -100,7 +106,7 @@ npm ci
 
 ### Development lokalny
 
-Serwer udostępnia katalog repozytorium i zwykłe zasoby źródłowe; build produkcyjny nie jest potrzebny. Po zmianach odśwież stronę. Serwer nie obserwuje plików ani nie generuje minifikowanych zasobów.
+`npm run dev` uruchamia `scripts/dev-server.js`, serwer oparty na http-server. Każde żądanie strony (`/`, `/about.html` lub `/about`) jest składane w pamięci z szablonu i partiali; nieistniejące adresy zwracają złożoną stronę 404 ze statusem 404. CSS, moduły ES, `js/bootstrap.js`, dane i zasoby są udostępniane ze źródeł bez zmian; build produkcyjny nie jest potrzebny. Po zmianie szablonu, partiala, CSS lub JS odśwież stronę. Serwer nie zapisuje plików, nie obserwuje zmian ani nie generuje minifikowanych zasobów. Szablon otwarty bezpośrednio z dysku nie zawiera nagłówka ani stopki.
 
 ```bash
 npm run dev
@@ -115,9 +121,9 @@ npm run build
 npm run preview
 ```
 
-Build usuwa poprzedni `dist/`, przygotowuje 11 stron, zasoby runtime i konfigurację hostingu, przekształca odwołania HTML/Service Workera, buduje CSS oraz oba wejścia JS bezpośrednio w `dist/` i sprawdza kompletność wyniku. Preview udostępnia wyłącznie `dist/` na porcie 5173; zatrzymaj dev przed preview. Build nie generuje obrazów ani nie kopiuje `assets/img-src/`. Zoptymalizowane obrazy pozostają śledzone w Git; minifikowane CSS/JS i cały `dist/` są ignorowanym wynikiem builda.
+Build najpierw składa wszystkie 11 stron z szablonów i partiali; błędny znacznik lub brakujący partial przerywa go, zanim poprzedni `dist/` zostanie usunięty. Następnie usuwa poprzedni `dist/`, zapisuje złożone strony, zasoby runtime i konfigurację hostingu, przekształca odwołania HTML/Service Workera, buduje CSS oraz oba wejścia JS bezpośrednio w `dist/` i sprawdza kompletność wyniku. Preview udostępnia wyłącznie `dist/` na porcie 5173; zatrzymaj dev przed preview. Build nie generuje obrazów ani nie kopiuje `assets/img-src/`. Zoptymalizowane obrazy pozostają śledzone w Git; minifikowane CSS/JS i cały `dist/` są ignorowanym wynikiem builda.
 
-Paczka zawiera `css/style.min.css`, `js/script.min.js`, `js/core.min.js` i niezmieniony skrypt runtime `js/bootstrap.js`. Nie zawiera modułów źródłowych CSS/JS ani narzędzi developerskich. Root HTML pozostaje kanoniczny; osobne ręcznie edytowane wersje produkcyjne nie istnieją.
+Paczka zawiera `css/style.min.css`, `js/script.min.js`, `js/core.min.js` i niezmieniony skrypt runtime `js/bootstrap.js`. Nie zawiera modułów źródłowych CSS/JS, szablonów, partiali ani narzędzi developerskich. Kanoniczne są szablony stron w katalogu głównym i partiale w `partials/`; osobne ręcznie edytowane wersje produkcyjne nie istnieją.
 
 Po zmianie źródeł obrazów dostępny jest osobny workflow:
 
@@ -133,13 +139,13 @@ Skonfigurowane kontrole obejmują:
 
 | Polecenie | Zakres |
 | --- | --- |
-| `npm run qa` | ESLint, kontrakt źródeł, HTML, uruchomienie dev, lokalne linki/zasoby/fragmenty i pa11y-ci. |
-| `npm run qa:dist` | Integralność istniejącego `dist/`, produkcyjny HTML, uruchomienie preview, lokalne linki/zasoby/fragmenty i pa11y-ci. Najpierw uruchom build. |
+| `npm run qa` | ESLint, kontrakt źródeł i partiali, HTML złożonych stron, uruchomienie składającego serwera dev, lokalne linki/zasoby/fragmenty i pa11y-ci. |
+| `npm run qa:dist` | Integralność istniejącego `dist/` względem złożonych źródeł, produkcyjny HTML, uruchomienie preview, lokalne linki/zasoby/fragmenty i pa11y-ci. Najpierw uruchom build. |
 | `npm run qa:links` | Wszystkie 11 stron i ich lokalne zasoby, w tym importy CSS i fonty; wymaga działającego dev albo preview. |
 | `npm run qa:a11y` | Wszystkie 11 adresów z `.pa11yci`, w tym `contact.html`, HTML CodeSniffer, WCAG2AA. |
 | `npm run qa:links:external` | Opcjonalna kontrola także zewnętrznych linków na działającym serwerze. |
 
-QA źródeł nie buduje produkcji; QA dist sprawdza przygotowaną paczkę i nie przebudowuje jej. Kontrole lokalne pomijają zewnętrzne adresy, a nie bundle produkcyjne. Runner `scripts/qa-server.js` używa tego samego http-server i właściwego katalogu; zamyka serwer także po błędzie. Nie wymaga Windows WMIC. Port 5173 musi być wolny. Automatyczny audyt dostępności nie potwierdza pełnej zgodności WCAG. Strona kontaktowa jest sprawdzana w stanie po załadowaniu; audyt nie obejmuje interaktywnych stanów walidacji formularza.
+QA źródeł nie buduje produkcji; QA dist sprawdza przygotowaną paczkę i nie przebudowuje jej. Kontrole lokalne pomijają zewnętrzne adresy, a nie bundle produkcyjne. Runner `scripts/qa-server.js` sprawdza źródła przez ten sam składający serwer co `npm run dev`, a paczkę przez http-server na `dist/`; zamyka serwer także po błędzie. Nie wymaga Windows WMIC. Port 5173 musi być wolny. Automatyczny audyt dostępności nie potwierdza pełnej zgodności WCAG. Strona kontaktowa jest sprawdzana w stanie po załadowaniu; audyt nie obejmuje interaktywnych stanów walidacji formularza.
 
 ### Ciągła integracja
 
@@ -156,7 +162,7 @@ Workflow wyłącznie weryfikuje projekt i zbudowaną paczkę. Nie publikuje ani 
 
 ### Wdrożenie
 
-Repozytorium przygotowuje statyczną paczkę `dist/` oraz pliki `_headers` i `_redirects` w formacie Netlify. Reguły określają nagłówki, cache i odpowiedź 404. Ścieżki manifestu, Service Workera i metadanych zakładają publikację w katalogu głównym domeny.
+Repozytorium przygotowuje statyczną paczkę `dist/` oraz pliki `_headers` i `_redirects` w formacie Netlify. Reguły określają nagłówki, cache i odpowiedź 404. Ścieżki manifestu, Service Workera i metadanych zakładają publikację w katalogu głównym domeny. Publikowany jest wyłącznie `dist/` ze złożonymi stronami, wdrażany ręcznie przez Netlify CLI; szablony z katalogu głównego zawierają znaczniki partiali i nie są kompletnymi stronami.
 
 Formularz w `contact.html` ma oznaczenia Netlify Forms, ukryte pole `form-name`, honeypot i przekierowanie do `thank-you.html`. Obsługa zgłoszeń zależy od konfiguracji hostingu; lokalny serwer nie potwierdza ich dostawy. Strona kontaktowa zawiera również bezpośrednio osadzoną mapę Google Maps.
 
@@ -174,7 +180,7 @@ Strony zawierają tytuły, opisy, linki canonical, metadane Open Graph i Twitter
 
 `manifest.webmanifest` definiuje widok `standalone`, `start_url` i `scope` ustawione na `/`, ikony 192/512 px, zrzuty ekranu oraz skróty do menu, galerii i kontaktu. Źródłem Service Workera jest ręcznie utrzymywany `sw.js` z odwołaniami źródłowymi; build przekształca wyłącznie ścieżki CSS/JS w jego kopii w `dist/`. Precache obejmuje oba bundle oraz bootstrap.
 
-Worker używa cache `atelierno02-v1.5`. Wybrane strony i zasoby są precache'owane; nawigacja korzysta z sieci, następnie zapisanej strony lub `offline.html`. Pozostałe żądania GET korzystają najpierw z cache. Podczas aktywacji worker usuwa cache o innych nazwach.
+Worker używa cache `atelierno02-v1.6`. Wybrane strony i zasoby są precache'owane; nawigacja korzysta z sieci, następnie zapisanej strony lub `offline.html`. Pozostałe żądania GET korzystają najpierw z cache. Podczas aktywacji worker usuwa cache o innych nazwach.
 
 Obsługa offline zależy od udanej rejestracji, instalacji i dostępnych zasobów cache; żądania POST formularza nie są obsługiwane przez worker. W izolowanym lokalnym Chrome sprawdzono ręczną rejestrację produkcyjnego workera, wszystkie 19 wpisów precache, działanie strony prawnej i motywu offline oraz fallback nawigacji. Instalowalności PWA ani wdrożonej witryny nie zweryfikowano.
 
@@ -191,14 +197,15 @@ Skonfigurowano minifikację CSS i bundling/minifikację JS. Obrazy korzystają z
 ### Utrzymanie projektu
 
 - Edytuj źródła CSS i moduły JS; przed preview lub wydaniem uruchom `npm run build`; nie poprawiaj ręcznie plików `.min.css` i `.min.js`.
+- Wspólny nagłówek i stopkę edytuj wyłącznie w `partials/header.html` i `partials/footer.html`. Każdy szablon strony zawiera dokładnie jeden znacznik `<!-- partial:header -->` i jeden `<!-- partial:footer -->`; brakujący, powtórzony lub nieznany znacznik oraz wklejony blok nagłówka lub stopki przerywają QA i build.
 - Utrzymuj dane w `data/menu.json` oraz statyczne karty HTML pełniące rolę fallbacku.
 - Zmiany stron i publicznych zasobów zestawiaj z listami w `scripts/build-config.js`, `sw.js`, `manifest.webmanifest` i `sitemap.xml`.
 - Po zmianach zasobów cache aktualizuj `CACHE_VERSION` w `sw.js`.
 - [CHANGELOG.md](docs/CHANGELOG.md) jest zapisem znaczących ukończonych zmian; aktualizuj go, gdy zakres zadania na to pozwala, lub zgłoś potrzebę wpisu.
-- [PLAN.md](PLAN.md) jest aktywnym planem rozwoju projektu i zawiera bieżące zadania oraz warunki ich ukończenia.
-- [AUDIT.md](AUDIT.md) jest bieżącym dokumentem audytowym projektu i źródłem ustaleń technicznych uwzględnianych w planie.
-- [Zakończony plan rozwoju](docs/archive/plans/PLAN-2026-09-19.md) zachowuje ukończony plan wdrożenia wraz z zapisem weryfikacji; jest dokumentem archiwalnym, a nie aktywną listą zadań.
-- [Zamknięty audyt frontendowy](docs/archive/audits/daily-AUDIT-2026-09-19.md) zachowuje historyczne ustalenia audytu i statusy ich rozwiązania.
+- [Zakończony plan rozwoju z 2026-09-23](docs/archive/plans/PLAN-2026-09-23.md), który zastąpił plan z 2026-09-19, zachowuje ukończone zadania i warunki ich ukończenia; jest dokumentem archiwalnym, a nie aktywną listą zadań.
+- [Audyt techniczny z 2026-09-23](docs/archive/audits/AUDIT-2026-09-23.md) zachowuje uzgodnione ustalenia techniczne i statusy ich rozwiązania; jest dokumentem archiwalnym.
+- [Zakończony plan rozwoju z 2026-09-19](docs/archive/plans/PLAN-2026-09-19.md) zachowuje ukończony plan wdrożenia wraz z zapisem weryfikacji; jest dokumentem archiwalnym, a nie aktywną listą zadań.
+- [Zamknięty audyt frontendowy z 2026-09-19](docs/archive/audits/daily-AUDIT-2026-09-19.md) zachowuje historyczne ustalenia audytu i statusy ich rozwiązania.
 
 ### Licencja
 
@@ -238,9 +245,9 @@ The project includes a homepage, restaurant information, menu, gallery, contact,
 
 ### Architecture
 
-Each page is a separate HTML document. Shared header and footer markup is stored in individual pages; the build does not generate it from templates. `js/script.js` runs `js/app/init.js`, which separates common initializers and page features using `data-page`. `js/core.js` is a smaller entry point used by legal pages and the 404 page.
+Each page has its own HTML template at the repository root. The shared header and footer exist only in `partials/header.html` and `partials/footer.html`; templates reference them with the whole-line markers `<!-- partial:header -->` and `<!-- partial:footer -->`. `composeHtml()` in `scripts/build-config.js` inserts the partials before a page reaches the browser: the development server does so in memory on every request, the build before writing `dist/`. The browser therefore always receives a complete static document, including without JavaScript. `js/script.js` runs `js/app/init.js`, which separates common initializers and page features using `data-page`. `js/core.js` is a smaller entry point used by legal pages and the 404 page.
 
-`css/style.css` imports the `base`, `layout`, `components` and `pages` layers. Source HTML loads ordinary CSS and ES Module entry points. PostCSS and esbuild write `.min.css` and `.min.js` bundles only into `dist/`; the build transforms references in copied HTML. The separate `js/bootstrap.js` synchronizes the theme color and registers the Service Worker.
+`css/style.css` imports the `base`, `layout`, `components` and `pages` layers. Source HTML loads ordinary CSS and ES Module entry points. PostCSS and esbuild write `.min.css` and `.min.js` bundles only into `dist/`; the build transforms references in the composed HTML copies. The separate `js/bootstrap.js` synchronizes the theme color and registers the Service Worker.
 
 ### Project Structure
 
@@ -260,8 +267,9 @@ Each page is a separate HTML document. Shared header and footer markup is stored
 ├── offline.html
 ├── thank-you.html
 ├── 404.html
-├── AUDIT.md
-├── PLAN.md
+├── partials/               # sole source of the shared header and footer
+│   ├── header.html
+│   └── footer.html
 ├── css/                    # CSS sources only
 ├── js/                     # sources: entries, bootstrap, app/, core/, features/
 ├── data/menu.json
@@ -275,16 +283,21 @@ Each page is a separate HTML document. Shared header and footer markup is stored
 │   ├── build-config.js
 │   ├── build-dist.js
 │   ├── validate-dist.js
+│   ├── dev-server.js
+│   ├── qa-html.js
 │   ├── qa-links.js
 │   ├── qa-server.js
 │   └── images/build-images.js
 ├── docs/
 │   ├── archive/            # archived project documents
 │   │   ├── audits/
+│   │   │   ├── AUDIT-2026-09-23.md
 │   │   │   └── daily-AUDIT-2026-09-19.md
 │   │   └── plans/
-│   │       └── PLAN-2026-09-19.md
+│   │       ├── PLAN-2026-09-19.md
+│   │       └── PLAN-2026-09-23.md
 │   ├── CHANGELOG.md        # record of significant changes
+│   ├── CONTEXT-PROJECT.md  # technical project context
 │   └── settings.md         # npm scripts and workflow reference
 ├── dist/                   # generated production package (ignored)
 ├── manifest.webmanifest
@@ -308,7 +321,7 @@ npm ci
 
 ### Local Development
 
-The server serves the repository and ordinary source assets; no production build is needed. Reload the page after changes. The server does not watch files or generate minified assets.
+`npm run dev` starts `scripts/dev-server.js`, a server built on http-server. Every page request (`/`, `/about.html` or `/about`) is composed in memory from the template and partials; missing addresses return the composed 404 page with status 404. CSS, ES modules, `js/bootstrap.js`, data and assets are served unchanged from source; no production build is needed. Reload the page after changing a template, partial, CSS or JS. The server writes no files, does not watch for changes and does not generate minified assets. A template opened directly from disk has no header or footer.
 
 ```bash
 npm run dev
@@ -323,9 +336,9 @@ npm run build
 npm run preview
 ```
 
-Build removes the previous `dist/`, prepares 11 pages, runtime assets and hosting configuration, transforms HTML/Service Worker references, builds CSS and both JS entries directly into `dist/`, and checks output integrity. Preview serves only `dist/` on port 5173; stop dev before preview. Build does not generate images or copy `assets/img-src/`. Optimized images remain tracked in Git; minified CSS/JS and the entire `dist/` are ignored build output.
+Build first composes all 11 pages from their templates and partials; an invalid marker or a missing partial stops it before the previous `dist/` is removed. It then removes the previous `dist/`, writes the composed pages, runtime assets and hosting configuration, transforms HTML/Service Worker references, builds CSS and both JS entries directly into `dist/`, and checks output integrity. Preview serves only `dist/` on port 5173; stop dev before preview. Build does not generate images or copy `assets/img-src/`. Optimized images remain tracked in Git; minified CSS/JS and the entire `dist/` are ignored build output.
 
-The package includes `css/style.min.css`, `js/script.min.js`, `js/core.min.js` and the unchanged runtime script `js/bootstrap.js`. It excludes CSS/JS source modules and development tools. Root HTML remains canonical; no separate manually edited production pages are maintained.
+The package includes `css/style.min.css`, `js/script.min.js`, `js/core.min.js` and the unchanged runtime script `js/bootstrap.js`. It excludes CSS/JS source modules, templates, partials and development tools. The root page templates and `partials/` are canonical; no separate manually edited production pages are maintained.
 
 A separate workflow is available after changing image sources:
 
@@ -341,13 +354,13 @@ Configured checks include:
 
 | Command | Scope |
 | --- | --- |
-| `npm run qa` | ESLint, source contract, HTML, dev startup, local links/assets/fragments and pa11y-ci. |
-| `npm run qa:dist` | Integrity of existing `dist/`, production HTML, preview startup, local links/assets/fragments and pa11y-ci. Run build first. |
+| `npm run qa` | ESLint, source and partial contract, composed-page HTML, composing dev server startup, local links/assets/fragments and pa11y-ci. |
+| `npm run qa:dist` | Integrity of existing `dist/` against the composed sources, production HTML, preview startup, local links/assets/fragments and pa11y-ci. Run build first. |
 | `npm run qa:links` | All 11 pages and local resources, including CSS imports and fonts; requires a running dev or preview server. |
 | `npm run qa:a11y` | All 11 addresses in `.pa11yci`, including `contact.html`, HTML CodeSniffer, WCAG2AA. |
 | `npm run qa:links:external` | Optional external link checking against a running server. |
 
-Source QA does not build production; dist QA checks the prepared package without rebuilding it. Local checks skip external addresses, not production bundles. The `scripts/qa-server.js` runner uses the same http-server and the appropriate directory; it closes the server even after failures. It does not require Windows WMIC. Port 5173 must be free. Automated accessibility auditing does not establish full WCAG compliance. The contact page is checked in its loaded state; the audit does not cover the form's interactive validation states.
+Source QA does not build production; dist QA checks the prepared package without rebuilding it. Local checks skip external addresses, not production bundles. The `scripts/qa-server.js` runner checks the sources through the same composing server as `npm run dev` and the package through http-server on `dist/`; it closes the server even after failures. It does not require Windows WMIC. Port 5173 must be free. Automated accessibility auditing does not establish full WCAG compliance. The contact page is checked in its loaded state; the audit does not cover the form's interactive validation states.
 
 ### Continuous Integration
 
@@ -364,7 +377,7 @@ The workflow only validates the project and the built package. It does not publi
 
 ### Deployment
 
-The repository prepares a static `dist/` package and `_headers` and `_redirects` files in Netlify format. Rules define headers, caching and the 404 response. Manifest, Service Worker and metadata paths assume deployment at the domain root.
+The repository prepares a static `dist/` package and `_headers` and `_redirects` files in Netlify format. Rules define headers, caching and the 404 response. Manifest, Service Worker and metadata paths assume deployment at the domain root. Only `dist/`, which holds the composed pages, is published, deployed manually through Netlify CLI; the root templates carry partial markers and are not complete pages.
 
 The form in `contact.html` has Netlify Forms attributes, a hidden `form-name` field, a honeypot and a redirect to `thank-you.html`. Submission handling depends on hosting configuration; the local server does not confirm delivery. The contact page also contains a directly embedded Google Maps iframe.
 
@@ -382,7 +395,7 @@ Pages include titles, descriptions, canonical links, Open Graph and Twitter Card
 
 `manifest.webmanifest` defines `standalone` display, `start_url` and `scope` set to `/`, 192/512 px icons, screenshots and menu, gallery and contact shortcuts. The Service Worker source is the manually maintained `sw.js` with source references; the build transforms only CSS/JS paths in its `dist/` copy. Precache includes both bundles and bootstrap.
 
-The worker uses the `atelierno02-v1.5` cache. Selected pages and assets are precached; navigation tries the network, then a saved page or `offline.html`. Other GET requests try the cache first. During activation, the worker removes caches with other names.
+The worker uses the `atelierno02-v1.6` cache. Selected pages and assets are precached; navigation tries the network, then a saved page or `offline.html`. Other GET requests try the cache first. During activation, the worker removes caches with other names.
 
 Offline support depends on successful registration, installation and available cached resources; form POST requests are not handled by the worker. An isolated local Chrome test verified manual production worker registration, all 19 precache entries, offline legal-page and theme behavior, and the navigation fallback. PWA installability and the deployed website were not verified.
 
@@ -399,14 +412,15 @@ CSS minification and JS bundling/minification are configured. Images use `pictur
 ### Project Maintenance
 
 - Edit CSS sources and JS modules; run `npm run build` before preview or release; do not manually patch `.min.css` and `.min.js` files.
+- Edit the shared header and footer only in `partials/header.html` and `partials/footer.html`. Every page template contains exactly one `<!-- partial:header -->` and one `<!-- partial:footer -->` marker; a missing, repeated or unknown marker and a pasted header or footer block stop QA and the build.
 - Maintain `data/menu.json` and the static HTML cards used as fallback content.
 - Check page and public asset changes against the lists in `scripts/build-config.js`, `sw.js`, `manifest.webmanifest` and `sitemap.xml`.
 - Update `CACHE_VERSION` in `sw.js` when cached resources change.
 - [CHANGELOG.md](docs/CHANGELOG.md) records significant completed changes; update it when task scope permits, or report that an entry is needed.
-- [PLAN.md](PLAN.md) is the active development plan, containing current tasks and their completion conditions.
-- [AUDIT.md](AUDIT.md) is the current project audit and the source of technical findings reflected in the development plan.
-- [Completed development plan](docs/archive/plans/PLAN-2026-09-19.md) preserves the finished implementation plan together with its verification record; it is an archived document, not an active task list.
-- [Resolved frontend audit](docs/archive/audits/daily-AUDIT-2026-09-19.md) preserves the historical audit findings and their resolution statuses.
+- [Completed development plan of 2026-09-23](docs/archive/plans/PLAN-2026-09-23.md), which superseded the 2026-09-19 plan, preserves the completed tasks and their completion conditions; it is an archived document, not an active task list.
+- [Technical audit of 2026-09-23](docs/archive/audits/AUDIT-2026-09-23.md) preserves the reconciled technical findings and their resolution statuses; it is an archived document.
+- [Completed development plan of 2026-09-19](docs/archive/plans/PLAN-2026-09-19.md) preserves the finished implementation plan together with its verification record; it is an archived document, not an active task list.
+- [Resolved frontend audit of 2026-09-19](docs/archive/audits/daily-AUDIT-2026-09-19.md) preserves the historical audit findings and their resolution statuses.
 
 ### License
 

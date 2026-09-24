@@ -21,7 +21,7 @@
     "PWA"
   ],
   "scripts": {
-    "dev": "http-server . -a 127.0.0.1 -p 5173 -c-1",
+    "dev": "node scripts/dev-server.js",
     "build": "npm run build:static && npm run build:css && npm run build:js && npm run qa:dist:integrity",
     "preview": "http-server dist -a 127.0.0.1 -p 5173 -c-1",
     "qa": "npm run lint && npm run qa:source && npm run qa:html && npm run qa:server",
@@ -32,7 +32,7 @@
     "images:build": "node scripts/images/build-images.js",
     "lint": "eslint \"js/**/*.js\" \"sw.js\" \"scripts/**/*.js\"",
     "qa:source": "node scripts/validate-dist.js --source",
-    "qa:html": "html-validate \"*.html\"",
+    "qa:html": "node scripts/qa-html.js",
     "qa:links": "node scripts/qa-links.js",
     "qa:links:external": "node scripts/qa-links.js --external",
     "qa:a11y": "pa11y-ci",
