@@ -59,6 +59,7 @@ All significant changes to this project are documented in this file.
 - Corrected the LinkedIn profile URL across all 11 page footers and verified the updated link in source and production HTML.
 - Aligned production URLs, SEO metadata, sitemap, robots and form host detection with the confirmed Atelier Netlify domain.
 - Integrated the seven retained Font Awesome Free 7.1.0 icons through a shared `js/features/icons.js` registry initialized by both JavaScript entries, replacing duplicated inline contact and social SVG markup on all 11 pages and adding the home icon to breadcrumb home links, with visible social link labels when JavaScript is unavailable and the Service Worker cache raised to v1.5.
+- Aligned menu filter chips and dish tag badges with consistent typography and burgundy styling across light and dark themes, preserving distinct interactive and informational states.
 
 ### Documentation
 

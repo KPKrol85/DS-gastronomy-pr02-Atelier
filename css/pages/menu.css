@@ -58,8 +58,7 @@
   background: var(--c-surface-1);
   color: var(--ink);
   font-weight: 600;
-  letter-spacing: var(--ls-widest);
-  font-size: var(--fs-xxxs);
+  letter-spacing: var(--ls-wider);
   line-height: var(--lh-snug);
 }
 .page--menu .menu-filters__btn.is-active {

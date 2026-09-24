@@ -104,18 +104,19 @@
   gap: var(--space-2);
   margin-top: auto;
 }
+/* Same type and burgundy tint as the active menu filter chip (pages/menu.css), minus its border, so it reads as a label rather than a control. */
 .page .menu-card__tag {
   padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-md);
   font-size: var(--fs-xxs);
   font-weight: 600;
   letter-spacing: var(--ls-wider);
-  text-transform: uppercase;
-  background: color-mix(in srgb, var(--gold) 30%, var(--cream));
-  color: var(--ink);
+  background: color-mix(in oklab, var(--burgundy) 10%, white);
+  color: color-mix(in oklab, var(--burgundy) 92%, black);
 }
 [data-theme="dark"] .page .menu-card__tag {
-  background: color-mix(in srgb, var(--gold) 45%, var(--bone));
+  background: color-mix(in oklab, var(--burgundy) 20%, var(--bone));
+  color: var(--burgundy);
 }
 .page .menu-card a:focus-visible {
   outline: 2px solid var(--focus-ring);
