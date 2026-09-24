@@ -34,6 +34,7 @@
 }
 .hero__title {
   margin-bottom: var(--space-3);
+  font-size: var(--fs-3xl);
 }
 .hero__subtitle {
   font-size: var(--fs-sm);
