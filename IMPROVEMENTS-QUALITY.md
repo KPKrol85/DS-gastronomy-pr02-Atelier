@@ -105,6 +105,7 @@ The opportunities below are in the places those mechanisms do not reach. The Ser
   - An invalid submission still shows the existing field errors and focuses the first invalid field.
 - **Impact:** Medium
 - **Effort:** Small
+- **Status:** COMPLETED — A valid submission made while `navigator.onLine` reports offline now stays on the page with all values kept and announces "Jesteś offline. Połącz się z internetem, aby wysłać wiadomość." in `#form-status`; the Service Worker cache was raised to v1.8 with a recalculated precache fingerprint.
 
 ## Selection summary
 

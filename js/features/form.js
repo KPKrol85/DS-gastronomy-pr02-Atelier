@@ -116,6 +116,11 @@ export function initForm() {
       result.firstInvalid && result.firstInvalid.focus();
       return;
     }
+    if (!navigator.onLine) {
+      event.preventDefault();
+      status && (status.classList.remove("visually-hidden"), (status.textContent = "Jesteś offline. Połącz się z internetem, aby wysłać wiadomość."));
+      return;
+    }
     status && (status.classList.remove("visually-hidden"), (status.textContent = "Wysyłanie…"));
   });
 }

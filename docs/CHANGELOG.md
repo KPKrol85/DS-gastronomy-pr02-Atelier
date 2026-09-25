@@ -63,6 +63,7 @@ All significant changes to this project are documented in this file.
 - Increased all four gallery lightbox controls to a minimum of 44×44px across viewport sizes, improving touch accessibility while preserving existing icons and interactions.
 - Refined letter spacing across seven About page text roles to improve readability and maintain consistent body typography.
 - Added thumbnail recovery and an accessible unavailable state for failed gallery lightbox images, with the Service Worker cache raised to v1.7.
+- Prevented offline contact-form submissions from navigating away, preserving entered values and announcing that a connection is required, with the Service Worker cache raised to v1.8.
 
 ### Documentation
 
