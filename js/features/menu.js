@@ -247,6 +247,10 @@ export function initMenuPage() {
     var buttons = Array.prototype.slice.call(buttonsWrap.querySelectorAll(".menu-filters__btn[data-filter]"));
     var cards = Array.prototype.slice.call(document.querySelectorAll(".menu-card"));
     var emptyInfo = document.querySelector(".menu-filters__empty");
+    var resetButton = document.querySelector(".menu-filters__reset");
+    var allButton = buttons.find(function (button) {
+      return button.getAttribute("data-filter") === "*";
+    });
 
     function normalize(str) {
       return (str || "")
@@ -323,6 +327,7 @@ export function initMenuPage() {
         if (show) visibleCount++;
       });
       reportResults(visibleCount, announce === true);
+      if (resetButton) resetButton.hidden = visibleCount !== 0 || (term === "" && activeTag === "*");
     }
 
     var debounceTimer = null;
@@ -352,6 +357,18 @@ export function initMenuPage() {
       activeTag = btn.getAttribute("data-filter") || "*";
       apply(true);
     });
+
+    if (resetButton && allButton) {
+      resetButton.addEventListener("click", function () {
+        clearTimeout(debounceTimer);
+        search.value = "";
+        term = "";
+        activeTag = "*";
+        setActiveButton(allButton);
+        apply(true);
+        search.focus();
+      });
+    }
 
     apply();
   }
