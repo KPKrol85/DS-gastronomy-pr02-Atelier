@@ -22,6 +22,7 @@ All significant changes to this project are documented in this file.
 
 ### Changed
 
+- Made contact-form name and message length requirements visible before entry and associated each hint with its field alongside validation errors.
 - Standardized the site terms and unified legal-page styling, operator information and contact details.
 - Standardized the privacy policy and clarified Netlify Forms processing and embedded Google Maps disclosures, correcting the cookies policy's third-party integration description.
 - Standardized the cookies policy and documented existing `localStorage`, Service Worker and Cache Storage use.
@@ -65,6 +66,7 @@ All significant changes to this project are documented in this file.
 - Refined letter spacing across seven About page text roles to improve readability and maintain consistent body typography.
 - Added thumbnail recovery and an accessible unavailable state for failed gallery lightbox images, with the Service Worker cache raised to v1.7.
 - Prevented offline contact-form submissions from navigating away, preserving entered values and announcing that a connection is required, with the Service Worker cache raised to v1.8.
+- Made contact-form name and message length requirements visible before entry and associated each hint with its field alongside validation errors.
 
 ### Documentation
 

@@ -28,13 +28,14 @@ The site supports browsing a sample menu, exploring grouped gallery images, and 
 
 - **Affected journey:** Completing the contact form.
 - **Evidence:** `contact.html:135-136`, `175-189`, `211-214`; `js/features/form.js:34-44`, `96-105`.
-- **Current experience:** The form explains which three fields to supply, but the two-character name and ten-character message thresholds appear only in JavaScript validation messages after interaction. The labels and field area do not state those thresholds in advance.
-- **Proposed improvement:** Add short, persistent field hints for the existing name and message length rules, linked to their controls without replacing the current error messages.
+- **Previous experience:** The form explained which three fields to supply, but the two-character name and ten-character message thresholds appeared only in JavaScript validation messages after interaction. The labels and field area did not state those thresholds in advance.
+- **Implemented improvement:** Persistent Polish hints state the existing two-character name and ten-character message requirements before entry, including without JavaScript. Each field references its hint and existing validation error through `aria-describedby`; errors remain separate and clear after correction without removing the hint.
 - **Expected user value:** Visitors can compose valid input on the first attempt and understand a length error in context.
 - **Implementation scope:** Update only the canonical contact-form markup and its existing form styles as needed. Preserve native required and email constraints, current JavaScript validation, Netlify form fields and POST action, and the no-JavaScript submission path.
 - **Acceptance criteria:** The name and message requirements are visible before typing and are programmatically associated with their fields. On invalid input, each error remains available alongside its hint; correcting the value clears the error without removing the hint. The form's submission and fallback paths remain unchanged.
 - **Impact:** Medium
 - **Effort:** Small
+- **Status:** COMPLETED — Added persistent, accessible length hints to the name and message fields while retaining their existing validation errors and submission behavior.
 
 ### IMP-UX-03 — Identify the gallery group inside the lightbox
 

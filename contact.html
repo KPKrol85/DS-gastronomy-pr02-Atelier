@@ -174,7 +174,8 @@
             </p>
             <div class="form__row">
               <label for="name">Imię i nazwisko</label>
-              <input id="name" name="name" type="text" autocomplete="name" required aria-required="true" aria-describedby="error-name" />
+              <input id="name" name="name" type="text" autocomplete="name" required aria-required="true" aria-describedby="hint-name error-name" />
+              <span class="form__hint" id="hint-name">Minimum 2 znaki.</span>
               <span class="form__error" id="error-name" aria-live="polite"></span>
             </div>
             <div class="form__row">
@@ -184,7 +185,8 @@
             </div>
             <div class="form__row">
               <label for="message">Wiadomość</label>
-              <textarea id="message" name="message" rows="4" required aria-required="true" aria-describedby="error-message"></textarea>
+              <textarea id="message" name="message" rows="4" required aria-required="true" aria-describedby="hint-message error-message"></textarea>
+              <span class="form__hint" id="hint-message">Minimum 10 znaków.</span>
               <span class="form__error" id="error-message" aria-live="polite"></span>
             </div>
             <div class="form__row form__actions">
