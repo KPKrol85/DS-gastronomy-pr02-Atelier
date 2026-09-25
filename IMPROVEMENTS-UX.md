@@ -17,12 +17,12 @@ The site supports browsing a sample menu, exploring grouped gallery images, and 
 - **Evidence:** `menu.html:651-666`; `js/features/menu.js:269-270`, `289-325`, `340-356`.
 - **Previous experience:** Search text and the selected tag were combined. When no card matched, the page reported “Brak pozycji spełniających kryteria.” Returning to the full menu required clearing the search field and selecting “Wszystko” separately when both criteria were active.
 - **Implemented improvement:** A “Wyczyść filtry” button appears beside the no-results message when active criteria find no dishes. It clears pending search input, resets both criteria, restores all cards, updates the existing result announcement, and returns focus to search.
-- **Status:** Completed.
 - **Expected user value:** Visitors can recover from an empty result set without working out which active criterion removed the dishes.
 - **Implementation scope:** Change the canonical `menu.html` filter area and `js/features/menu.js` filter state; use the existing button styles and result announcement. Keep the current search, tag combination, static menu cards, and no-JavaScript content available.
 - **Acceptance criteria:** With a search term and non-default tag producing zero matches, the reset action is visible. Activating it empties the search field, selects “Wszystko” visually and through `aria-pressed`, restores every menu card, updates the result announcement, and hides the reset action. It is absent before filtering and when results are present.
 - **Impact:** Medium
 - **Effort:** Small
+- **Status:** COMPLETED — Added a one-step reset for empty menu filter results, clearing pending search input and both active criteria, restoring all 18 dishes, updating the result announcement, and returning keyboard focus to the search field.
 
 ### IMP-UX-02 — State the contact form's length requirements before entry
 
