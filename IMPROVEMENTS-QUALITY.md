@@ -65,6 +65,7 @@ The opportunities below are in the places those mechanisms do not reach. The Ser
   - A temporarily broken selector in the scenario fails the run instead of silently auditing the page as it loads.
 - **Impact:** Medium
 - **Effort:** Small
+- **Status:** COMPLETED — Added a 12th `.pa11yci` entry, `contact.html?a11y=form-errors`, whose actions accept the demo dialog, blur all three empty fields and hold the audit until each has `aria-invalid="true"` and error text; source and production QA both pass 12/12.
 
 ### IMP-QUALITY-04 — Recover from a failed full-size image in the gallery lightbox
 

@@ -142,10 +142,10 @@ Skonfigurowane kontrole obejmują:
 | `npm run qa` | ESLint, kontrakt źródeł i partiali, HTML złożonych stron, uruchomienie składającego serwera dev, lokalne linki/zasoby/fragmenty i pa11y-ci. |
 | `npm run qa:dist` | Integralność istniejącego `dist/` względem złożonych źródeł, produkcyjny HTML, uruchomienie preview, lokalne linki/zasoby/fragmenty i pa11y-ci. Najpierw uruchom build. |
 | `npm run qa:links` | Wszystkie 11 stron i ich lokalne zasoby, w tym importy CSS i fonty; wymaga działającego dev albo preview. |
-| `npm run qa:a11y` | Wszystkie 11 adresów z `.pa11yci`, w tym `contact.html`, HTML CodeSniffer, WCAG2AA. |
+| `npm run qa:a11y` | 12 scenariuszy z `.pa11yci`: wszystkie 11 stron po załadowaniu oraz `contact.html` z błędami walidacji formularza; HTML CodeSniffer, WCAG2AA. |
 | `npm run qa:links:external` | Opcjonalna kontrola także zewnętrznych linków na działającym serwerze. |
 
-QA źródeł nie buduje produkcji; QA dist sprawdza przygotowaną paczkę i nie przebudowuje jej. Kontrole lokalne pomijają zewnętrzne adresy, a nie bundle produkcyjne. Runner `scripts/qa-server.js` sprawdza źródła przez ten sam składający serwer co `npm run dev`, a paczkę przez http-server na `dist/`; zamyka serwer także po błędzie. Nie wymaga Windows WMIC. Port 5173 musi być wolny. Automatyczny audyt dostępności nie potwierdza pełnej zgodności WCAG. Strona kontaktowa jest sprawdzana w stanie po załadowaniu; audyt nie obejmuje interaktywnych stanów walidacji formularza.
+QA źródeł nie buduje produkcji; QA dist sprawdza przygotowaną paczkę i nie przebudowuje jej. Kontrole lokalne pomijają zewnętrzne adresy, a nie bundle produkcyjne. Runner `scripts/qa-server.js` sprawdza źródła przez ten sam składający serwer co `npm run dev`, a paczkę przez http-server na `dist/`; zamyka serwer także po błędzie. Nie wymaga Windows WMIC. Port 5173 musi być wolny. Automatyczny audyt dostępności nie potwierdza pełnej zgodności WCAG. Strona kontaktowa jest sprawdzana dwukrotnie: po załadowaniu oraz pod adresem `contact.html?a11y=form-errors`, gdzie akcje pa11y akceptują informację o projekcie, przechodzą fokusem przez puste pola i wstrzymują audyt, dopóki wszystkie trzy pola nie mają `aria-invalid="true"` i treści błędu. Pozostałe stany formularza, np. komunikat po próbie wysłania, nie są audytowane.
 
 ### Ciągła integracja
 
@@ -357,10 +357,10 @@ Configured checks include:
 | `npm run qa` | ESLint, source and partial contract, composed-page HTML, composing dev server startup, local links/assets/fragments and pa11y-ci. |
 | `npm run qa:dist` | Integrity of existing `dist/` against the composed sources, production HTML, preview startup, local links/assets/fragments and pa11y-ci. Run build first. |
 | `npm run qa:links` | All 11 pages and local resources, including CSS imports and fonts; requires a running dev or preview server. |
-| `npm run qa:a11y` | All 11 addresses in `.pa11yci`, including `contact.html`, HTML CodeSniffer, WCAG2AA. |
+| `npm run qa:a11y` | 12 scenarios in `.pa11yci`: all 11 pages as loaded, plus `contact.html` with the form's validation errors shown; HTML CodeSniffer, WCAG2AA. |
 | `npm run qa:links:external` | Optional external link checking against a running server. |
 
-Source QA does not build production; dist QA checks the prepared package without rebuilding it. Local checks skip external addresses, not production bundles. The `scripts/qa-server.js` runner checks the sources through the same composing server as `npm run dev` and the package through http-server on `dist/`; it closes the server even after failures. It does not require Windows WMIC. Port 5173 must be free. Automated accessibility auditing does not establish full WCAG compliance. The contact page is checked in its loaded state; the audit does not cover the form's interactive validation states.
+Source QA does not build production; dist QA checks the prepared package without rebuilding it. Local checks skip external addresses, not production bundles. The `scripts/qa-server.js` runner checks the sources through the same composing server as `npm run dev` and the package through http-server on `dist/`; it closes the server even after failures. It does not require Windows WMIC. Port 5173 must be free. Automated accessibility auditing does not establish full WCAG compliance. The contact page is checked twice: as loaded, and at `contact.html?a11y=form-errors`, where pa11y actions accept the project notice, move focus through the empty fields and hold the audit until all three carry `aria-invalid="true"` and error text. Other form states, such as the message after a submit attempt, are not audited.
 
 ### Continuous Integration
 
