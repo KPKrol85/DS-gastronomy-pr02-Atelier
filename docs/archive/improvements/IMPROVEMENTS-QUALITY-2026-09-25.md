@@ -5,6 +5,8 @@
 **Analysis mode:** Evidence-based quality improvement review
 **Focus:** Project-wide quality
 
+> **Completion note:** All five quality improvements (IMP-QUALITY-01 to IMP-QUALITY-05) have been implemented, and their changes have been recorded in `docs/CHANGELOG.md`. This report was archived on 2026-09-25.
+
 ## Improvement overview
 
 Atelier No.02 has far more verification than a site of its size usually needs. `scripts/validate-dist.js` enforces page composition, the head, body and dialog contracts, parity between the menu data and its static fallback, image provenance, per-page metadata uniqueness and a byte-for-byte production package. html-validate, a link and fragment crawl and pa11y-ci run against both the composed sources and `dist/`, and CI runs the whole chain. The runtime modules degrade deliberately: storage access is guarded, a missing `IntersectionObserver` falls back, a failed menu fetch keeps the static cards, and failed menu and gallery thumbnails receive a placeholder. The archived audits record every finding as resolved or implemented, and the source contract passed when run during this review.
