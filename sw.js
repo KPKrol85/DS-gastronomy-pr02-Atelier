@@ -1,6 +1,6 @@
-const CACHE_VERSION = "1.6";
+const CACHE_VERSION = "1.7";
 /* exported PRECACHE_FINGERPRINT -- SHA-256 of the precached dist/ files, checked by scripts/validate-dist.js */
-const PRECACHE_FINGERPRINT = "39fdcc0fa60efd2a79187d7d0e4ec036e818fcb84c7e282a915f0d70ff0d6bef";
+const PRECACHE_FINGERPRINT = "65723fe109aa13255fcdc9007bd2ad55573f3f936718648c3cb7ddcd20dedfdb";
 const CACHE_NAME = `atelierno02-v${CACHE_VERSION}`;
 
 const FILES_TO_CACHE = [

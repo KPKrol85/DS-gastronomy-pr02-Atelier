@@ -62,6 +62,7 @@ All significant changes to this project are documented in this file.
 - Aligned menu filter chips and dish tag badges with consistent typography and burgundy styling across light and dark themes, preserving distinct interactive and informational states.
 - Increased all four gallery lightbox controls to a minimum of 44×44px across viewport sizes, improving touch accessibility while preserving existing icons and interactions.
 - Refined letter spacing across seven About page text roles to improve readability and maintain consistent body typography.
+- Added thumbnail recovery and an accessible unavailable state for failed gallery lightbox images, with the Service Worker cache raised to v1.7.
 
 ### Documentation
 

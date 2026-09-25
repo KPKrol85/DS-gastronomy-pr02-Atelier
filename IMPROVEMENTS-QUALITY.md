@@ -85,6 +85,7 @@ The opportunities below are in the places those mechanisms do not reach. The Ser
   - Behavior is unchanged when the network is unrestricted.
 - **Impact:** Medium
 - **Effort:** Small
+- **Status:** COMPLETED — A failed full-size lightbox image now falls back once to the trigger's loaded thumbnail, otherwise shows and announces "Nie udało się wczytać zdjęcia."; the Service Worker cache was raised to v1.7 with a recalculated precache fingerprint.
 
 ### IMP-QUALITY-05 — Keep an offline contact-form submission on the page
 

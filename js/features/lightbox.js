@@ -1,3 +1,5 @@
+const UNAVAILABLE_TEXT = "Nie udało się wczytać zdjęcia.";
+
 export function initLightbox() {
   const html = document.documentElement;
   const hasGalleryLinks = document.querySelector(".gallery__link");
@@ -23,6 +25,11 @@ export function initLightbox() {
     img.alt = "";
     img.decoding = "async";
     img.loading = "eager";
+
+    const status = document.createElement("p");
+    status.className = "lb-status";
+    status.hidden = true;
+    status.textContent = UNAVAILABLE_TEXT;
 
     const caption = document.createElement("figcaption");
     caption.className = "lb-caption";
@@ -64,13 +71,14 @@ export function initLightbox() {
     live.id = "lb-live";
     live.setAttribute("aria-live", "polite");
 
-    figure.append(img, caption);
+    figure.append(img, status, caption);
     modal.append(figure, controls, live);
     overlay.append(modal);
     document.body.appendChild(overlay);
   }
 
   const imgEl = overlay.querySelector("img");
+  const statusEl = overlay.querySelector(".lb-status");
   const captionEl = overlay.querySelector(".lb-caption");
   const closeBtn = overlay.querySelector(".lb-close");
   const prevBtn = overlay.querySelector(".lb-prev");
@@ -122,16 +130,27 @@ export function initLightbox() {
 
   function placeArrows() {
     if (!imgEl || !prevBtn || !nextBtn) return;
-    const rect = imgEl.getBoundingClientRect();
+    /* In the unavailable state the arrows line up with the message instead of the hidden image. */
+    const rect = (imgEl.hidden && statusEl ? statusEl : imgEl).getBoundingClientRect();
     if (!rect || !rect.height) return;
     const mid = rect.top + rect.height / 2;
     prevBtn.style.top = mid + "px";
     nextBtn.style.top = mid + "px";
   }
 
-  function updateCounter() {
+  function updateCounter(status) {
     counterEl.textContent = index + 1 + "/" + group.length;
-    if (liveEl) liveEl.textContent = "Obraz " + (index + 1) + " z " + group.length;
+    if (liveEl) liveEl.textContent = "Obraz " + (index + 1) + " z " + group.length + (status ? ". " + status : "");
+  }
+  function getThumbnailSrc(link, failedSrc) {
+    /*
+     The trigger's thumbnail counts only once it has really loaded a photograph: currentSrc follows the
+     <picture>/srcset choice, and the "Brak obrazu" placeholder from initImageFallbacks() is excluded.
+    */
+    const thumb = link.querySelector("img");
+    if (!thumb || thumb.dataset.fallbackApplied || !thumb.complete || !thumb.naturalWidth) return "";
+    const src = thumb.currentSrc || thumb.src;
+    return src && src !== failedSrc ? src : "";
   }
   function prefetch(i) {
     /* Preload neighboring slides for smoother next/previous navigation. */
@@ -147,9 +166,29 @@ export function initLightbox() {
   function render(i) {
     const a = group[i];
     if (!a) return;
+    /*
+     Every render resets the error state and binds fresh handlers. Replacing src makes the browser drop
+     the previous request's pending load/error events, so these handlers only ever see this image.
+    */
+    let fallbackTried = false;
     imgEl.classList.remove("is-ready");
+    imgEl.hidden = false;
+    if (statusEl) statusEl.hidden = true;
     imgEl.onload = function () {
       imgEl.classList.add("is-ready");
+      placeArrows();
+    };
+    imgEl.onerror = function () {
+      /* Fall back to the thumbnail once; if that is unusable too, show and announce the message. */
+      const thumbSrc = fallbackTried ? "" : getThumbnailSrc(a, imgEl.src);
+      fallbackTried = true;
+      if (thumbSrc) {
+        imgEl.src = thumbSrc;
+        return;
+      }
+      imgEl.hidden = true;
+      if (statusEl) statusEl.hidden = false;
+      updateCounter(UNAVAILABLE_TEXT);
       placeArrows();
     };
     imgEl.src = a.getAttribute("href");
