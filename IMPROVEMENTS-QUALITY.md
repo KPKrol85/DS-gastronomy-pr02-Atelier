@@ -44,6 +44,7 @@ The opportunities below are in the places those mechanisms do not reach. The Ser
 - **Acceptance criteria:** `npm run qa:source` passes on the current tree. It fails, with a message naming the page and the affected dish or filter value, for each of three temporary edits: a changed tag on one static card, a changed description on one static card, and a `data-filter` value that matches no tag in `data/menu.json`. Each edit is reverted afterwards.
 - **Impact:** Medium
 - **Effort:** Small
+- **Status:** COMPLETED — Extended `validateMenuParity()` so every static card's description and ordered tags must equal its `data/menu.json` item, and every `menu.html` `data-filter` other than `*` must name a data tag.
 
 ### IMP-QUALITY-03 — Audit the contact form's validation-error state with pa11y-ci
 

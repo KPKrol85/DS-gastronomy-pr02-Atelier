@@ -26,6 +26,7 @@ const MENU_PAGE = "menu.html";
 const FEATURED_PAGE = "index.html";
 const FEATURED_CATEGORIES = ["przystawki", "dania-glowne", "desery"];
 const FEATURED_SIZE = 3;
+const ALL_ITEMS_FILTER = "*";
 const IMAGE_SOURCES = "assets/img-src";
 const IMAGE_OUTPUTS = "assets/img-optimized";
 const RASTER_SOURCE_FORMATS = [".jpg", ".jpeg", ".png"];
@@ -200,6 +201,16 @@ function cardField(card, className) {
   return null;
 }
 
+// Each .menu-card__tag in document order; the depth scan ends every <li> at its own closing tag.
+function cardTags(card) {
+  return [...card.matchAll(OPEN_TAG)]
+    .filter((tag) => classNames(tag[0]).includes("menu-card__tag"))
+    .map((tag) => {
+      const element = elementsOf(card, tag[1], tag.index)[0];
+      return element ? elementText(element.content) : null;
+    });
+}
+
 function listsWith(html, attribute) {
   return [...html.matchAll(OPEN_TAG)].flatMap((tag) =>
     tagAttribute(tag[0], attribute) === null
@@ -213,10 +224,24 @@ function staticCards(scope, listContent) {
     const position = `${scope} card ${index + 1}`;
     const title = cardField(card.content, "card__title");
     const price = cardField(card.content, "menu-card__price");
+    const description = cardField(card.content, "card__text");
     assert(title, `${position} carries no .card__title`);
     assert(price, `${position} carries no .menu-card__price`);
-    return { position, title, price };
+    assert(description !== null, `${position} carries no .card__text`);
+    return { position, title, price, description, tags: cardTags(card.content) };
   });
+}
+
+/*
+ Search reads the .card__text description and the tag filter reads the .menu-card__tag list,
+ so a static card that drifts from its item answers both differently once the fetch fails.
+*/
+function assertCardContent(card, item) {
+  assert.equal(card.description, item.description, `${card.position} describes "${item.title}" as `
+    + `"${card.description}" where ${MENU_DATA} says "${item.description}"`);
+  const tags = Array.isArray(item.tags) ? item.tags : [];
+  assert.deepEqual(card.tags, tags, `${card.position} tags "${item.title}" `
+    + `${JSON.stringify(card.tags)} where ${MENU_DATA} lists ${JSON.stringify(tags)} in that order`);
 }
 
 /*
@@ -263,6 +288,7 @@ function validateCompleteMenu(items) {
       + `"${card.category}" where ${MENU_DATA} assigns it to "${item.category}"`);
     assert.equal(card.price, item.price, `${card.position} prices "${card.title}" at `
       + `"${card.price}" where ${MENU_DATA} says "${item.price}"`);
+    assertCardContent(card, item);
   }
   for (const item of items) {
     assert(mirrored.has(item.title), `${MENU_PAGE} is missing the menu item "${item.title}" `
@@ -291,7 +317,24 @@ function validateFeaturedMenu(items) {
       + `renderFeaturedMenu() selects "${item.title}" from ${MENU_DATA}`);
     assert.equal(card.price, item.price, `${card.position} prices "${item.title}" at `
       + `"${card.price}" where ${MENU_DATA} says "${item.price}"`);
+    assertCardContent(card, item);
   });
+}
+
+/*
+ initMenuFilters() in js/features/menu.js shows a card only when the pressed button's data-filter
+ equals one of its tags exactly, case and diacritics included, and treats "*" as every card. Any
+ other value outside the data's tag vocabulary is a button that empties the menu.
+*/
+function validateMenuFilters(items) {
+  const html = composePage(MENU_PAGE).replace(HTML_COMMENT, "");
+  const vocabulary = new Set(items.flatMap((item) => (Array.isArray(item.tags) ? item.tags : [])));
+  for (const tag of html.matchAll(OPEN_TAG)) {
+    const filter = tagAttribute(tag[0], "data-filter");
+    if (filter === null || filter === ALL_ITEMS_FILTER) continue;
+    assert(vocabulary.has(filter), `${MENU_PAGE} [data-filter="${filter}"] matches no tag in ${MENU_DATA}, `
+      + `so its button hides every card; known tags: ${JSON.stringify([...vocabulary])}`);
+  }
 }
 
 // The rendered menu and the static fallback both claim to show data/menu.json.
@@ -301,6 +344,7 @@ function validateMenuParity() {
   assert(items.length, `${MENU_DATA} carries no items for the static menus to mirror`);
   validateCompleteMenu(items);
   validateFeaturedMenu(items);
+  validateMenuFilters(items);
 }
 
 /*

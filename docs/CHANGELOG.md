@@ -90,3 +90,4 @@ All significant changes to this project are documented in this file.
 - Extended automated accessibility checks to all 11 pages, including the contact form page, with successful source and production validation.
 - Verified the complete source and production QA pipelines, with zero local link or automated accessibility errors across all 11 pages; tracked external-link findings for follow-up.
 - Extended source QA to enforce unique per-page metadata and consistency between canonical URLs, Open Graph URLs and breadcrumb structured data.
+- Added source validation to keep static and featured menu cards consistent with canonical menu data across item selection, prices, categories, descriptions and ordered tags, and to reject menu filters without matching data tags.
