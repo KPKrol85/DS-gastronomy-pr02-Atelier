@@ -39,6 +39,7 @@ Three opportunities qualify: reuse managed server startup for a selected existin
 - **Acceptance criteria:** Focused diagnostic cases before and after a partial marker and inside each partial identify the correct canonical file and original line, with the affected page retained. LF and CRLF inputs map consistently, including insertion indentation. Composition output remains byte-for-byte equivalent for the same inputs, existing marker errors remain actionable, and validation rules and exit status remain unchanged. Verification can use in-memory inputs without retaining altered page fixtures.
 - **Impact:** Medium
 - **Effort:** Medium
+- **Status:** COMPLETED — Added canonical source-file and line mapping to composed HTML diagnostics while preserving affected-page context, existing validation behavior, and byte-for-byte identical HTML output.
 
 ### IMP-WORKFLOW-03 — Give detailed command documentation one maintenance home
 

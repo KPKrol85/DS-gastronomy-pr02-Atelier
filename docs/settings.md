@@ -66,7 +66,7 @@ Dev i preview używają portu 5173; uruchamiaj je osobno. Przed QA zatrzymaj rę
 ### `qa:html`
 
 - command: `node scripts/qa-html.js`
-- what it does: Waliduje html-validate 11 złożonych stron źródłowych z konfiguracją .htmlvalidate.json. Numery linii w błędach dotyczą złożonej strony, takiej jak z `npm run dev`.
+- what it does: Waliduje html-validate 11 złożonych stron źródłowych z konfiguracją .htmlvalidate.json, takich jak z `npm run dev`. Każdy komunikat zachowuje stronę oraz linię i kolumnę w złożonym HTML, a dodatkowo wskazuje kanoniczny plik do edycji i jego oryginalną linię (szablon strony lub partials/header.html albo partials/footer.html). Kolumny źródłowe nie są przeliczane; brak wiarygodnego mapowania jest jawnie zgłaszany przy zachowaniu diagnostyki złożonej strony.
 
 ### `qa:links`
 

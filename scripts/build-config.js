@@ -100,13 +100,14 @@ function readPartial(page, name) {
  and the rest of the template is kept byte for byte. A malformed, unknown, repeated or missing
  marker, and a hand-written copy of a shared component, fail with the page and line to correct.
 */
-function composeHtml(page, html) {
+function composeHtmlWithOrigins(page, html) {
   const markers = new Map();
   for (const reference of html.matchAll(PARTIAL_REFERENCE)) {
     const start = html.lastIndexOf("\n", reference.index) + 1;
     const lineEnd = html.indexOf("\n", reference.index);
     const line = html.slice(start, lineEnd < 0 ? html.length : lineEnd).replace(/\r$/, "");
-    const at = `${page}:${lineOf(html, reference.index)}`;
+    const sourceLine = lineOf(html, reference.index);
+    const at = `${page}:${sourceLine}`;
     const marker = line.match(PARTIAL_MARKER);
     if (!marker) {
       throw new Error(`${at}: "${line.trim()}" is not a partial marker; write <!-- partial:name --> alone on its line`);
@@ -118,7 +119,7 @@ function composeHtml(page, html) {
     if (markers.has(name)) {
       throw new Error(`${at}: repeats <!-- partial:${name} -->, already composed at ${markers.get(name).at}`);
     }
-    markers.set(name, { at, start, end: start + line.length, indent });
+    markers.set(name, { at, start, end: start + line.length, indent, sourceLine });
   }
   for (const [name, component] of Object.entries(htmlPartials)) {
     const copy = componentTags(html, component)[0];
@@ -131,20 +132,42 @@ function composeHtml(page, html) {
     }
   }
   const eol = html.includes("\r\n") ? "\r\n" : "\n";
+  // Entry i describes composed line i + 1. Whole-line markers keep each line in one source.
+  const lineOrigins = [];
+  let templateLine = 1;
+  function appendTemplateOrigins(untilLine) {
+    for (; templateLine < untilLine; templateLine++) {
+      lineOrigins.push({ file: page, line: templateLine });
+    }
+  }
   let composed = "";
   let cursor = 0;
   for (const [name, marker] of [...markers].sort((a, b) => a[1].start - b[1].start)) {
     const lines = readPartial(page, name).replace(/\r?\n$/, "").split(/\r?\n/);
     composed += html.slice(cursor, marker.start) + lines.map((line) => (line ? marker.indent + line : line)).join(eol);
+    appendTemplateOrigins(marker.sourceLine);
+    // Only the final line ending is removed; leading, interior and trailing blank lines retain their numbers.
+    lines.forEach((_, index) => lineOrigins.push({ file: htmlPartials[name].file, line: index + 1 }));
+    templateLine = marker.sourceLine + 1;
     cursor = marker.end;
   }
-  return composed + html.slice(cursor);
+  appendTemplateOrigins(html.split("\n").length + 1);
+  return { html: composed + html.slice(cursor), lineOrigins };
+}
+
+// Existing consumers still receive exactly the composed HTML string.
+function composeHtml(page, html) {
+  return composeHtmlWithOrigins(page, html).html;
 }
 
 // A registered page read from the repository root and composed; no other file is ever served or built as a page.
-function composePage(page) {
+function composePageWithOrigins(page) {
   if (!htmlPages.includes(page)) throw new Error(`${page} is not a page registered in scripts/build-config.js`);
-  return composeHtml(page, fs.readFileSync(path.join(rootDir, page), "utf8"));
+  return composeHtmlWithOrigins(page, fs.readFileSync(path.join(rootDir, page), "utf8"));
+}
+
+function composePage(page) {
+  return composePageWithOrigins(page).html;
 }
 
 function productionReference(reference) {
@@ -169,5 +192,5 @@ function productionWorker(worker) {
 
 module.exports = {
   rootDir, distDir, htmlPages, htmlPartials, rootFiles, assetEntries, productionAssets,
-  composeHtml, composePage, productionHtml, productionWorker,
+  composeHtml, composePage, composeHtmlWithOrigins, composePageWithOrigins, productionHtml, productionWorker,
 };
