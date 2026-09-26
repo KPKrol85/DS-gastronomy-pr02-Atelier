@@ -2,6 +2,10 @@
 .page--menu .menu-section {
   scroll-margin-top: clamp(64px, 10vh, 120px);
 }
+.page--menu .menu-section[hidden],
+.page--menu .menu-tabs__list > li[hidden] {
+  display: none;
+}
 /* Filters menu*/
 .page--menu .menu-filters .container {
   max-width: 960px;
