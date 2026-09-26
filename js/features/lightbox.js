@@ -127,6 +127,15 @@ export function initLightbox() {
   let group = [];
   let index = 0;
   let lastTrigger = null;
+  let groupLabel = "";
+
+  function getGroupLabel(link) {
+    const section = link && link.closest("section[aria-labelledby]");
+    if (!section) return "";
+    const headingId = section.getAttribute("aria-labelledby");
+    const heading = headingId && document.getElementById(headingId);
+    return heading ? heading.textContent.trim() : "";
+  }
 
   function placeArrows() {
     if (!imgEl || !prevBtn || !nextBtn) return;
@@ -139,8 +148,12 @@ export function initLightbox() {
   }
 
   function updateCounter(status) {
-    counterEl.textContent = index + 1 + "/" + group.length;
-    if (liveEl) liveEl.textContent = "Obraz " + (index + 1) + " z " + group.length + (status ? ". " + status : "");
+    const position = index + 1 + "/" + group.length;
+    counterEl.textContent = groupLabel ? groupLabel + " · " + position : position;
+    if (liveEl) {
+      const positionAnnouncement = "Obraz " + (index + 1) + " z " + group.length;
+      liveEl.textContent = (groupLabel ? groupLabel + ". " : "") + positionAnnouncement + (status ? ". " + status : groupLabel ? "." : "");
+    }
   }
   function getThumbnailSrc(link, failedSrc) {
     /*
@@ -205,6 +218,7 @@ export function initLightbox() {
     lastTrigger = a;
     const gName = a.getAttribute("data-lightbox") || "gallery";
     group = Array.prototype.slice.call(document.querySelectorAll(".gallery__link" + (gName ? '[data-lightbox="' + gName + '"]' : "")));
+    groupLabel = getGroupLabel(a);
     index = Math.max(0, group.indexOf(a));
     html.classList.add("lb-open");
     render(index);
