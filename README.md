@@ -78,6 +78,10 @@ Każda podstrona ma własny szablon HTML w katalogu głównym. Wspólny nagłów
 │   │   ├── audits/
 │   │   │   ├── AUDIT-2026-09-23.md
 │   │   │   └── daily-AUDIT-2026-09-19.md
+│   │   ├── improvements/   # zakończone analizy i usprawnienia UI, QUALITY, UX
+│   │   │   ├── IMPROVEMENTS-UI-2026-09-24.md
+│   │   │   ├── IMPROVEMENTS-QUALITY-2026-09-25.md
+│   │   │   └── IMPROVEMENTS-UX-2026-09-26.md
 │   │   └── plans/
 │   │       ├── PLAN-2026-09-19.md
 │   │       └── PLAN-2026-09-23.md
@@ -93,12 +97,13 @@ Każda podstrona ma własny szablon HTML w katalogu głównym. Wspólny nagłów
 ├── _redirects
 ├── package.json
 ├── package-lock.json
+├── AGENTS.md               # lokalne instrukcje pracy agenta
 └── LICENSE
 ```
 
 ### Instalacja
 
-Wymagane są Node.js i npm. Repozytorium zawiera `package-lock.json`; nie ustala jednej wersji Node.js w konfiguracji projektu.
+Wymagane są Node.js i npm. Zalecany jest Node.js 22, zgodnie z konfiguracją CI; zależności z `package-lock.json` mają własne wymagania wersji Node.js. Projekt nie przypina dokładnej lokalnej wersji Node.js ani nie deklaruje pola `engines` w `package.json`.
 
 ```bash
 npm ci
@@ -174,13 +179,13 @@ Animacje uwzględniają `prefers-reduced-motion`; moduł reveal pokazuje treść
 
 ### SEO
 
-Strony zawierają tytuły, opisy, linki canonical, metadane Open Graph i Twitter Cards oraz JSON-LD, m.in. `Organization` i `Restaurant`. Repozytorium zawiera również `robots.txt` i `sitemap.xml`. Dane restauracji opisują fikcyjną markę demonstracyjną; obecność metadanych nie potwierdza indeksacji ani pozycji w wyszukiwarkach.
+Każda strona zawiera tytuł i opis. Osiem stron treściowych zawiera także linki canonical, metadane Open Graph i Twitter Cards oraz JSON-LD, m.in. `Organization` i `Restaurant`. Strony systemowe mają węższy zakres: `404.html` nie zawiera canonical, Open Graph, Twitter Cards ani JSON-LD; `offline.html` zawiera canonical i Open Graph, ale nie Twitter Cards ani JSON-LD; `thank-you.html` zawiera canonical, ale nie Open Graph, Twitter Cards ani JSON-LD. Repozytorium zawiera również `robots.txt` i `sitemap.xml`. Dane restauracji opisują fikcyjną markę demonstracyjną; obecność metadanych nie potwierdza indeksacji ani pozycji w wyszukiwarkach.
 
 ### PWA i obsługa offline
 
 `manifest.webmanifest` definiuje widok `standalone`, `start_url` i `scope` ustawione na `/`, ikony 192/512 px, zrzuty ekranu oraz skróty do menu, galerii i kontaktu. Źródłem Service Workera jest ręcznie utrzymywany `sw.js` z odwołaniami źródłowymi; build przekształca wyłącznie ścieżki CSS/JS w jego kopii w `dist/`. Precache obejmuje oba bundle oraz bootstrap.
 
-Worker używa cache `atelierno02-v1.8`. Wybrane strony i zasoby są precache'owane; nawigacja korzysta z sieci, następnie zapisanej strony lub `offline.html`. Pozostałe żądania GET korzystają najpierw z cache. Podczas aktywacji worker usuwa cache o innych nazwach.
+Nazwa cache workera ma postać `atelierno02-v${CACHE_VERSION}`, gdzie `CACHE_VERSION` jest utrzymywane w `sw.js`. Wybrane strony i zasoby są precache'owane; nawigacja korzysta z sieci, następnie zapisanej strony lub `offline.html`. Pozostałe żądania GET korzystają najpierw z cache. Podczas aktywacji worker usuwa cache o innych nazwach.
 
 Obsługa offline zależy od udanej rejestracji, instalacji i dostępnych zasobów cache; żądania POST formularza nie są obsługiwane przez worker. W izolowanym lokalnym Chrome sprawdzono ręczną rejestrację produkcyjnego workera, wszystkie 19 wpisów precache, działanie strony prawnej i motywu offline oraz fallback nawigacji. Instalowalności PWA ani wdrożonej witryny nie zweryfikowano.
 
@@ -206,6 +211,7 @@ Skonfigurowano minifikację CSS i bundling/minifikację JS. Obrazy korzystają z
 - [Audyt techniczny z 2026-09-23](docs/archive/audits/AUDIT-2026-09-23.md) zachowuje uzgodnione ustalenia techniczne i statusy ich rozwiązania; jest dokumentem archiwalnym.
 - [Zakończony plan rozwoju z 2026-09-19](docs/archive/plans/PLAN-2026-09-19.md) zachowuje ukończony plan wdrożenia wraz z zapisem weryfikacji; jest dokumentem archiwalnym, a nie aktywną listą zadań.
 - [Zamknięty audyt frontendowy z 2026-09-19](docs/archive/audits/daily-AUDIT-2026-09-19.md) zachowuje historyczne ustalenia audytu i statusy ich rozwiązania.
+- Raporty [UI](docs/archive/improvements/IMPROVEMENTS-UI-2026-09-24.md), [QUALITY](docs/archive/improvements/IMPROVEMENTS-QUALITY-2026-09-25.md) i [UX](docs/archive/improvements/IMPROVEMENTS-UX-2026-09-26.md) w `docs/archive/improvements/` zachowują analizy, ukończone usprawnienia i zapisane ograniczenia weryfikacji.
 
 ### Licencja
 
@@ -293,6 +299,10 @@ Each page has its own HTML template at the repository root. The shared header an
 │   │   ├── audits/
 │   │   │   ├── AUDIT-2026-09-23.md
 │   │   │   └── daily-AUDIT-2026-09-19.md
+│   │   ├── improvements/   # completed UI, QUALITY and UX reviews and improvements
+│   │   │   ├── IMPROVEMENTS-UI-2026-09-24.md
+│   │   │   ├── IMPROVEMENTS-QUALITY-2026-09-25.md
+│   │   │   └── IMPROVEMENTS-UX-2026-09-26.md
 │   │   └── plans/
 │   │       ├── PLAN-2026-09-19.md
 │   │       └── PLAN-2026-09-23.md
@@ -308,12 +318,13 @@ Each page has its own HTML template at the repository root. The shared header an
 ├── _redirects
 ├── package.json
 ├── package-lock.json
+├── AGENTS.md               # local agent instructions
 └── LICENSE
 ```
 
 ### Installation
 
-Node.js and npm are required. The repository includes `package-lock.json`; project configuration does not pin a single Node.js version.
+Node.js and npm are required. Node.js 22 is recommended to match CI; dependencies in `package-lock.json` have their own Node.js version requirements. The project does not pin an exact local Node.js version or declare an `engines` field in `package.json`.
 
 ```bash
 npm ci
@@ -389,13 +400,13 @@ Animations account for `prefers-reduced-motion`; the reveal module also exposes 
 
 ### SEO
 
-Pages include titles, descriptions, canonical links, Open Graph and Twitter Cards metadata, and JSON-LD such as `Organization` and `Restaurant`. The repository also contains `robots.txt` and `sitemap.xml`. Restaurant data describes a fictional demonstration brand; metadata does not confirm indexing or search rankings.
+Every page includes a title and description. The eight content pages also include canonical links, Open Graph and Twitter Cards metadata, and JSON-LD such as `Organization` and `Restaurant`. System pages have narrower coverage: `404.html` has no canonical, Open Graph, Twitter Cards or JSON-LD; `offline.html` has canonical and Open Graph, but no Twitter Cards or JSON-LD; `thank-you.html` has canonical, but no Open Graph, Twitter Cards or JSON-LD. The repository also contains `robots.txt` and `sitemap.xml`. Restaurant data describes a fictional demonstration brand; metadata does not confirm indexing or search rankings.
 
 ### PWA and Offline Support
 
 `manifest.webmanifest` defines `standalone` display, `start_url` and `scope` set to `/`, 192/512 px icons, screenshots and menu, gallery and contact shortcuts. The Service Worker source is the manually maintained `sw.js` with source references; the build transforms only CSS/JS paths in its `dist/` copy. Precache includes both bundles and bootstrap.
 
-The worker uses the `atelierno02-v1.8` cache. Selected pages and assets are precached; navigation tries the network, then a saved page or `offline.html`. Other GET requests try the cache first. During activation, the worker removes caches with other names.
+The worker's cache name follows `atelierno02-v${CACHE_VERSION}`, with `CACHE_VERSION` maintained in `sw.js`. Selected pages and assets are precached; navigation tries the network, then a saved page or `offline.html`. Other GET requests try the cache first. During activation, the worker removes caches with other names.
 
 Offline support depends on successful registration, installation and available cached resources; form POST requests are not handled by the worker. An isolated local Chrome test verified manual production worker registration, all 19 precache entries, offline legal-page and theme behavior, and the navigation fallback. PWA installability and the deployed website were not verified.
 
@@ -421,6 +432,7 @@ CSS minification and JS bundling/minification are configured. Images use `pictur
 - [Technical audit of 2026-09-23](docs/archive/audits/AUDIT-2026-09-23.md) preserves the reconciled technical findings and their resolution statuses; it is an archived document.
 - [Completed development plan of 2026-09-19](docs/archive/plans/PLAN-2026-09-19.md) preserves the finished implementation plan together with its verification record; it is an archived document, not an active task list.
 - [Resolved frontend audit of 2026-09-19](docs/archive/audits/daily-AUDIT-2026-09-19.md) preserves the historical audit findings and their resolution statuses.
+- The [UI](docs/archive/improvements/IMPROVEMENTS-UI-2026-09-24.md), [QUALITY](docs/archive/improvements/IMPROVEMENTS-QUALITY-2026-09-25.md) and [UX](docs/archive/improvements/IMPROVEMENTS-UX-2026-09-26.md) reports in `docs/archive/improvements/` preserve the analyses, completed improvements and recorded verification limitations.
 
 ### License
 

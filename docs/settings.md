@@ -81,7 +81,7 @@ Dev i preview używają portu 5173; uruchamiaj je osobno. Przed QA zatrzymaj rę
 ### `qa:a11y`
 
 - command: `pa11y-ci`
-- what it does: Konfiguracja .pa11yci: WCAG2AA/htmlcs, wszystkie 11 stron łącznie z contact.html. Wymaga serwera.
+- what it does: Konfiguracja .pa11yci: WCAG2AA/htmlcs, 12 scenariuszy — wszystkie 11 stron po załadowaniu oraz `contact.html?a11y=form-errors`. Dodatkowy scenariusz akceptuje informację demo, przenosi fokus przez trzy puste pola i czeka na `aria-invalid="true"` oraz niepuste komunikaty błędów dla każdego pola. Wymaga serwera; nie sprawdza wysyłki formularza ani wszystkich jego stanów.
 
 ### `qa:server`
 
@@ -91,7 +91,7 @@ Dev i preview używają portu 5173; uruchamiaj je osobno. Przed QA zatrzymaj rę
 ### `qa:dist:integrity`
 
 - command: `node scripts/validate-dist.js`
-- what it does: Sprawdza 11 stron, zasoby, CSS, manifest, obrazy menu, bootstrap i precache SW; porównuje każdą stronę dist ze złożonym szablonem po przekształceniu produkcyjnym; odrzuca źródła, znaczniki i partiale w dist.
+- what it does: Sprawdza 11 stron, zasoby, CSS, manifest, obrazy menu, bootstrap i precache SW; porównuje każdą stronę dist ze złożonym szablonem po przekształceniu produkcyjnym; odrzuca źródła, znaczniki i partiale w dist. Oblicza również SHA-256 z wpisów `FILES_TO_CACHE` i wskazanych plików w dist, normalizując końce linii plików tekstowych do LF, i porównuje go z `PRECACHE_FINGERPRINT` w `sw.js`. Niezgodność przerywa kontrolę oraz `npm run build` i wypisuje zapisany oraz obliczony skrót. Dla wydania zmieniającego precache należy podnieść `CACHE_VERSION`, zapisać obliczony fingerprint i ponowić build; kontrola nie sprawdza wzrostu wersji względem poprzedniego wydania. Zobacz [Utrzymanie projektu](../README.md#utrzymanie-projektu).
 
 ### `qa:dist:html`
 

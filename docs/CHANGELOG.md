@@ -26,7 +26,6 @@ All significant changes to this project are documented in this file.
 - Added direct recovery links to the home, menu and gallery pages within the 404 message.
 - Added gallery category names to the lightbox counter and navigation announcements.
 
-- Made contact-form name and message length requirements visible before entry and associated each hint with its field alongside validation errors.
 - Standardized the site terms and unified legal-page styling, operator information and contact details.
 - Standardized the privacy policy and clarified Netlify Forms processing and embedded Google Maps disclosures, correcting the cookies policy's third-party integration description.
 - Standardized the cookies policy and documented existing `localStorage`, Service Worker and Cache Storage use.
@@ -65,9 +64,11 @@ All significant changes to this project are documented in this file.
 - Corrected the LinkedIn profile URL across all 11 page footers and verified the updated link in source and production HTML.
 - Aligned production URLs, SEO metadata, sitemap, robots and form host detection with the confirmed Atelier Netlify domain.
 - Integrated the seven retained Font Awesome Free 7.1.0 icons through a shared `js/features/icons.js` registry initialized by both JavaScript entries, replacing duplicated inline contact and social SVG markup on all 11 pages and adding the home icon to breadcrumb home links, with visible social link labels when JavaScript is unavailable and the Service Worker cache raised to v1.5.
+- Increased the homepage hero heading to the existing `--fs-3xl` typography token, distinguishing it from section headings.
 - Aligned menu filter chips and dish tag badges with consistent typography and burgundy styling across light and dark themes, preserving distinct interactive and informational states.
 - Increased all four gallery lightbox controls to a minimum of 44×44px across viewport sizes, improving touch accessibility while preserving existing icons and interactions.
 - Refined letter spacing across seven About page text roles to improve readability and maintain consistent body typography.
+- Increased homepage and inner-page hero vertical spacing with the existing `--section-y-lg` token, preserving standard section and footer spacing.
 - Added thumbnail recovery and an accessible unavailable state for failed gallery lightbox images, with the Service Worker cache raised to v1.7.
 - Prevented offline contact-form submissions from navigating away, preserving entered values and announcing that a connection is required, with the Service Worker cache raised to v1.8.
 - Made contact-form name and message length requirements visible before entry and associated each hint with its field alongside validation errors.
@@ -75,9 +76,9 @@ All significant changes to this project are documented in this file.
 ### Documentation
 
 - Established the canonical changelog and its maintenance rule for significant completed changes, including tasks with restricted documentation scope.
-- Established the canonical changelog and its maintenance rule for significant completed changes, including tasks with restricted documentation scope.
 - Corrected bilingual README paths and project trees, and documented the GitHub Actions quality workflow and its separation from deployment.
 - Documented the active development plan and current audit in both README language sections, aligning both project trees with the repository layout.
+- Reconciled project documentation with current dependencies, QA, metadata and Service Worker behavior, removed duplicate entries, and clarified completed work in archived reports (2026-09-26).
 
 ### Build and Tooling
 

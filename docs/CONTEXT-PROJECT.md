@@ -23,7 +23,7 @@ The repository is explicitly positioned as KP_Code Digital Studio reference/port
 - **Images:** Sharp + `fast-glob` (`scripts/images/build-images.js`) generate AVIF/WebP/JPEG variants from source images and copy SVGs.
 - **Quality tooling:** ESLint (flat config), html-validate (its Node API over the composed source pages in `scripts/qa-html.js`, its CLI over `dist/`), pa11y-ci (WCAG2AA via HTML CodeSniffer), a custom linkinator-based link checker (`scripts/qa-links.js`), and a custom Node contract validator (`scripts/validate-dist.js`).
 - **Dev/runtime glue:** `http-server` for preview and as the base of the composing dev server (`scripts/dev-server.js`), a custom managed-server QA runner (`scripts/qa-server.js`), a hand-written Service Worker (`sw.js`) and Web App Manifest (`manifest.webmanifest`) for PWA/offline behavior.
-- No runtime dependencies are declared — `package.json` has no `dependencies` key, only `devDependencies`. No Node.js version is pinned in project configuration (no `engines` field); CI pins Node 22 independently.
+- No runtime dependencies are declared — `package.json` has no `dependencies` key, only `devDependencies`. Node.js 22 is recommended to match CI; dependencies in `package-lock.json` have their own Node.js version requirements. The project does not pin an exact local Node.js version or declare an `engines` field in `package.json`.
 
 ## Architecture
 
@@ -81,11 +81,14 @@ CSS has a single entry, `css/style.css`, which `@import`s layered partials in a 
 │   └── images/build-images.js
 ├── docs/
 │   ├── CHANGELOG.md, CONTEXT-PROJECT.md, settings.md
-│   └── archive/{audits,plans}/  # superseded audit/plan documents
+│   └── archive/
+│       ├── audits/, plans/       # superseded audits and completed plans
+│       └── improvements/         # completed UI (2026-09-24), QUALITY (2026-09-25), UX (2026-09-26) reports
 ├── .github/workflows/quality.yml  # CI: qa -> build -> qa:dist
 ├── manifest.webmanifest, sw.js, robots.txt, sitemap.xml
 ├── _headers, _redirects         # Netlify hosting rules
 ├── package.json, package-lock.json
+├── AGENTS.md                     # local agent instructions
 ├── dist/                        # generated production package (gitignored)
 └── LICENSE
 ```
@@ -104,7 +107,7 @@ CSS has a single entry, `css/style.css`, which `@import`s layered partials in a 
 
 - **Accessibility:** semantic landmarks, skip links, field labels, and visible focus states throughout; mobile navigation, the lightbox, and the demo-notice dialog manage focus and support keyboard interaction; form validation toggles `aria-invalid` and status messages use `aria-live` regions. `pa11y-ci` (WCAG2AA/htmlcs) runs against all 11 pages as loaded, plus `contact.html?a11y=form-errors`, whose actions accept the demo notice, move focus through the empty contact fields and wait until all three carry `aria-invalid="true"` and error text before the audit. It does not by itself establish full WCAG conformance, and other form states, such as the submit-attempt status message, are not audited.
 - **Motion:** animations respect `prefers-reduced-motion`; the reveal-on-scroll module also shows content immediately when `IntersectionObserver` is unavailable.
-- **SEO/metadata:** every page has a title, description, canonical link, Open Graph and Twitter Card tags, and JSON-LD (`Organization`, plus per-page types such as `Restaurant`/`BreadcrumbList`); uniqueness and self-reference consistency are enforced by `scripts/validate-dist.js` against both source and built output.
+- **SEO/metadata:** every page has a title and description. The eight content pages also have canonical links, Open Graph and Twitter Card tags, and JSON-LD (`Organization`, plus per-page types such as `Restaurant`/`BreadcrumbList`). System-page exceptions: `404.html` has no canonical, Open Graph, Twitter Cards or JSON-LD; `offline.html` has canonical and Open Graph, but no Twitter Cards or JSON-LD; `thank-you.html` has canonical, but no Open Graph, Twitter Cards or JSON-LD. `scripts/validate-dist.js` requires titles and descriptions, checks uniqueness of the metadata fields it tracks and consistency of declared self-references, and permits these omissions. Production HTML must match the transformed composed sources.
 - **Images/performance:** `<picture>`/`srcset` with AVIF/WebP/JPEG variants, explicit dimensions, and selective `loading="lazy"`; the homepage preloads its two referenced variable fonts and the hero image (`fetchpriority="high"`); font-face declarations use `font-display: swap`. No Lighthouse or Core Web Vitals results are recorded in the repository.
 
 ## Data and state

@@ -5,6 +5,8 @@
 **Analysis mode:** Evidence-based UX improvement review
 **Focus:** Project-wide UX
 
+> **Closure note (2026-09-26):** All five UX improvements (IMP-UX-01 to IMP-UX-05) are recorded as COMPLETED, and this report is archived. The analysis date and original selection rationale are preserved; this note adds no new verification result.
+
 ## Improvement overview
 
 The site supports browsing a sample menu, exploring grouped gallery images, and sending a project-related message through a Netlify Forms-prepared contact form. Category navigation, menu result announcements, field errors, gallery controls, and fallback pages already provide usable paths. The opportunities below focus on explaining the next action or reducing steps within those existing paths.
@@ -76,7 +78,7 @@ The site supports browsing a sample menu, exploring grouped gallery images, and 
 - **Effort:** Small
 - **Status:** COMPLETED — Added a direct home-page link alongside the existing return-to-form option after contact submission.
 
-## Selection summary
+## Original selection summary (2026-09-25)
 
 The menu and form items reduce friction in active tasks; the gallery and system-page items clarify orientation and next steps. Each proposal can be implemented independently in canonical source files, with no new service or dependency. All five have narrow implementation boundaries and are candidates for focused development work, subject to review and separate approval.
 

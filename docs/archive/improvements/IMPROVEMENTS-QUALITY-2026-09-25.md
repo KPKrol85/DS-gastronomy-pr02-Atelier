@@ -7,6 +7,8 @@
 
 > **Completion note:** All five quality improvements (IMP-QUALITY-01 to IMP-QUALITY-05) have been implemented, and their changes have been recorded in `docs/CHANGELOG.md`. This report was archived on 2026-09-25.
 
+> **Historical scope:** The proposal text, expected benefits and selection summary preserve the analysis of 2026-09-24. Completion statuses record the later implementations. For IMP-QUALITY-01, the implemented guarantee is narrower than originally proposed, as clarified below.
+
 ## Improvement overview
 
 Atelier No.02 has far more verification than a site of its size usually needs. `scripts/validate-dist.js` enforces page composition, the head, body and dialog contracts, parity between the menu data and its static fallback, image provenance, per-page metadata uniqueness and a byte-for-byte production package. html-validate, a link and fragment crawl and pa11y-ci run against both the composed sources and `dist/`, and CI runs the whole chain. The runtime modules degrade deliberately: storage access is guarded, a missing `IntersectionObserver` falls back, a failed menu fetch keeps the static cards, and failed menu and gallery thumbnails receive a placeholder. The archived audits record every finding as resolved or implemented, and the source contract passed when run during this review.
@@ -31,6 +33,7 @@ The opportunities below are in the places those mechanisms do not reach. The Ser
 - **Impact:** High
 - **Effort:** Medium
 - **Status:** COMPLETED — Recorded a SHA-256 precache fingerprint beside `CACHE_VERSION` in `sw.js`, which the production integrity check recalculates from `dist/` and rejects on mismatch.
+- **Implemented guarantee:** The validator detects a mismatch between the calculated and recorded precache fingerprints. It does not compare `CACHE_VERSION` with a previous release or enforce an increment; raising that version remains a maintenance requirement. It also does not guarantee atomic release consistency in the browser: network-first HTML and cache-first assets can come from different releases. The stronger claims in the original expected value and selection summary are historical expectations, not guarantees of the completed implementation.
 
 ### IMP-QUALITY-02 — Extend menu parity to descriptions, tags and filter values
 
