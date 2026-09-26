@@ -36,8 +36,6 @@ node_modules/
 /.temp/
 /.tmp/
 
-# Local Codex instructions
-/AGENTS.md
 
 # Local agent and worktree files
 
