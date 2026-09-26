@@ -52,6 +52,7 @@ Three opportunities qualify: reuse managed server startup for a selected existin
 - **Acceptance criteria:** The operational reference states its ownership and points to executable definitions. README and context link to it from the relevant workflow sections; repeated low-level details selected for consolidation have one maintained prose location. Public commands and their prerequisites remain discoverable, all new relative links resolve, and the two README language sections retain equivalent instructions and limitations. No package command or validation behavior changes.
 - **Impact:** Medium
 - **Effort:** Small
+- **Status:** COMPLETED — Consolidated detailed build and QA command documentation in `docs/settings.md`, preserving bilingual README guidance and architectural context while reducing duplicated operational descriptions.
 
 ## Selection summary
 

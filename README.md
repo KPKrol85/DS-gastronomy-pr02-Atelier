@@ -109,9 +109,11 @@ Wymagane są Node.js i npm. Zalecany jest Node.js 22, zgodnie z konfiguracją CI
 npm ci
 ```
 
+Szczegółowy opis poleceń, ich wymagań i ograniczeń jest utrzymywany w [dokumentacji operacyjnej](docs/settings.md); wykonywalne definicje pozostają w `package.json` oraz wskazanych tam skryptach i konfiguracjach.
+
 ### Development lokalny
 
-`npm run dev` uruchamia `scripts/dev-server.js`, serwer oparty na http-server. Każde żądanie strony (`/`, `/about.html` lub `/about`) jest składane w pamięci z szablonu i partiali; nieistniejące adresy zwracają złożoną stronę 404 ze statusem 404. CSS, moduły ES, `js/bootstrap.js`, dane i zasoby są udostępniane ze źródeł bez zmian; build produkcyjny nie jest potrzebny. Po zmianie szablonu, partiala, CSS lub JS odśwież stronę. Serwer nie zapisuje plików, nie obserwuje zmian ani nie generuje minifikowanych zasobów. Szablon otwarty bezpośrednio z dysku nie zawiera nagłówka ani stopki.
+`npm run dev` serwuje źródła i składa strony z szablonów i partiali w pamięci; build produkcyjny nie jest potrzebny. Po zmianie szablonu, partiala, CSS lub JS odśwież stronę — serwer nie zapisuje plików ani nie obserwuje zmian. Szablon otwarty bezpośrednio z dysku nie zawiera nagłówka ani stopki. Szczegóły tras i obsługi błędów opisuje [referencja dev](docs/settings.md#dev).
 
 ```bash
 npm run dev
@@ -126,7 +128,7 @@ npm run build
 npm run preview
 ```
 
-Build najpierw składa wszystkie 11 stron z szablonów i partiali; błędny znacznik lub brakujący partial przerywa go, zanim poprzedni `dist/` zostanie usunięty. Następnie usuwa poprzedni `dist/`, zapisuje złożone strony, zasoby runtime i konfigurację hostingu, przekształca odwołania HTML/Service Workera, buduje CSS oraz oba wejścia JS bezpośrednio w `dist/` i sprawdza kompletność wyniku. Preview udostępnia wyłącznie `dist/` na porcie 5173; zatrzymaj dev przed preview. Build nie generuje obrazów ani nie kopiuje `assets/img-src/`. Zoptymalizowane obrazy pozostają śledzone w Git; minifikowane CSS/JS i cały `dist/` są ignorowanym wynikiem builda.
+Build odtwarza `dist/` ze złożonymi stronami, zasobami runtime, konfiguracją hostingu i produkcyjnymi CSS/JS, a następnie sprawdza kompletność wyniku. Preview wymaga wcześniejszego builda i udostępnia wyłącznie `dist/` na porcie 5173; zatrzymaj dev przed preview. Build nie generuje obrazów ani nie kopiuje `assets/img-src/`. Zoptymalizowane obrazy pozostają śledzone w Git; minifikowane CSS/JS i cały `dist/` są ignorowanym wynikiem builda. Etapy i zachowanie przy błędach opisuje [referencja builda](docs/settings.md#build).
 
 Paczka zawiera `css/style.min.css`, `js/script.min.js`, `js/core.min.js` i niezmieniony skrypt runtime `js/bootstrap.js`. Nie zawiera modułów źródłowych CSS/JS, szablonów, partiali ani narzędzi developerskich. Kanoniczne są szablony stron w katalogu głównym i partiale w `partials/`; osobne ręcznie edytowane wersje produkcyjne nie istnieją.
 
@@ -144,13 +146,15 @@ Skonfigurowane kontrole obejmują:
 
 | Polecenie | Zakres |
 | --- | --- |
-| `npm run qa` | ESLint, kontrakt źródeł i partiali, HTML złożonych stron, uruchomienie składającego serwera dev, lokalne linki/zasoby/fragmenty i pa11y-ci. |
-| `npm run qa:dist` | Integralność istniejącego `dist/` względem złożonych źródeł, produkcyjny HTML, uruchomienie preview, lokalne linki/zasoby/fragmenty i pa11y-ci. Najpierw uruchom build. |
-| `npm run qa:links` | Wszystkie 11 stron i ich lokalne zasoby, w tym importy CSS i fonty; wymaga działającego dev albo preview. |
-| `npm run qa:a11y` | 12 scenariuszy z `.pa11yci`: wszystkie 11 stron po załadowaniu oraz `contact.html` z błędami walidacji formularza; HTML CodeSniffer, WCAG2AA. |
+| `npm run qa` | Pełne QA źródeł: lint, kontrakty, HTML, linki i dostępność; samo uruchamia serwer dev. |
+| `npm run qa:dist` | QA istniejącego `dist/`: integralność, HTML, linki i dostępność; samo uruchamia preview. Najpierw uruchom build. |
+| `npm run qa:links` | Lokalne linki i zasoby; wymaga działającego dev albo preview. |
+| `npm run qa:a11y` | Audyt dostępności pa11y-ci według `.pa11yci`; wymaga działającego dev albo preview. |
 | `npm run qa:links:external` | Opcjonalna kontrola także zewnętrznych linków na działającym serwerze. |
 
-QA źródeł nie buduje produkcji; QA dist sprawdza przygotowaną paczkę i nie przebudowuje jej. Kontrole lokalne pomijają zewnętrzne adresy, a nie bundle produkcyjne. Runner `scripts/qa-server.js` sprawdza źródła przez ten sam składający serwer co `npm run dev`, a paczkę przez http-server na `dist/`; zamyka serwer także po błędzie. Nie wymaga Windows WMIC. Port 5173 musi być wolny. Automatyczny audyt dostępności nie potwierdza pełnej zgodności WCAG. Strona kontaktowa jest sprawdzana dwukrotnie: po załadowaniu oraz pod adresem `contact.html?a11y=form-errors`, gdzie akcje pa11y akceptują informację o projekcie, przechodzą fokusem przez puste pola i wstrzymują audyt, dopóki wszystkie trzy pola nie mają `aria-invalid="true"` i treści błędu. Pozostałe stany formularza, np. komunikat po próbie wysłania, nie są audytowane.
+QA źródeł nie buduje produkcji; QA dist sprawdza przygotowaną paczkę i nie przebudowuje jej. Przed `npm run qa` lub `npm run qa:dist` zatrzymaj ręczny serwer, aby port 5173 był wolny. Bezpośrednie kontrole z tabeli wymagają natomiast działającego dev albo preview pod `http://127.0.0.1:5173`.
+
+Do pojedynczych kontroli, które same uruchamiają serwer, używaj [`npm run qa:server`](docs/settings.md#qaserver) lub — po buildzie — [`npm run qa:dist:server`](docs/settings.md#qadistserver); port 5173 również musi być wolny. Referencja zawiera przykłady selektorów `--check=links` i `--check=a11y`; wybrana kontrola nie zastępuje pełnego QA. Znajdziesz tam również [opis diagnostyki HTML ze wskazaniem źródła](docs/settings.md#qahtml) oraz [zakres i ograniczenia scenariuszy dostępności](docs/settings.md#qaa11y). Są to skonfigurowane kontrole, nie potwierdzenie ich wykonania; automatyczny audyt nie potwierdza pełnej zgodności WCAG ani wszystkich stanów formularza.
 
 ### Ciągła integracja
 
@@ -167,7 +171,7 @@ Workflow wyłącznie weryfikuje projekt i zbudowaną paczkę. Nie publikuje ani 
 
 ### Wdrożenie
 
-Repozytorium przygotowuje statyczną paczkę `dist/` oraz pliki `_headers` i `_redirects` w formacie Netlify. Reguły określają nagłówki, cache i odpowiedź 404. Ścieżki manifestu, Service Workera i metadanych zakładają publikację w katalogu głównym domeny. Publikowany jest wyłącznie `dist/` ze złożonymi stronami, wdrażany ręcznie przez Netlify CLI; szablony z katalogu głównego zawierają znaczniki partiali i nie są kompletnymi stronami.
+Repozytorium przygotowuje statyczną paczkę `dist/` oraz pliki `_headers` i `_redirects` w formacie Netlify. Reguły określają nagłówki, cache i odpowiedź 404. Ścieżki manifestu, Service Workera i metadanych zakładają publikację w katalogu głównym domeny. Przed wdrożeniem wykonaj `npm run build`, a następnie opublikuj wyłącznie `dist/` ze złożonymi stronami, ręcznie przez Netlify CLI; szablony z katalogu głównego zawierają znaczniki partiali i nie są kompletnymi stronami. Zobacz też [wymagania operacyjne publikacji](docs/settings.md#ci-i-ręczne-wdrożenie).
 
 Formularz w `contact.html` ma oznaczenia Netlify Forms, ukryte pole `form-name`, honeypot i przekierowanie do `thank-you.html`. Obsługa zgłoszeń zależy od konfiguracji hostingu; lokalny serwer nie potwierdza ich dostawy. Strona kontaktowa zawiera również bezpośrednio osadzoną mapę Google Maps.
 
@@ -205,7 +209,7 @@ Skonfigurowano minifikację CSS i bundling/minifikację JS. Obrazy korzystają z
 - Wspólny nagłówek i stopkę edytuj wyłącznie w `partials/header.html` i `partials/footer.html`. Każdy szablon strony zawiera dokładnie jeden znacznik `<!-- partial:header -->` i jeden `<!-- partial:footer -->`; brakujący, powtórzony lub nieznany znacznik oraz wklejony blok nagłówka lub stopki przerywają QA i build.
 - Utrzymuj dane w `data/menu.json` oraz statyczne karty HTML pełniące rolę fallbacku.
 - Zmiany stron i publicznych zasobów zestawiaj z listami w `scripts/build-config.js`, `sw.js`, `manifest.webmanifest` i `sitemap.xml`.
-- Po zmianach zasobów cache aktualizuj `CACHE_VERSION` w `sw.js`. Wydanie zmieniające zawartość precache wymaga zarówno podniesienia `CACHE_VERSION`, jak i zapisania nowego `PRECACHE_FINGERPRINT` w `sw.js` — skrótu SHA-256 obliczanego z wpisów `FILES_TO_CACHE` i wskazanych przez nie plików w `dist/`. Przy niezgodności `npm run build` kończy się błędem i podaje zapisany oraz obliczony skrót. Kontrola porównuje tylko te dwie wartości, więc nie sprawdza, czy `CACHE_VERSION` podniesiono względem poprzedniego wydania.
+- Po zmianach zasobów cache aktualizuj `CACHE_VERSION` w `sw.js`. Wydanie zmieniające zawartość precache wymaga także nowego `PRECACHE_FINGERPRINT`; build odrzuca niezgodny fingerprint. [Sposób obliczania, postępowanie przy błędzie i ograniczenia kontroli](docs/settings.md#qadistintegrity) są opisane w referencji operacyjnej.
 - [CHANGELOG.md](docs/CHANGELOG.md) jest zapisem znaczących ukończonych zmian; aktualizuj go, gdy zakres zadania na to pozwala, lub zgłoś potrzebę wpisu.
 - [Zakończony plan rozwoju z 2026-09-23](docs/archive/plans/PLAN-2026-09-23.md), który zastąpił plan z 2026-09-19, zachowuje ukończone zadania i warunki ich ukończenia; jest dokumentem archiwalnym, a nie aktywną listą zadań.
 - [Audyt techniczny z 2026-09-23](docs/archive/audits/AUDIT-2026-09-23.md) zachowuje uzgodnione ustalenia techniczne i statusy ich rozwiązania; jest dokumentem archiwalnym.
@@ -330,9 +334,11 @@ Node.js and npm are required. Node.js 22 is recommended to match CI; dependencie
 npm ci
 ```
 
+Detailed command behavior, prerequisites and limitations are maintained in the [operational reference](docs/settings.md); executable definitions remain in `package.json` and the scripts and configuration it references.
+
 ### Local Development
 
-`npm run dev` starts `scripts/dev-server.js`, a server built on http-server. Every page request (`/`, `/about.html` or `/about`) is composed in memory from the template and partials; missing addresses return the composed 404 page with status 404. CSS, ES modules, `js/bootstrap.js`, data and assets are served unchanged from source; no production build is needed. Reload the page after changing a template, partial, CSS or JS. The server writes no files, does not watch for changes and does not generate minified assets. A template opened directly from disk has no header or footer.
+`npm run dev` serves sources and composes pages from templates and partials in memory; no production build is needed. Reload the page after changing a template, partial, CSS or JS — the server writes no files and does not watch for changes. A template opened directly from disk has no header or footer. Route and error-handling details are in the [dev reference](docs/settings.md#dev).
 
 ```bash
 npm run dev
@@ -347,7 +353,7 @@ npm run build
 npm run preview
 ```
 
-Build first composes all 11 pages from their templates and partials; an invalid marker or a missing partial stops it before the previous `dist/` is removed. It then removes the previous `dist/`, writes the composed pages, runtime assets and hosting configuration, transforms HTML/Service Worker references, builds CSS and both JS entries directly into `dist/`, and checks output integrity. Preview serves only `dist/` on port 5173; stop dev before preview. Build does not generate images or copy `assets/img-src/`. Optimized images remain tracked in Git; minified CSS/JS and the entire `dist/` are ignored build output.
+Build recreates `dist/` with composed pages, runtime assets, hosting configuration and production CSS/JS, then checks output integrity. Preview requires a prior build and serves only `dist/` on port 5173; stop dev before preview. Build does not generate images or copy `assets/img-src/`. Optimized images remain tracked in Git; minified CSS/JS and the entire `dist/` are ignored build output. Stages and failure behavior are described in the [build reference](docs/settings.md#build).
 
 The package includes `css/style.min.css`, `js/script.min.js`, `js/core.min.js` and the unchanged runtime script `js/bootstrap.js`. It excludes CSS/JS source modules, templates, partials and development tools. The root page templates and `partials/` are canonical; no separate manually edited production pages are maintained.
 
@@ -365,13 +371,15 @@ Configured checks include:
 
 | Command | Scope |
 | --- | --- |
-| `npm run qa` | ESLint, source and partial contract, composed-page HTML, composing dev server startup, local links/assets/fragments and pa11y-ci. |
-| `npm run qa:dist` | Integrity of existing `dist/` against the composed sources, production HTML, preview startup, local links/assets/fragments and pa11y-ci. Run build first. |
-| `npm run qa:links` | All 11 pages and local resources, including CSS imports and fonts; requires a running dev or preview server. |
-| `npm run qa:a11y` | 12 scenarios in `.pa11yci`: all 11 pages as loaded, plus `contact.html` with the form's validation errors shown; HTML CodeSniffer, WCAG2AA. |
+| `npm run qa` | Full source QA: lint, contracts, HTML, links and accessibility; starts its own dev server. |
+| `npm run qa:dist` | QA of existing `dist/`: integrity, HTML, links and accessibility; starts its own preview server. Run build first. |
+| `npm run qa:links` | Local links and resources; requires a running dev or preview server. |
+| `npm run qa:a11y` | pa11y-ci accessibility audit configured in `.pa11yci`; requires a running dev or preview server. |
 | `npm run qa:links:external` | Optional external link checking against a running server. |
 
-Source QA does not build production; dist QA checks the prepared package without rebuilding it. Local checks skip external addresses, not production bundles. The `scripts/qa-server.js` runner checks the sources through the same composing server as `npm run dev` and the package through http-server on `dist/`; it closes the server even after failures. It does not require Windows WMIC. Port 5173 must be free. Automated accessibility auditing does not establish full WCAG compliance. The contact page is checked twice: as loaded, and at `contact.html?a11y=form-errors`, where pa11y actions accept the project notice, move focus through the empty fields and hold the audit until all three carry `aria-invalid="true"` and error text. Other form states, such as the message after a submit attempt, are not audited.
+Source QA does not build production; dist QA checks the prepared package without rebuilding it. Stop any manual server before `npm run qa` or `npm run qa:dist` so port 5173 is free. The direct checks in the table instead require dev or preview running at `http://127.0.0.1:5173`.
+
+For individual checks that manage their own server, use [`npm run qa:server`](docs/settings.md#qaserver) or — after building — [`npm run qa:dist:server`](docs/settings.md#qadistserver); port 5173 must also be free. The reference includes `--check=links` and `--check=a11y` examples; a selected check does not replace full QA. It also documents [HTML diagnostics with source locations](docs/settings.md#qahtml) and [accessibility scenarios and their limitations](docs/settings.md#qaa11y). These are configured checks, not evidence that they have run; automated auditing does not establish full WCAG compliance or cover every form state.
 
 ### Continuous Integration
 
@@ -388,7 +396,7 @@ The workflow only validates the project and the built package. It does not publi
 
 ### Deployment
 
-The repository prepares a static `dist/` package and `_headers` and `_redirects` files in Netlify format. Rules define headers, caching and the 404 response. Manifest, Service Worker and metadata paths assume deployment at the domain root. Only `dist/`, which holds the composed pages, is published, deployed manually through Netlify CLI; the root templates carry partial markers and are not complete pages.
+The repository prepares a static `dist/` package and `_headers` and `_redirects` files in Netlify format. Rules define headers, caching and the 404 response. Manifest, Service Worker and metadata paths assume deployment at the domain root. Before deployment, run `npm run build`, then publish only `dist/`, which holds the composed pages, manually through Netlify CLI; the root templates carry partial markers and are not complete pages. See also the [operational deployment requirements](docs/settings.md#ci-i-ręczne-wdrożenie).
 
 The form in `contact.html` has Netlify Forms attributes, a hidden `form-name` field, a honeypot and a redirect to `thank-you.html`. Submission handling depends on hosting configuration; the local server does not confirm delivery. The contact page also contains a directly embedded Google Maps iframe.
 
@@ -426,7 +434,7 @@ CSS minification and JS bundling/minification are configured. Images use `pictur
 - Edit the shared header and footer only in `partials/header.html` and `partials/footer.html`. Every page template contains exactly one `<!-- partial:header -->` and one `<!-- partial:footer -->` marker; a missing, repeated or unknown marker and a pasted header or footer block stop QA and the build.
 - Maintain `data/menu.json` and the static HTML cards used as fallback content.
 - Check page and public asset changes against the lists in `scripts/build-config.js`, `sw.js`, `manifest.webmanifest` and `sitemap.xml`.
-- Update `CACHE_VERSION` in `sw.js` when cached resources change. A release that changes precached content needs both a raised `CACHE_VERSION` and a newly recorded `PRECACHE_FINGERPRINT` in `sw.js`, the SHA-256 calculated from the `FILES_TO_CACHE` entries and the `dist/` files they resolve to. On a mismatch, `npm run build` fails and prints the recorded and calculated fingerprints. The check compares only those two values, so it does not verify that `CACHE_VERSION` was raised relative to the previous release.
+- Update `CACHE_VERSION` in `sw.js` when cached resources change. A release that changes precached content also needs a new `PRECACHE_FINGERPRINT`; the build rejects a mismatched fingerprint. The operational reference describes [calculation, failure handling and check limitations](docs/settings.md#qadistintegrity).
 - [CHANGELOG.md](docs/CHANGELOG.md) records significant completed changes; update it when task scope permits, or report that an entry is needed.
 - [Completed development plan of 2026-09-23](docs/archive/plans/PLAN-2026-09-23.md), which superseded the 2026-09-19 plan, preserves the completed tasks and their completion conditions; it is an archived document, not an active task list.
 - [Technical audit of 2026-09-23](docs/archive/audits/AUDIT-2026-09-23.md) preserves the reconciled technical findings and their resolution statuses; it is an archived document.

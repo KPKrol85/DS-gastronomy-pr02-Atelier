@@ -81,6 +81,7 @@ All significant changes to this project are documented in this file.
 - Corrected bilingual README paths and project trees, and documented the GitHub Actions quality workflow and its separation from deployment.
 - Documented the active development plan and current audit in both README language sections, aligning both project trees with the repository layout.
 - Reconciled project documentation with current dependencies, QA, metadata and Service Worker behavior, removed duplicate entries, and clarified completed work in archived reports (2026-09-26).
+- Consolidated build and QA command documentation into a single operational reference, aligning bilingual README guidance and project context without changing executable workflows.
 
 ### Build and Tooling
 
