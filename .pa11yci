@@ -39,7 +39,7 @@
         "click element #contact-title",
         "wait for element #name[aria-invalid=true] ~ #error-name:not(:empty) to be added",
         "wait for element #email[aria-invalid=true] + #error-email:not(:empty) to be added",
-        "wait for element #message[aria-invalid=true] + #error-message:not(:empty) to be added"
+        "wait for element #message[aria-invalid=true] ~ #error-message:not(:empty) to be added"
       ]
     }
   ]
