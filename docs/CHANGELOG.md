@@ -72,6 +72,7 @@ All significant changes to this project are documented in this file.
 - Added thumbnail recovery and an accessible unavailable state for failed gallery lightbox images, with the Service Worker cache raised to v1.7.
 - Prevented offline contact-form submissions from navigating away, preserving entered values and announcing that a connection is required, with the Service Worker cache raised to v1.8.
 - Made contact-form name and message length requirements visible before entry and associated each hint with its field alongside validation errors.
+- Added focused link and accessibility check selection to the managed QA server runner, preserving the default full-check workflow.
 
 ### Documentation
 

@@ -26,6 +26,7 @@ Three opportunities qualify: reuse managed server startup for a selected existin
 - **Acceptance criteria:** Each selected mode launches only its requested existing check against the selected source or production server; omitting the selector still runs links then pa11y. Invalid selections fail clearly before server startup. Selected-check failure returns a nonzero exit status and releases the runner's port. Focused usage examples identify whether a prior build is needed and do not imply that a single check replaces full source or production QA.
 - **Impact:** Medium
 - **Effort:** Small
+- **Status:** COMPLETED — Added focused links-only and accessibility-only modes to the existing QA server runner while preserving the default checks, source/dist selection, failure handling, and server cleanup.
 
 ### IMP-WORKFLOW-02 — Show editable source locations in composed HTML diagnostics
 

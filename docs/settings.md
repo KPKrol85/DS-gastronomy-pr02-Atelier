@@ -86,7 +86,8 @@ Dev i preview używają portu 5173; uruchamiaj je osobno. Przed QA zatrzymaj rę
 ### `qa:server`
 
 - command: `node scripts/qa-server.js`
-- what it does: Zarządza składającym serwerem dev (scripts/dev-server.js) na czas linków i pa11y.
+- what it does: Zarządza składającym serwerem dev (scripts/dev-server.js) na 127.0.0.1:5173. Domyślnie uruchamia linki, następnie pa11y; nie wymaga builda.
+- focused usage: `npm run qa:server -- --check=links` uruchamia tylko kontrolę linków; `npm run qa:server -- --check=a11y` tylko dostępność. Selektor można podać raz, wyłącznie w jednej z tych postaci; błędny wybór przerywa polecenie przed uruchomieniem serwera. Wybrana kontrola nie zastępuje pełnego `npm run qa`.
 
 ### `qa:dist:integrity`
 
@@ -101,7 +102,8 @@ Dev i preview używają portu 5173; uruchamiaj je osobno. Przed QA zatrzymaj rę
 ### `qa:dist:server`
 
 - command: `node scripts/qa-server.js --dist`
-- what it does: Zarządza serwerem preview na czas linków i pa11y.
+- what it does: Zarządza serwerem preview na 127.0.0.1:5173 dla istniejącego `dist/`. Domyślnie uruchamia linki, następnie pa11y. Wymaga wcześniejszego `npm run build`; sam nie buduje paczki.
+- focused usage: `npm run qa:dist:server -- --check=links` uruchamia tylko kontrolę linków; `npm run qa:dist:server -- --check=a11y` tylko dostępność. Selektor działa razem z `--dist` ustawionym przez ten skrypt npm i podlega tym samym zasadom co w `qa:server`. Wybrana kontrola nie zastępuje pełnego `npm run qa:dist`.
 
 ## Własność plików
 
