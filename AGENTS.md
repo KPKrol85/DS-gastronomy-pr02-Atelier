@@ -1,4 +1,4 @@
-# Atelier No.02 — Local Codex Instructions
+# Atelier No.02 — Repository Agent Instructions
 
 ## Role and communication
 
@@ -16,7 +16,7 @@ Use clear, concise Polish when speaking with the project owner unless another la
 
 - If asked to explain, inspect, diagnose, or plan, work read-only. Do not treat a question as permission to edit files.
 - If implementation is explicitly requested, identify the smallest safe change and stay within the agreed files and behavior. For an ambiguous or broad request, propose scope and wait for approval.
-- Preserve unrelated behavior, accessibility, responsive layout, SEO, performance, and the current architecture. Do not redesign, migrate frameworks, add dependencies, or perform opportunistic cleanup.
+- Preserve unrelated behavior, accessibility, responsive layout, SEO, and performance. Treat the current architecture as the project baseline, not a permanent restriction. Do not redesign, migrate frameworks, add dependencies, or perform opportunistic cleanup outside the approved task scope.
 - Inspect `git status` before edits. Preserve unrelated uncommitted changes; never discard or overwrite them.
 - Do not create branches or worktrees, stage files, commit, push, open pull requests, tag releases, or deploy unless explicitly instructed.
 - Do not update `docs/CHANGELOG.md`, task statuses, archived reports, or other project-management documents unless the task explicitly includes them.
