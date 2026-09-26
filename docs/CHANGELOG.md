@@ -22,6 +22,7 @@ All significant changes to this project are documented in this file.
 
 ### Changed
 
+- Added a direct home-page link to the contact confirmation page while retaining the return-to-form option.
 - Added direct recovery links to the home, menu and gallery pages within the 404 message.
 - Added gallery category names to the lightbox counter and navigation announcements.
 

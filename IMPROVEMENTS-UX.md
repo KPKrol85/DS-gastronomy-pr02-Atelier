@@ -67,13 +67,14 @@ The site supports browsing a sample menu, exploring grouped gallery images, and 
 
 - **Affected journey:** Continuing after the contact-form success page.
 - **Evidence:** `contact.html:158-167`; `thank-you.html:59-78`.
-- **Current experience:** The form targets `thank-you.html`. That page gives a confirmation and contact alternatives, but its only in-content navigation returns to the form, which the visitor has just completed; other destinations require the shared navigation.
-- **Proposed improvement:** Add a direct link from the success content back to the existing home page while retaining the return-to-form option.
+- **Previous experience:** The form targeted `thank-you.html`. That page gave a confirmation and contact alternatives, but its only in-content navigation returned to the form, which the visitor had just completed; other destinations required the shared navigation.
+- **Implemented improvement:** The success content offers “Wróć na stronę główną” linking to `index.html` as the primary action, followed by “Wróć do formularza” linking to `contact.html` in the ghost style. Both native links work without JavaScript and share a consistently spaced, page-specific action layout.
 - **Expected user value:** Visitors who have finished their message have an obvious way to continue browsing without returning to the completed task.
 - **Implementation scope:** Change only the canonical `thank-you.html` call to action area, using existing link styles. Do not change the form action, success wording, or submission handling.
 - **Acceptance criteria:** The success content offers distinct, keyboard-accessible links to `index.html` and `contact.html`; both labels describe their destinations. The current confirmation and contact alternatives remain present.
 - **Impact:** Low
 - **Effort:** Small
+- **Status:** COMPLETED — Added a direct home-page link alongside the existing return-to-form option after contact submission.
 
 ## Selection summary
 
