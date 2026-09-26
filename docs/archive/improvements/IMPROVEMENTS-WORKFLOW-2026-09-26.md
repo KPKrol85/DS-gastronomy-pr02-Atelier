@@ -4,6 +4,7 @@
 **Project type:** Static multi-page restaurant demonstration website: HTML templates and shared partials, modular CSS, vanilla JavaScript, Node.js/npm build and QA tooling, and a static package prepared for manual Netlify deployment.
 **Analysis mode:** Evidence-based workflow improvement review
 **Focus:** Project-wide workflow
+**Completion note (2026-09-26):** All three workflow improvements (IMP-WORKFLOW-01 to IMP-WORKFLOW-03) have been implemented and recorded in `docs/CHANGELOG.md`. This report was archived on 2026-09-26. The original proposals, selection rationale, and analysis limitations are preserved as historical records.
 
 ## Improvement overview
 
