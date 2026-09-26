@@ -22,6 +22,7 @@ All significant changes to this project are documented in this file.
 
 ### Changed
 
+- Added direct recovery links to the home, menu and gallery pages within the 404 message.
 - Added gallery category names to the lightbox counter and navigation announcements.
 
 - Made contact-form name and message length requirements visible before entry and associated each hint with its field alongside validation errors.

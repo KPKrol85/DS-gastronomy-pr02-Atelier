@@ -54,13 +54,14 @@ The site supports browsing a sample menu, exploring grouped gallery images, and 
 
 - **Affected journey:** Recovering from an unavailable page.
 - **Evidence:** `404.html:58-74`; `partials/header.html` (shared navigation links to home, menu and gallery).
-- **Current experience:** The 404 message suggests returning home or visiting Menu or Galeria, but its main content contains no links for those actions. Visitors must use the shared header navigation.
-- **Proposed improvement:** Turn the existing recovery suggestions into direct links to the corresponding existing pages within the 404 content.
+- **Previous experience:** The 404 message suggested returning home or visiting Menu or Galeria, but its main content contained no links for those actions. Visitors had to use the shared header navigation.
+- **Implemented improvement:** The existing recovery list now links directly to the home, full menu and gallery pages using root-relative URLs, while retaining the suggestion to use the shared navigation.
 - **Expected user value:** A visitor reaching a missing address has an immediate next step at the point where the error is explained.
 - **Implementation scope:** Update the canonical `404.html` content, reusing existing link or button styles. Keep the shared header, 404 status routing, and destination pages unchanged.
 - **Acceptance criteria:** The main 404 message offers keyboard-accessible links to `index.html`, `menu.html`, and `gallery.html`, with labels that match their destinations. The existing header navigation and 404 route behavior remain intact.
 - **Impact:** Low
 - **Effort:** Small
+- **Status:** COMPLETED — Added direct recovery links to the home, menu and gallery pages within the existing 404 content.
 
 ### IMP-UX-05 — Add a direct onward path after contact submission
 
