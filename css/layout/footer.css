@@ -17,7 +17,6 @@
 .footer__social {
   padding: var(--space-5);
   border-radius: var(--radius-md);
-  border: 1px solid var(--footer-border);
   text-align: center;
 }
 .footer__brand .brand {
@@ -28,7 +27,6 @@
 .footer__logo {
   width: 8.25rem;
   height: auto;
-  margin: 0 auto;
 }
 .footer .footer__logo--light {
   display: block;
@@ -43,7 +41,6 @@
   display: block;
 }
 .footer__tagline {
-  text-align: center;
   margin-top: var(--space-3);
   padding-inline: var(--space-4);
   margin-inline: auto;
@@ -56,7 +53,6 @@
   font-size: var(--fs-md);
   letter-spacing: var(--ls-widest);
   text-transform: uppercase;
-  text-align: center;
   font-weight: 600;
 }
 .footer__list {
@@ -215,13 +211,43 @@ html:not(.js) .footer__social svg[data-icon] + .visually-hidden {
 }
 
 @media (min-width: 1024px) {
+  /* The column gutters are tracks, so the gutter after the brand can be wider than the other two. */
   .footer__grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr) var(--space-8) minmax(0, 1fr) repeat(2, var(--space-6) minmax(0, 1fr));
+    column-gap: 0;
+  }
+  .footer__brand + .footer__nav {
+    grid-column: 3;
+  }
+  .footer__nav + .footer__nav {
+    grid-column: 5;
+  }
+  .footer__contact {
+    grid-column: 7;
+  }
+  .footer__brand,
+  .footer__nav,
+  .footer__contact {
+    text-align: left;
+  }
+  .footer__brand .brand {
+    justify-content: flex-start;
+  }
+  .footer__tagline {
+    padding-inline: 0;
+    margin-inline: 0;
   }
   .footer__heading {
     font-size: var(--fs-sm);
   }
   .footer__list li + li {
     margin-top: var(--space-3);
+  }
+  .footer__contact-item {
+    justify-content: flex-start;
+  }
+  .footer__contact-item--address {
+    align-items: flex-start;
+    margin-inline: 0;
   }
 }
