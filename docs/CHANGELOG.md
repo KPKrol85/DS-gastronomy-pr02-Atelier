@@ -22,6 +22,8 @@ All significant changes to this project are documented in this file.
 
 ### Changed
 
+- Added gallery category names to the lightbox counter and navigation announcements.
+
 - Made contact-form name and message length requirements visible before entry and associated each hint with its field alongside validation errors.
 - Standardized the site terms and unified legal-page styling, operator information and contact details.
 - Standardized the privacy policy and clarified Netlify Forms processing and embedded Google Maps disclosures, correcting the cookies policy's third-party integration description.

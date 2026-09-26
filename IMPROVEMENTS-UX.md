@@ -41,13 +41,14 @@ The site supports browsing a sample menu, exploring grouped gallery images, and 
 
 - **Affected journey:** Moving between enlarged gallery images.
 - **Evidence:** `gallery.html:131-153`, `gallery.html:161`, `208`, `255`, `313`, `359`, `405`, `463`, `509`, `555`, `613`, `659`, `705`; `js/features/lightbox.js:127-143`, `200-208`, `224-230`.
-- **Current experience:** The gallery presents four named categories, and lightbox navigation stays within the clicked image's `data-lightbox` group. Inside the overlay, the counter says only the position (for example, `1/3`), so the active category is not stated there.
-- **Proposed improvement:** Show the existing category name next to the image position in the lightbox and include it in the navigation announcement.
+- **Previous experience:** The gallery presents four named categories, and lightbox navigation stays within the clicked image's `data-lightbox` group. Inside the overlay, the counter said only the position (for example, `1/3`), so the active category was not stated there.
+- **Implemented improvement:** The lightbox resolves the activated link's category from its enclosing section's `aria-labelledby` heading, then keeps that label beside the changing position and in navigation announcements. If no suitable heading is available, it retains the position-only behavior.
 - **Expected user value:** Visitors can tell which collection they are browsing, especially after using previous and next controls several times.
 - **Implementation scope:** Use category labels already present in canonical `gallery.html` and update the counter and announcement in `js/features/lightbox.js`. Keep the current group boundaries, wrapping, captions, image recovery, and keyboard and touch controls.
 - **Acceptance criteria:** Opening an image in each of the four categories displays and announces the matching category with its position. Previous and next keep the category label stable while updating the position; closing and reopening in another category updates it. Gallery links still open the image directly when JavaScript is unavailable.
 - **Impact:** Low
 - **Effort:** Small
+- **Status:** COMPLETED — The lightbox counter and live announcements now identify the active canonical gallery category alongside the image position.
 
 ### IMP-UX-04 — Put the 404 page's recovery links in its main content
 
