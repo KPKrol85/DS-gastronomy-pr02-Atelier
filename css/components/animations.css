@@ -4,16 +4,6 @@
   --reveal-delay: 0ms;
 }
 
-[data-reveal][data-reveal-dir="up"] {
-  --rx: 0px;
-  --ry: 16px;
-}
-
-[data-reveal][data-reveal-dir="down"] {
-  --rx: 0px;
-  --ry: -16px;
-}
-
 [data-reveal][data-reveal-dir="left"] {
   --rx: -16px;
   --ry: 0px;
