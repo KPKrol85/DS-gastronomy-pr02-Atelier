@@ -130,6 +130,22 @@
   margin-bottom: 0;
 }
 
+.page--legal .legal__updated {
+  max-width: 920px;
+  padding-block-end: var(--section-y-md);
+  color: var(--text-subtle);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+}
+
+.page--legal .legal__updated p {
+  margin: 0;
+}
+
+.page--legal .legal__updated strong {
+  color: var(--c-ink);
+}
+
 .page--legal :is(.card__body, .page-hero__lead) a {
   text-decoration: none;
   text-underline-offset: 0.15em;
