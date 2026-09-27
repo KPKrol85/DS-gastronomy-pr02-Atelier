@@ -4,6 +4,27 @@
   max-width: 920px;
 }
 
+.page--legal .page-hero__inner {
+  max-width: 920px;
+  justify-content: flex-start;
+}
+
+.page--legal .page-hero__content {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  text-align: left;
+}
+
+.page--legal .page-hero__title {
+  text-align: left;
+}
+
+.page--legal .page-hero__lead {
+  margin-inline: 0;
+  max-width: 66ch;
+}
+
 .page--legal .page-hero__eyebrow {
   margin: 0;
   font-family: inherit;
@@ -21,6 +42,7 @@
 .toc {
   max-width: 720px;
   margin-inline: auto;
+  scroll-margin-top: calc(var(--header-offset) + 16px);
 }
 
 .toc__list {
@@ -116,6 +138,31 @@
 }
 .page--legal :is(.card__body, .page-hero__lead) a:hover {
   text-decoration-thickness: 2px;
+}
+
+/* Powrót do spisu treści */
+
+.page--legal .legal__back-to-toc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  margin-block-start: var(--space-3);
+  margin-inline-start: auto;
+  color: var(--text-subtle);
+  border-radius: var(--radius-md);
+}
+
+.page--legal .legal__back-to-toc:hover,
+.page--legal .legal__back-to-toc:focus-visible {
+  color: var(--c-ink);
+}
+
+.page--legal .legal__back-to-toc:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 /* Tabele przewijane w obrębie dokumentu */
