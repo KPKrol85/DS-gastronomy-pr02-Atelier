@@ -10,11 +10,11 @@ Atelier No.02 (`package.json` name: `atelier-no-02-restaurant`) is a multi-page 
 
 The site has 11 canonical pages: `index` (home), `about`, `menu`, `gallery`, `contact`, `cookies`, `polityka-prywatnosci` (privacy policy), `regulamin` (terms), `offline`, `thank-you`, and `404`. User-facing content is Polish-primary (`lang="pl"` on every page); `README.md` is maintained bilingually (Polish, then a full English translation).
 
-The project is governed by a proprietary KP_CODE license (`LICENSE`), not an open-source license — see [Project boundaries](#project-boundaries).
+The project is governed by a proprietary KP_CODE license (`LICENSE.md`), not an open-source license — see [Project boundaries](#project-boundaries).
 
 ## Project intent
 
-The repository is explicitly positioned as KP_Code Digital Studio reference/portfolio work (`package.json` keywords include `portfolio`; `LICENSE` frames permitted use around "portfolio review, code review, testing, or educational study"). Treat it as a technically serious reference implementation: architecture, accessibility, semantics, maintainability, and content/metadata integrity are expected to hold up under technical review, not just visual review.
+The repository is explicitly positioned as KP_Code Digital Studio reference/portfolio work (`package.json` keywords include `portfolio`; `LICENSE.md` frames permitted use around "portfolio review, code review, testing, or educational study"). Treat it as a technically serious reference implementation: architecture, accessibility, semantics, maintainability, and content/metadata integrity are expected to hold up under technical review, not just visual review.
 
 ## Technology stack
 
@@ -90,7 +90,7 @@ CSS has a single entry, `css/style.css`, which `@import`s layered partials in a 
 ├── package.json, package-lock.json
 ├── AGENTS.md                     # local agent instructions
 ├── dist/                        # generated production package (gitignored)
-└── LICENSE
+└── LICENSE.md
 ```
 
 ## Development conventions
@@ -150,7 +150,7 @@ Detailed command behavior, prerequisites and limitations are maintained in [sett
 - Frontend-only: no backend service, database, authentication, or booking system.
 - The restaurant is a fictional demonstration brand; content and SEO metadata do not imply real-world indexing, ranking, or business operation.
 - Contact-form delivery, PWA installability, and the state of any deployed site are outside what this repository's own checks verify.
-- Proprietary license (`LICENSE`, KP_CODE Proprietary Project License v1.0; Polish text controls in case of conflict with the English text): the repository is source-available for review, not open source. Reuse, redistribution, derivative works, and commercial use all require the owner's prior written permission.
+- Proprietary license (`LICENSE.md`, KP_CODE Proprietary Project License v1.0; Polish text controls in case of conflict with the English text): the repository is source-available for review, not open source. Reuse, redistribution, derivative works, and commercial use all require the owner's prior written permission.
 
 ## Maintenance rules
 

@@ -98,7 +98,7 @@ Każda podstrona ma własny szablon HTML w katalogu głównym. Wspólny nagłów
 ├── package.json
 ├── package-lock.json
 ├── AGENTS.md               # lokalne instrukcje pracy agenta
-└── LICENSE
+└── LICENSE.md
 ```
 
 ### Instalacja
@@ -219,7 +219,7 @@ Skonfigurowano minifikację CSS i bundling/minifikację JS. Obrazy korzystają z
 
 ### Licencja
 
-Atelier No.02 jest projektem własnościowym objętym [Własnościową Licencją Projektu KP_CODE, wersja 1.0](LICENSE), z prawami zastrzeżonymi przez Kamila Króla — KP_Code. Publiczne udostępnienie nie oznacza licencji open source. Materiały podmiotów trzecich podlegają własnym warunkom.
+Atelier No.02 jest projektem własnościowym objętym [Własnościową Licencją Projektu KP_CODE, wersja 1.0](LICENSE.md), z prawami zastrzeżonymi przez Kamila Króla — KP_Code. Publiczne udostępnienie nie oznacza licencji open source. Materiały podmiotów trzecich podlegają własnym warunkom.
 
 ### Atrybucje
 
@@ -323,7 +323,7 @@ Each page has its own HTML template at the repository root. The shared header an
 ├── package.json
 ├── package-lock.json
 ├── AGENTS.md               # local agent instructions
-└── LICENSE
+└── LICENSE.md
 ```
 
 ### Installation
@@ -444,7 +444,7 @@ CSS minification and JS bundling/minification are configured. Images use `pictur
 
 ### License
 
-Atelier No.02 is a proprietary project governed by the [KP_CODE Proprietary Project License, version 1.0](LICENSE), with rights reserved by Kamil Król — KP_Code. Public availability does not grant an open source license. Third-party materials remain subject to their own terms.
+Atelier No.02 is a proprietary project governed by the [KP_CODE Proprietary Project License, version 1.0](LICENSE.md), with rights reserved by Kamil Król — KP_Code. Public availability does not grant an open source license. Third-party materials remain subject to their own terms.
 
 ### Attributions
 
